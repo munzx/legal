@@ -6,6 +6,8 @@ var cms = require('../controllers/cms'),
 	admin = require('../controllers/admin'),
 	test = require('../controllers/test'),
 	court = require('../controllers/court'),
+	consultant = require('../controllers/consultant'),
+	employee = require('../controllers/employee'),
 	client = require('../controllers/client'),
 	account = require('../controllers/account'),
 	passport = require('passport'),
@@ -65,6 +67,18 @@ module.exports = function (app, express) {
 	function isEmployee(req, res, next){
 		if(req.user){
 			if(req.user.role === 'employee' || req.user.role === 'admin'){
+				next();
+			} else {
+				res.status(403).json('Access Denied');
+			}
+		} else {
+			res.status(403).json('Access Denied');
+		}
+	}
+
+	function isConsultant(req, res, next){
+		if(req.user){
+			if(req.user.role === 'consultant' || req.user.role === 'admin'){
 				next();
 			} else {
 				res.status(403).json('Access Denied');
@@ -142,8 +156,10 @@ module.exports = function (app, express) {
 		.delete('/admin/court/:id', ensureAuthenticated, isUser, court.remove)
 		//clients
 		.get('/admin/client', ensureAuthenticated, isUser, client.index)
-		.post('/admin/client', ensureAuthenticated, isUser, client.create)
-		.delete('/admin/client/:id', ensureAuthenticated, isAdmin, client.remove)
+		//consultants
+		.get('/admin/consultant', ensureAuthenticated, isUser, consultant.index)
+		//employees
+		.get('/admin/employee', ensureAuthenticated, isUser, employee.index)
 		//Users
 		.get('/user', users.index) //get all users
 		.post('/user', ensureAuthenticated, isUser, users.create) //create a new user

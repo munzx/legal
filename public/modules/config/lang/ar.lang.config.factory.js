@@ -6,6 +6,7 @@ angular.module('yousufalsharif').factory('arLang', [function () {
 		'client': 'موكل',
 		'employee': 'موظف',
 		'user': 'مستخدم',
+		'consultant': 'مستشار',
 		'email already exist': 'البريد الإلكتروني غير متاح'
 	}
 }]);

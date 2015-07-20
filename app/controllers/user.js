@@ -41,6 +41,9 @@ module.exports.create = function(req, res){
 			case "employee":
 				valid = true;
 				break;
+			case "consultant":
+				valid = true;
+				break;
 			default:
 				valid = false;
 		}

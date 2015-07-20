@@ -6,9 +6,9 @@ var mongoose = require('mongoose'),
 	_ = require('lodash');
 
 module.exports.index = function (req, res) {
-	users.find({'role': 'client'}, {password: 0}, function(err, result){
+	users.find({'role': 'employee'}, {'password': 0}, function(err, result){
 		if(err){
-			res.status(500).jsonp({message: err});
+			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {
 			res.status(200).jsonp(result);
 		}
