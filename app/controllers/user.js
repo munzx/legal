@@ -10,77 +10,63 @@ _ = require('lodash'),
 users = require('../models/user'),
 accounts = require('../models/account');
 
-module.exports.createFirst = function (req, res) {
-	users.find({role: 'admin'}, {password: 0}, function (err, user){
-		if(err){
-			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-		} else if(user.length > 0){
-			res.status(200).jsonp('Admin Exists');
-		} else {
-			var countryInfo = lookup.countries({name: 'United Arab Emirates'})[0];
-			var country = [{
-				name: countryInfo.name,
-				code: countryInfo.alpha2,
-				callingCode: countryInfo.countryCallingCodes[0],
-				currency: countryInfo.currencies[0],
-				language: countryInfo.languages[0]
-			}];
-
-			var newUser = new users({
-				firstName: 'munzir',
-				lastName: 'suliman',
-				name: 'moe',
-				role: 'user',
-				email: 'munzmania@gmail.com',
-				password: 'Dubai@123',
-				country: country
-			});
-
-			newUser.save(function(err, user){
-				if(err){
-					res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-				} else {
-					res.status(200).jsonp(user);
-				}
-			});
-		}
-	});
-}
-
-
 // get all users
 module.exports.index = function (req, res){
-	users.find({role: 'user'}, {password: 0}, function (err, user){
+	users.find({}, {password: 0}, function (err, user){
 		if(err){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-		} else if(user.length > 0){
-			res.status(200).jsonp(user);
 		} else {
-			res.status(404).json({message: 'No user has been found'});
+			res.status(200).jsonp(user);
 		}
 	});
 }
 
 // create a new user
 module.exports.create = function(req, res){
-	var countryInfo = lookup.countries({name: req.body.country})[0];
-	 req.body.country = [{
-		name: countryInfo.name,
-		code: countryInfo.alpha2,
-		callingCode: countryInfo.countryCallingCodes[0],
-		currency: countryInfo.currencies[0],
-		language: countryInfo.languages[0]
-	}];
+	var user = new users(),
+		userInfo = _.extend(user, req.body.userInfo);
 
-	var newUser = new users(req.body);
+	console.log(userInfo);
 
-	newUser.save(function(err, user){
-		if(err){
-			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-		} else {
-			res.status(200).jsonp(user);
+	//if the role is empty or not employee, client or admin then return error message
+	if(userInfo.role !== undefined){
+		var valid = false;
+		switch(userInfo.role.toLowerCase()){
+			case "admin":
+				valid = true;
+				break;
+			case "client":
+				valid = true;
+				break;
+			case "employee":
+				valid = true;
+				break;
+			default:
+				valid = false;
 		}
-	});
+
+		if(valid){
+			//only admin can create employees and other admins
+			//admin and employees can create clients
+			//employee can not create another employee or admin
+			if(req.user.role.toLowerCase() !== 'admin' && userInfo.role.toLowerCase() !== 'client'){
+				res.status(403).jsonp({message: 'لايمكن الدخول'});
+			} else {
+				user.save(function(err, user){
+					if(err){
+						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+					} else {
+						res.status(200).jsonp(user);
+					}
+				});
+			}
+		} else {
+			res.status(403).jsonp({message: 'لايمكن الدخول'});
+		}
+
+	} else {
+		res.status(500).jsonp({message: 'نوع المستخدم مطلوب'});
+	}
 }
 
 // get user by name
@@ -211,29 +197,25 @@ module.exports.changePassword = function(req, res){
 }
 
 //delete user by id
-module.exports.delete = function(req, res){
+module.exports.remove = function(req, res){
 	var dest = 'public/uploads/';
-	users.findById(req.user._id, function(err, user){
-		if(err){
-			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-		} else if(user) {
-			user.remove(function (err) {
-				if(err){
-					res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-				} else {
-					accounts.find(function (err,account) {
-						if(account){
-							var allUserAccounts = account;
-							allUserAccounts.forEach(function (info) {
-								info.remove(function () {});
-							});
-						}
-					});
-				}
-			});
-			res.status(200).json({message: 'User has been deleted successfully'});
-		} else {
-			res.status(404).json({message: 'User has not been found'});
-		}
-	});
+	if(req.params.id){
+		users.findById(req.params.id, function(err, user){
+			if(err){
+				res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+			} else if(user){
+				user.remove(function (err) {
+					if(err){
+						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+					} else {
+						res.status(200).jsonp('تم محو بيانات المستخدم بنجاح')
+					}
+				});
+			} else {
+				res.status(500).jsonp({message: 'لم يتم العثور على المستخدم'});
+			}
+		});
+	} else {
+		res.status(500).jsonp({message: 'يرجى إضافة رقم المعرف الخاص بالموظف'});
+	}
 }

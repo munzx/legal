@@ -21,46 +21,100 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			url: '/notfound',
 			templateUrl: 'public/modules/config/view/notfound.config.view.html',
 			controller: 'errorConfigController',
-			cache: true
+			cache: false
 		})
 		.state('home', {
 			url: '/',
 			templateUrl: 'public/modules/home/view/index.home.view.html',
 			controller: 'indexHomeController',
-			cache: true
+			cache: false
 		})
 		.state('about',{
 			url: '/about',
 			templateUrl: 'public/modules/home/view/about.home.view.html',
 			controller: 'indexHomeController',
-			cache: true
+			cache: false
 		})
 		.state('signin', {
 			url: '/signin',
 			templateUrl: 'public/modules/auth/view/signin.auth.view.html',
 			controller: 'signinAuthController',
-			cache: true
+			cache: false
 		})
 		.state('signup', {
 			url: '/signup',
 			templateUrl: 'public/modules/auth/view/signup.auth.view.html',
 			controller: 'signupAuthController',
-			cache: true
+			cache: false
 		})
 		.state('providerSignIn', {
 			url: '/signin/provider/:id',
 			templateUrl: 'public/modules/auth/view/provider.signin.auth.view.html',
 			controller: 'signInProviderAuthController',
-			cache: true
+			cache: false
 		})
 		.state('signout', {
 			url: '/signout',
 			controller: 'signoutAuthController',
-			cache: true
+			cache: false
 		})
+		.state('admin', {
+			url: '/admin',
+			templateUrl: 'public/modules/admin/view/index.admin.view.html',
+			controller: 'indexAdminController',
+			cache: false
+		})
+		.state('admin.reports', {
+			url: '/reports',
+			templateUrl: 'public/modules/admin/view/reports.admin.view.html',
+			controller: 'reportsAdminController',
+			cache: false
+		})
+		.state('admin.users', {
+			url: '/users',
+			templateUrl: 'public/modules/admin/view/users.admin.view.html',
+			controller: 'usersAdminController',
+			cache: false
+		})
+		.state('admin.users.create', {
+			url: '/create',
+			templateUrl: 'public/modules/admin/view/create.users.admin.view.html',
+			controller: 'usersAdminController',
+			cache: false
+		})
+		.state('admin.clients', {
+			url: '/clients',
+			templateUrl: 'public/modules/admin/view/clients.admin.view.html',
+			controller: 'clientsAdminController',
+			cache: false
+		})
+		.state('admin.clients.create', {
+			url: '/create',
+			templateUrl: 'public/modules/admin/view/create.client.admin.view.html',
+			controller: 'clientsAdminController',
+			cache: false
+		})
+		.state('admin.cases', {
+			url: '/cases',
+			templateUrl: 'public/modules/admin/view/cases.admin.view.html',
+			controller: 'casesAdminController',
+			cache: false
+		})
+		.state('admin.courts', {
+			url: '/courts',
+			templateUrl: 'public/modules/admin/view/courts.admin.view.html',
+			controller: 'courtsAdminController',
+			cache: false
+		})
+		.state('admin.courts.create', {
+			url: '/create',
+			templateUrl: 'public/modules/admin/view/create.court.admin.view.html',
+			controller: 'courtsAdminController',
+			cache: false
+		});
 		$locationProvider.html5Mode(true).hashPrefix('!');
 }])
-.run(['$rootScope', '$location', 'editableOptions', function ($rootScope, $location, editableOptions) {
+.run(['$rootScope', '$location', 'editableOptions', '$state', function ($rootScope, $location, editableOptions, $state) {
 	editableOptions.theme = 'bs3';
 	//remove the extra sympoles that is inserted by facebook redirect "when facebook redirect to the success login pagein server side"
 	//when  a user try to sign up through facebook

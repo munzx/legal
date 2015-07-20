@@ -3,7 +3,7 @@ body {
 	line-height: 1.42857143;
 	padding-top: 6em;
 	padding-bottom: 7%;
-	background-color: #EEEEEE;
+	background-color: #fff;
 }
 
 .navbar-collapse {
@@ -182,6 +182,19 @@ hr {
     }
 }
 
-h1, h2, h3, h4, h5, h6, p, li, ul, b, a, placeholder, input, option, select, textarea, form {
+.icon-right {
+    float: right;
+    display: inline;
+    clear: both;
+    margin: 2px;
+    margin-right: 0px;
+}
+
+h1, h2, h3, h4, h5, h6, p, li, ul, b, a, placeholder, input, option, select, textarea, form, span, td, tr, th {
     direction: rtl;
+}
+
+.no-animate {
+   -webkit-transition: none !important;
+   transition: none !important;
 }

@@ -1,0 +1,40 @@
+<div data-ui-view>
+	<div class="row">
+		<button class="btn btn-lg btn-success icon-right" ng-click="showNewUserForm()">
+			إضافة مستخدم جديد <span class="glyphicon glyphicon-plus"></span>
+		</button>
+		<div class="row" ng-hide="users.length">
+			<div class="col-md-12">
+				<h4 class="alert alert-danger">لم يتم إضافة أي مستخدم</h4>
+			</div>
+		</div>
+		<div ng-show="users.length" class="row" ng-show="users">
+			<div class="col-md-12">
+				<table class="table">
+					<thead>
+						<tr>
+							<th class="text-center">إلغاء</th>
+							<th class="text-center">الدور</th>
+							<th class="text-center">البريد الإلكتروني</th>
+							<th class="text-center">إسم المستخدم</th>
+							<th class="text-center">الإسم الثاني</th>
+							<th class="text-center">الإسم الأول</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="user in users" class="no-animate">
+							<td class="text-center">
+								<span ng-click="removeUserInfo($index, user._id)" class="glyphicon glyphicon-remove cursor"></span>
+							</td>
+							<td class="text-center">{{user.role | localize:'ar'}}</td>
+							<td class="text-center">{{user.email}}</td>
+							<td class="text-center">{{user.name}}</td>
+							<td class="text-center">{{user.lastName}}</td>
+							<td class="text-center">{{user.firstName}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,30 @@
+<div data-ui-view>
+	<div class="row">
+		<div class="col-md-12">
+			<button ng-click="showNewCourtForm()" class="btn btn-success btn-lg icon-right">  إضافة محكمة <span class="glyphicon glyphicon-plus"></span></button>
+		</div>
+		<div ng-hide="courts.length" class="col-md-12">
+			<h4 class="alert alert-danger">لم يتم إضافة أي محكمة</h4>
+		</div>
+		<table ng-show="courts.length" class="table table-condensed table-hover table-striped">
+			<thead>
+				<tr>
+					<th class="text-center">إلغاء</th>
+					<th class="text-center">إسم المحكمة</th>
+					<th class="text-center">المدينة</th>
+					<th class="text-center">العنوان</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="court in courts" class="no-animate">
+					<td class="text-center cursor">
+						<span class="glyphicon glyphicon-remove" ng-click="removeCourtInfo($index, court._id)"></span>
+					</td>
+					<td class="text-center">{{court.name}}</td>
+					<td class="text-center">{{court.city}}</td>
+					<td class="text-center">{{court.address}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

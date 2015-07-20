@@ -5,6 +5,8 @@ var cms = require('../controllers/cms'),
 	users = require('../controllers/user'),
 	admin = require('../controllers/admin'),
 	test = require('../controllers/test'),
+	court = require('../controllers/court'),
+	client = require('../controllers/client'),
 	account = require('../controllers/account'),
 	passport = require('passport'),
 	authLocal = require('./auth/local.strategy');
@@ -39,6 +41,30 @@ module.exports = function (app, express) {
 	function isUser(req, res, next){
 		if(req.user){
 			if(req.user.role === 'user' || req.user.role === 'admin'){
+				next();
+			} else {
+				res.status(403).json('Access Denied');
+			}
+		} else {
+			res.status(403).json('Access Denied');
+		}
+	}
+
+	function isClient(req, res, next){
+		if(req.user){
+			if(req.user.role === 'client' || req.user.role === 'admin'){
+				next();
+			} else {
+				res.status(403).json('Access Denied');
+			}
+		} else {
+			res.status(403).json('Access Denied');
+		}
+	}
+
+	function isEmployee(req, res, next){
+		if(req.user){
+			if(req.user.role === 'employee' || req.user.role === 'admin'){
 				next();
 			} else {
 				res.status(403).json('Access Denied');
@@ -100,7 +126,7 @@ module.exports = function (app, express) {
 		//test zone
 		.get('/test', test.index)
 		//Cms
-		.get('/cms/contact', isAdmin, cms.contactIndex)
+		.get('/cms/contact', ensureAuthenticated, isAdmin, cms.contactIndex)
 		.post('/cms/contact', isGuest, cms.contact)
 		//Account (provider as twitter or facebook)
 		.get('/account/:id', account.getById)
@@ -108,15 +134,23 @@ module.exports = function (app, express) {
 		.get('/account/status/:userID', account.AccountsStatus)
 		.get('/account/link/:id', account.linkProviderAccount)
 		//admin
-		.get('/admin', isAdmin, admin.index)
+		.get('/admin', ensureAuthenticated, isAdmin, admin.index)
 		.get('/admin/first', admin.createFirst)
+		//courts
+		.get('/admin/court', court.index)
+		.post('/admin/court', ensureAuthenticated, isUser, court.create)
+		.delete('/admin/court/:id', ensureAuthenticated, isUser, court.remove)
+		//clients
+		.get('/admin/client', ensureAuthenticated, isUser, client.index)
+		.post('/admin/client', ensureAuthenticated, isUser, client.create)
+		.delete('/admin/client/:id', ensureAuthenticated, isAdmin, client.remove)
 		//Users
 		.get('/user', users.index) //get all users
-		.post('/user', isGuest, users.create) //create a new user
+		.post('/user', ensureAuthenticated, isUser, users.create) //create a new user
 		.put('/user', ensureAuthenticated, isUser, users.update) //update user info
 		.put('/user/password', ensureAuthenticated, isUser, users.changePassword) //update the user password
-		.delete('/user', ensureAuthenticated, isUser, users.delete) //delete user
-		.get('/user/:name', isUser, users.getByName) //get a user by name
+		.delete('/user/:id', ensureAuthenticated, isAdmin, users.remove) //delete user
+		.get('/user/:name', ensureAuthenticated, isUser, users.getByName) //get a user by name
 	);
 
 	//404 Route/Page has not been found
