@@ -43,7 +43,13 @@ var usersSchema = Schema({
 	mobilePhone: {
 		type: String,
 		unique: true,
-		sparse: true
+		sparse: true,
+		default: ''
+	},
+	address: {
+		type: String,
+		trim: true,
+		default: ''
 	},
 	country: [{
 		name: {

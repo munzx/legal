@@ -1,1 +1,36 @@
-<h2>cases</h2>
+<div data-ui-view>
+	<div class="row">
+		<div class="col-md-12">
+			<button class="btn btn-lg btn-success icon-right" ng-click="showNewCaseForm()">إضافة قضية جديدة</button>
+		</div>
+		<div class="col-md-12" ng-hide="cases.length">
+			<h4 class='alert alert-danger'>لاتوجد قضايا</h4>
+		</div>
+		<div ng-show="cases.length" class="col-md-12">
+			<table class="table table-condensed table-hover table-striped">
+				<thead>
+					<tr>
+						<th class="text-center">إلغاء</th>
+						<th class="text-center">التاريخ</th>
+						<th class="text-center">البريد الإلكتروني</th>
+						<th class="text-center">رقم الهاتف</th>
+						<th class="text-center">الإسم الثاني</th>
+						<th class="text-center">الإسم الأول</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="case in cases" class="no-animate">
+						<td class="text-center">
+							<span class="glyphicon glyphicon-remove cursor" ng-click="removecase($index, case._id)"></span>
+						</td>
+						<td class="text-center">{{case.created}}</td>
+						<td class="text-center">{{case.email}}</td>
+						<td class="text-center">{{case.mobilePhone}}</td>
+						<td class="text-center">{{case.lastName}}</td>
+						<td class="text-center">{{case.firstName}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

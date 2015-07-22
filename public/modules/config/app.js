@@ -2,7 +2,7 @@
 
 // intitiate the app and Inject all of the app module dependencies
 //configure the routes
-var yousufalsharif = angular.module('yousufalsharif', ['xeditable', 'akoenig.deckgrid', 'ngAnimate', 'infinite-scroll', 'adminModule', 'angulartics', 'angulartics.google.analytics', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule' , 'chart.js']);
+var yousufalsharif = angular.module('yousufalsharif', ['xeditable', 'akoenig.deckgrid', 'ngAnimate', 'infinite-scroll', 'adminModule', 'angulartics', 'angulartics.google.analytics', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'chart.js']);
 
 //RouteScopes & Routes Configurations 
 yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'ChartJsProvider', function ($urlRouterProvider, $stateProvider, $locationProvider, ChartJsProvider) {
@@ -64,12 +64,6 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			controller: 'indexAdminController',
 			cache: false
 		})
-		.state('admin.reports', {
-			url: '/reports',
-			templateUrl: 'public/modules/admin/view/reports.admin.view.html',
-			controller: 'reportsAdminController',
-			cache: false
-		})
 		.state('admin.users', {
 			url: '/users',
 			templateUrl: 'public/modules/admin/view/users.admin.view.html',
@@ -103,6 +97,11 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			templateUrl: 'public/modules/admin/view/cases.admin.view.html',
 			controller: 'casesAdminController',
 			cache: false
+		})
+		.state('admin.cases.create', {
+			url: '/create',
+			templateUrl: 'public/modules/admin/view/create.case.admin.view.html',
+			controller: 'casesAdminController'
 		})
 		.state('admin.courts', {
 			url: '/courts',

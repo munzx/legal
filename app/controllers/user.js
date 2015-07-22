@@ -26,8 +26,6 @@ module.exports.create = function(req, res){
 	var user = new users(),
 		userInfo = _.extend(user, req.body.userInfo);
 
-	console.log(userInfo);
-
 	//if the role is empty or not employee, client or admin then return error message
 	if(userInfo.role !== undefined){
 		var valid = false;

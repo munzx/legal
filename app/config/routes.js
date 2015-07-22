@@ -9,7 +9,9 @@ var cms = require('../controllers/cms'),
 	consultant = require('../controllers/consultant'),
 	employee = require('../controllers/employee'),
 	client = require('../controllers/client'),
+	defendant = require('../controllers/defendant'),
 	account = require('../controllers/account'),
+	courtCase = require('../controllers/case'),
 	passport = require('passport'),
 	authLocal = require('./auth/local.strategy');
 
@@ -160,6 +162,10 @@ module.exports = function (app, express) {
 		.get('/admin/consultant', ensureAuthenticated, isUser, consultant.index)
 		//employees
 		.get('/admin/employee', ensureAuthenticated, isUser, employee.index)
+		//case
+		.get('/admin/case', ensureAuthenticated, isUser, courtCase.index)
+		//defendant
+		.get('/admin/defendant', ensureAuthenticated, isUser, defendant.index)
 		//Users
 		.get('/user', users.index) //get all users
 		.post('/user', ensureAuthenticated, isUser, users.create) //create a new user

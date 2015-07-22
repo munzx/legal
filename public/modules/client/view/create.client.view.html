@@ -4,11 +4,11 @@
 			<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>
-			<h4 class="modal-title text-center">بيانات المستخدم</h4>
+			<h4 class="modal-title text-center">إضافة موكل</h4>
 		</div>
 		<div class="modal-body">
 			<h4 ng-show="error" class="alert alert-danger">{{error}}</h4>
-			<form name="userForm" novalidate autocomplete="off">
+			<form name="clientInfo" novalidate autocomplete="off">
 				<fieldset>
 					<div class="form-group">
 						<div class="input-group input-group-lg">
@@ -17,7 +17,7 @@
 							</span>
 							<input type="text" class="form-control" name="firstName" data-ng-model="userInfo.firstName" placeholder="الإسم الأول" required>
 						</div>
-						<h5 class="alert alert-danger" ng-show="userForm.firstName.$error.required && userForm.firstName.$dirty">
+						<h5 class="alert alert-danger" ng-show="clientInfo.firstName.$error.required && clientInfo.firstName.$dirty">
 							حقل الإسم الأول مطلوب
 						</h5>
 					</div>
@@ -28,7 +28,7 @@
 							</span>
 							<input type="text" class="form-control" name="lastName" data-ng-model="userInfo.lastName" placeholder="الإسم الثاني" required>
 						</div>
-						<h5 class="alert alert-danger" ng-show="userForm.lastName.$error.required && userForm.lastName.$dirty">
+						<h5 class="alert alert-danger" ng-show="clientInfo.lastName.$error.required && clientInfo.lastName.$dirty">
 							حقل الإسم الثاني مطلوب
 						</h5>
 					</div>
@@ -39,8 +39,19 @@
 							</span>
 							<input type="text" class="form-control" name="name" data-ng-model="userInfo.name" placeholder="إسم المستخدم" required>
 						</div>
-						<h5 class="alert alert-danger" ng-show="userForm.name.$error.required && userForm.name.$dirty">
+						<h5 class="alert alert-danger" ng-show="clientInfo.name.$error.required && clientInfo.name.$dirty">
 							إسم المستخدم مطلوب
+						</h5>
+					</div>
+					<div class="form-group">
+						<div class="input-group input-group-lg">
+							<span class="input-group-addon">
+								<i class="text-muted glyphicon glyphicon-phone-alt"></i>
+							</span>
+							<input type="text" class="form-control" name="mobilePhone" data-ng-model="userInfo.mobilePhone" placeholder="رقم الهاتف" required>
+						</div>
+						<h5 class="alert alert-danger" ng-show="clientInfo.mobilePhone.$error.required && clientInfo.mobilePhone.$dirty">
+							رقم الهاتف مطلوب
 						</h5>
 					</div>
 					<div class="form-group">
@@ -50,10 +61,10 @@
 							</span>
 							<input type="email" class="form-control" name="email" data-ng-model="userInfo.email" placeholder="البريد الإلكتروني" required>
 						</div>
-						<h5 class="alert alert-danger" ng-show="userForm.email.$error.required && userForm.email.$dirty">
+						<h5 class="alert alert-danger" ng-show="clientInfo.email.$error.required && clientInfo.email.$dirty">
 							حقل البريد الإلكتروني مطلوب
 						</h5>
-						<h5 class="alert alert-danger" ng-show="userForm.email.$invalid && userForm.email.$dirty">
+						<h5 class="alert alert-danger" ng-show="clientInfo.email.$invalid && clientInfo.email.$dirty">
 							يرجى إدخال عنوان بريد إلكتروني صحيح
 						</h5>
 					</div>
@@ -64,46 +75,22 @@
 							</span>
 							<input type="password" class="form-control" name="password" ng-maxlength="40" ng-minlength="8" data-ng-model="userInfo.password" placeholder="كلمة السر" required>
 						</div>
-						<h5 class="alert alert-danger" ng-show="userForm.password.$error.required && userForm.password.$dirty">
+						<h5 class="alert alert-danger" ng-show="clientInfo.password.$error.required && clientInfo.password.$dirty">
 							حقل كلمة السر مطلوب
 						</h5>
-						<h5 class="alert alert-danger" ng-show="userForm.password.$error.maxlength && userForm.password.$dirty">
+						<h5 class="alert alert-danger" ng-show="clientInfo.password.$error.maxlength && clientInfo.password.$dirty">
 							الحد الأقصى لكلمة السر هو ٤٠ حرفا
 						</h5>
-						<h5 class="alert alert-danger" ng-show="userForm.password.$error.minlength && userForm.password.$dirty">
+						<h5 class="alert alert-danger" ng-show="clientInfo.password.$error.minlength && clientInfo.password.$dirty">
 							الحد الأدنى لكلمة السر هو ٨ أحرف
 						</h5>
 					</div>
-					<div class="form-group">
-						<div class="input-group input-group-lg">
-							<span class="input-group-addon">
-								<i class="text-muted glyphicon glyphicon-phone-alt"></i>
-							</span>
-							<input type="text" class="form-control" name="mobilePhone" data-ng-model="userInfo.mobilePhone" placeholder="رقم الهاتف" required>
-						</div>
-						<h5 class="alert alert-danger" ng-show="userForm.mobilePhone.$error.required && userForm.mobilePhone.$dirty">
-							رقم الهاتف مطلوب
-						</h5>
-					</div>
-					<div class="form-group">
-						<div class="input-group input-group-lg">
-							<span class="input-group-addon">
-								<i class="text-muted glyphicon glyphicon-asterisk"></i>
-							</span>
-							<select class="form-control" ng-model='userInfo.role'>
-								<option selected value="client">موكل</option>
-								<option value="employee">موظف</option>
-								<option value="admin">إداري</option>
-								<option value="consultant">مستشار</option>
-							</select>
-						</div>
-					</div>
 					<div class="text-center form-group">
-						<button ng-click="createNewUser()" ng-disabled="userForm.$invalid" class="btn btn-lg btn-success btn-block">تسجيل مستخدم جديد</button>
+						<button ng-click="createNewClient()" ng-disabled="clientInfo.$invalid" class="btn btn-lg btn-success btn-block">تسجيل مستخدم جديد</button>
 						<button class="btn btn-lg btn-danger btn-block" ng-click="closeModal()">إلغاء</button>
 					</div>
 				</fieldset>
 			</form>
 		</div>
 	</div>
-</div>
+</section>
