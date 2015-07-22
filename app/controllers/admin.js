@@ -33,9 +33,9 @@ module.exports.createFirst = function (req, res) {
 			}];
 
 			var newUser = new users({
-				firstName: 'munzir',
-				lastName: 'suliman',
-				name: 'moeAdmin',
+				firstName: 'root',
+				lastName: 'admin',
+				name: 'admin',
 				role: 'admin',
 				email: 'munzir.suliman@outlook.com',
 				password: 'Dubai@123',
@@ -53,9 +53,8 @@ module.exports.createFirst = function (req, res) {
 	});
 }
 
-
 module.exports.index = function (req, res) {
-	users.find({role: 'admin'}, {password: 0}, function (err, user){
+	users.find({role: 'admin'}, {password: 0}).where('name').ne('admin').exec(function (err, user){
 		if(err){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {

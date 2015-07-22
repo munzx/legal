@@ -12,7 +12,7 @@ accounts = require('../models/account');
 
 // get all users
 module.exports.index = function (req, res){
-	users.find({}, {password: 0}, function (err, user){
+	users.find({}, {password: 0}).where('name').ne('admin').exec(function (err, user){
 		if(err){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {

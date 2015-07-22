@@ -70,12 +70,6 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			controller: 'usersAdminController',
 			cache: false
 		})
-		.state('admin.users.create', {
-			url: '/create',
-			templateUrl: 'public/modules/admin/view/create.users.admin.view.html',
-			controller: 'usersAdminController',
-			cache: false
-		})
 		.state('admin.consultants', {
 			url: '/consultants',
 			templateUrl: 'public/modules/admin/view/consultants.admin.view.html',
@@ -98,20 +92,9 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			controller: 'casesAdminController',
 			cache: false
 		})
-		.state('admin.cases.create', {
-			url: '/create',
-			templateUrl: 'public/modules/admin/view/create.case.admin.view.html',
-			controller: 'casesAdminController'
-		})
 		.state('admin.courts', {
 			url: '/courts',
 			templateUrl: 'public/modules/admin/view/courts.admin.view.html',
-			controller: 'courtsAdminController',
-			cache: false
-		})
-		.state('admin.courts.create', {
-			url: '/create',
-			templateUrl: 'public/modules/admin/view/create.court.admin.view.html',
 			controller: 'courtsAdminController',
 			cache: false
 		});
