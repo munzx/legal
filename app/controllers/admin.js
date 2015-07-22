@@ -167,8 +167,6 @@ module.exports.updateCategory = function (req, res) {
 									res.status(500).jsonp({message: err});
 								} else {
 									//update the category parent name in the whole DB
-									console.log(result[catId].name);
-									console.log(oldValue.name);
 									category.update({parent: oldValue.name}, {parent: result[catId].name}, {multi: true},function(err, updateResult){
 										if(err){
 											res.status(500).jsonp({message: err});
