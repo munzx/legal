@@ -13,14 +13,14 @@ angular.module('adminModule').controller('usersAdminController', ['$scope', '$st
 			$scope.error = false;
 		}, function(error){
 			$scope.error = response.data.message;
-	
 		});
 	}
 
 	$scope.showNewUserForm = function(){
 		$modal.open({
-			templateUrl: 'public/modules/admin/view/create.users.admin.view.html',
-			controller: 'createUserAdminController',
+			templateUrl: 'public/modules/user/view/create.user.view.html',
+			controller: 'indexUserController',
+			size: 'md',
 			resolve: {
 				users: function(){
 					return $scope.users;

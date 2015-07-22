@@ -1,10 +1,6 @@
 'use strict';
 
-angular.module('adminModule').controller('casesAdminController', ['$scope', 'connectAdminFactory', '$state', '$modal', function ($scope, connectAdminFactory, $state, $modal) {
-	connectAdminFactory.query({page: 'case'}, function(response){
-		$scope.cases = response;
-	});
-
+angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases', 'connectAdminFactory', '$modal', '$modalInstance', function ($scope, cases, connectAdminFactory, $modal, $modalInstance) {
 	connectAdminFactory.query({page: 'court'}, function(response){
 		$scope.courts = response;
 	});
@@ -17,8 +13,12 @@ angular.module('adminModule').controller('casesAdminController', ['$scope', 'con
 		$scope.consultants = response;
 	});
 
-	$scope.showNewCaseForm = function(){
-		$state.go('admin.cases.create', {}, {reload: true});
+	connectAdminFactory.query({page: 'defendant'}, function(response){
+		$scope.defendants = response;
+	});
+
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
 	}
 
 	$scope.showNewDefendantForm = function(){
@@ -46,7 +46,6 @@ angular.module('adminModule').controller('casesAdminController', ['$scope', 'con
 			}
 		});
 	}
-
 
 
 }]);

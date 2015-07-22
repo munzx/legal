@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('courtModule').controller('createCourtController', ['$scope', '$modalInstance', 'connectAdminFactory', 'courts', function ($scope, $modalInstance, connectAdminFactory, courts) {
+angular.module('courtModule').controller('indexCourtController', ['$scope', '$modalInstance', 'connectAdminFactory', 'courts', function ($scope, $modalInstance, connectAdminFactory, courts) {
 	//init
 	$scope.courtInfo = {};
 	//default value

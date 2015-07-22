@@ -8,7 +8,7 @@ angular.module('adminModule').controller('courtsAdminController', ['$scope', 'co
 	$scope.showNewCourtForm = function(){
 		$modal.open({
 			templateUrl: 'public/modules/court/view/create.court.view.html',
-			controller: 'createCourtController',
+			controller: 'indexCourtController',
 			size: 'md',
 			resolve: {
 				courts: function(){

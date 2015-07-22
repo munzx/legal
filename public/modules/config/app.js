@@ -2,7 +2,7 @@
 
 // intitiate the app and Inject all of the app module dependencies
 //configure the routes
-var yousufalsharif = angular.module('yousufalsharif', ['xeditable', 'akoenig.deckgrid', 'ngAnimate', 'infinite-scroll', 'adminModule', 'angulartics', 'angulartics.google.analytics', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'chart.js']);
+var yousufalsharif = angular.module('yousufalsharif', ['xeditable', 'akoenig.deckgrid', 'ngAnimate', 'infinite-scroll', 'adminModule', 'angulartics', 'angulartics.google.analytics', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'chart.js']);
 
 //RouteScopes & Routes Configurations 
 yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'ChartJsProvider', function ($urlRouterProvider, $stateProvider, $locationProvider, ChartJsProvider) {
