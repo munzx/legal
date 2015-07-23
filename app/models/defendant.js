@@ -23,8 +23,9 @@ var defendantSchema = new Schema({
 		trim: true
 	},
 	mobilePhone: {
-		type: Number,
+		type: String,
 		default: '',
+		unique: true,
 		required: 'إسم المدعي مطلوب',
 		trim: true
 	},
@@ -42,7 +43,6 @@ var defendantSchema = new Schema({
 	user: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 	created: {type: Date, default: Date.now}
 });
-
 
 module.exports = mongoose.model('defendant', defendantSchema);
 

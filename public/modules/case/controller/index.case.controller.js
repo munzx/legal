@@ -1,6 +1,9 @@
 'use strict';
 
-angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases', 'connectAdminFactory', '$modal', '$modalInstance', function ($scope, cases, connectAdminFactory, $modal, $modalInstance) {
+angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases', 'connectAdminFactory', '$modal', '$modalInstance', 'connectDefendantFactory', function ($scope, cases, connectAdminFactory, $modal, $modalInstance, connectDefendantFactory) {
+	//init selected defendants
+	$scope.selectedDefendants = [];
+
 	connectAdminFactory.query({page: 'court'}, function(response){
 		$scope.courts = response;
 	});
@@ -13,7 +16,7 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 		$scope.consultants = response;
 	});
 
-	connectAdminFactory.query({page: 'defendant'}, function(response){
+	connectDefendantFactory.query({}, function(response){
 		$scope.defendants = response;
 	});
 
@@ -29,6 +32,9 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 			resolve: {
 				defendants: function(){
 					return $scope.defendants
+				},
+				selectedDefendants: function(){
+					return $scope.selectedDefendants;
 				}
 			}
 		});

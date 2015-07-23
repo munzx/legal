@@ -165,7 +165,8 @@ module.exports = function (app, express) {
 		//case
 		.get('/admin/case', ensureAuthenticated, isUser, courtCase.index)
 		//defendant
-		.get('/admin/defendant', ensureAuthenticated, isUser, defendant.index)
+		.get('/defendant', ensureAuthenticated, isUser, defendant.index)
+		.post('/defendant', ensureAuthenticated, isUser, defendant.create)
 		//Users
 		.get('/user', users.index) //get all users
 		.post('/user', ensureAuthenticated, isUser, users.create) //create a new user

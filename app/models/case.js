@@ -2,8 +2,7 @@ var mongoose = require('mongoose'),
 Schema = mongoose.Schema;
 
 var caseSchema = mongoose.Schema({
-	claimant: [{ type: Schema.Types.ObjectId, ref: 'defendant' }],
-	respondant: [{ type: Schema.Types.ObjectId, ref: 'defendant' }],
+	defendant: [{ type: Schema.Types.ObjectId, ref: 'defendant' }],
 	client: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 	clientRole: {
 		type: String,
@@ -11,6 +10,11 @@ var caseSchema = mongoose.Schema({
 		trim: true,
 		enum: ['claimant', 'respondant']
 	},
+	clientRoleHistory: [{
+		type: String,
+		default: '',
+		trim: true
+	}],
 	created: {
 		type: Date, 
 		default: "",

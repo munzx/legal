@@ -17,3 +17,17 @@ module.exports.index = function (req, res) {
 		}
 	});
 }
+
+module.exports.create = function(req, res){
+	var defendant = new defendants,
+		defendantInfo = _.extend(defendant, req.body.defendantInfo);
+
+	defendant.save(function(err, result){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else {
+			res.status(200).jsonp(result);	
+		}
+	});
+
+}
