@@ -30,7 +30,7 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<button class="btn btn-lg btn-primary" ng-click="step(2)"> التالي</button>
+						<button ng-disabled="compeleteToProceedStep1()" class="btn btn-lg btn-primary" ng-click="step(2)"> التالي</button>
 					</div>
 				</div>
 				<div ng-show="step2">
@@ -80,7 +80,7 @@
 					</div>
 					<div class="form-group">
 						<button class="btn btn-lg btn-warning" ng-click="step(1)"> السابق</button>
-						<button class="btn btn-lg btn-primary" ng-click="step(3)"> التالي</button>
+						<button ng-disabled="compeleteToProceedStep2()" class="btn btn-lg btn-primary" ng-click="step(3)"> التالي</button>
 					</div>
 				</div>
 				<div ng-show="step3">
@@ -132,12 +132,12 @@
 					</div>
 					<div class="form-group">
 						<button class="btn btn-lg btn-warning" ng-click="step(2)"> السابق</button>
-						<button class="btn btn-lg btn-primary" ng-click="step(4)"> التالي</button>
+						<button ng-disabled="compeleteToProceedStep3()" class="btn btn-lg btn-primary" ng-click="step(4)"> التالي</button>
 					</div>
 				</div>
 				<div ng-show="step4">
 					<div class="form-group">
-						<select class="form-control" ng-model="newCase.client">
+						<select class="form-control" ng-model="newCase.consultant">
 							<option value="">-- المستشار --</option>
 							<option ng-repeat="consultant in consultants" value="{{consultant.name}}">{{consultant.name}}</option>
 						</select>
@@ -152,7 +152,7 @@
 						<button class="btn btn-lg btn-warning" ng-click="step(3)"> السابق</button>
 					</div>
 					<div class="form-group">
-						<button class="btn btn-lg btn-block btn-success">إضافة قضية جديدة</button>
+						<button ng-disabled="compeleteToProceedStep4()" class="btn btn-lg btn-block btn-success">إضافة قضية جديدة</button>
 					</div>
 				</div>
 			</form>

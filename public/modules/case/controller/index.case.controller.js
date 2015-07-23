@@ -1,6 +1,8 @@
 'use strict';
 
 angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases', 'connectAdminFactory', '$modal', '$modalInstance', 'connectDefendantFactory', function ($scope, cases, connectAdminFactory, $modal, $modalInstance, connectDefendantFactory) {
+	//init newCase
+	$scope.newCase = {};
 	//init selected clients
 	$scope.selectedClients = [];
 	//init selected defendants
@@ -42,6 +44,26 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 
 	//init with step 1
 	$scope.step(1);
+
+	$scope.compeleteToProceedStep1 = function(){
+		if(!$scope.newCase.caseDate || !$scope.newCase.caseNumber || !$scope.newCase.reportNumber || !$scope.newCase.court) return true;
+		return false;
+	}
+
+	$scope.compeleteToProceedStep2 = function(){
+		if($scope.selectedClients.length === 0) return true;
+		return false;
+	}
+
+	$scope.compeleteToProceedStep3 = function(){
+		if($scope.selectedDefendants.length === 0) return true;
+		return false;
+	}
+
+	$scope.compeleteToProceedStep4 = function(){
+		if(!$scope.newCase.consultant || !$scope.newCase.subject || !$scope.newCase.facts) return true;
+		return false;
+	}
 
 	connectAdminFactory.query({page: 'court'}, function(response){
 		$scope.courts = response;
