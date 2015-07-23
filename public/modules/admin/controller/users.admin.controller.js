@@ -21,6 +21,7 @@ angular.module('adminModule').controller('usersAdminController', ['$scope', '$st
 			templateUrl: 'public/modules/user/view/create.user.view.html',
 			controller: 'indexUserController',
 			size: 'md',
+			backdrop : 'static',
 			resolve: {
 				users: function(){
 					return $scope.users;

@@ -2,7 +2,7 @@
 
 // intitiate the app and Inject all of the app module dependencies
 //configure the routes
-var yousufalsharif = angular.module('yousufalsharif', ['xeditable', 'akoenig.deckgrid', 'ngAnimate', 'infinite-scroll', 'adminModule', 'angulartics', 'angulartics.google.analytics', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'chart.js']);
+var yousufalsharif = angular.module('yousufalsharif', ['xeditable', 'akoenig.deckgrid', 'ngAnimate', 'infinite-scroll', 'adminModule', 'angulartics', 'angulartics.google.analytics', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'chart.js']);
 
 //RouteScopes & Routes Configurations 
 yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'ChartJsProvider', function ($urlRouterProvider, $stateProvider, $locationProvider, ChartJsProvider) {
@@ -86,6 +86,12 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			controller: 'clientsAdminController',
 			cache: false
 		})
+		.state('admin.defendants', {
+			url: '/defendant',
+			templateUrl: 'public/modules/admin/view/defendant.admin.vew.html',
+			controller: 'defendantAdminController',
+			cache: false
+		})
 		.state('admin.cases', {
 			url: '/cases',
 			templateUrl: 'public/modules/admin/view/cases.admin.view.html',
@@ -96,6 +102,12 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			url: '/courts',
 			templateUrl: 'public/modules/admin/view/courts.admin.view.html',
 			controller: 'courtsAdminController',
+			cache: false
+		})
+		.state('admin.caseRole', {
+			url: '/caserole',
+			templateUrl: 'public/modules/admin/view/caserole.admin.view.html',
+			controller: 'caseRoleAdminController',
 			cache: false
 		});
 		$locationProvider.html5Mode(true).hashPrefix('!');

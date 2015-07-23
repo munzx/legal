@@ -104,6 +104,16 @@ var usersSchema = Schema({
 		enum: ['user', 'admin', 'employee', 'client', 'consultant'],
 		default: ['user']
 	},
+	caseRole : {
+		type: String,
+		default: '',
+		trim: true
+	},
+	caseRoleHistory: [{
+		type: String,
+		default: '',
+		trim: true
+	}],
 	password: {
 		type: String,
 		default: '',

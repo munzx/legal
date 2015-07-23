@@ -4,96 +4,156 @@
 			<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>
-			<h4 class="modal-title text-center">بيانات القضية</h4>
+			<h4 class="modal-title text-center">بيانات القضية {{'- ' + pageTitle}}</h4>
 		</div>
 		<div class="modal-body">
 			<h4 ng-show="error" class="alert alert-danger">{{error}}</h4>
-			<div class="row">
-				<div class="col-md-12 add-space">
-					<div class="icon-right">
-						<button ng-click="showNewDefendantForm()" class="btn btn-lg btn-warning"> إضافة خصم <span class="glyphicon glyphicon-plus"></span></button>
+			<form class="form">
+				<div ng-show="step1">
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-4">
+								<input type="date" ng-model="newCase.caseDate" class="form-control">
+							</div>
+							<div class="col-md-4">
+								<input type="text" ng-model="newCase.caseNumber" class="form-control" placeholder="رقم القضية">
+							</div>
+							<div class="col-md-4">
+								<input type="text" ng-model="newCase.reportNumber" class="form-control" placeholder="رقم البلاغ">
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<select class="form-control" ng-model="newCase.court">
+							<option value="">-- المحكمة --</option>
+							<option ng-repeat="court in courts" value="{{court._id}}">{{court.name}}</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-lg btn-primary" ng-click="step(2)"> التالي</button>
+					</div>
+				</div>
+				<div ng-show="step2">
+					<div class="form-group">
 						<button ng-click="showNewClientForm()" class="btn btn-lg btn-info"> إضافة موكل <span class="glyphicon glyphicon-plus"></span></button>
 					</div>
-				</div>
-			</div>
-			<form class="form">
-				<div class="form-group">
-					<div class="row">
-						<div class="col-md-4">
-							<input type="date" ng-model="newCase.caseDate" class="form-control">
-						</div>
-						<div class="col-md-4">
-							<input type="text" ng-model="newCase.reportNumber" class="form-control" placeholder="رقم البلاغ">
-						</div>
-						<div class="col-md-4">
-							<input type="text" ng-model="newCase.caseNumber" class="form-control" placeholder="رقم القضية">
+					<div class="form-group">
+						<div class="form-inline">
+							<div class="input-group input-group-lg">
+								<span class="input-group-addon">
+									<i class="text-muted glyphicon glyphicon-list icon-right"></i>
+								</span>
+								<select class="form-control" ng-model="newCase.client">
+									<option value="">-- الموكلين --</option>
+									<option ng-repeat="client in clients" value="{{$index}}">{{client.name}}</option>
+								</select>
+							</div>
+							<button ng-click="selectClient()" class="btn btn-lg btn-primary">إضافة</button>
 						</div>
 					</div>
+					<div class="form-group">
+						<table class="table">
+							<thead>
+								<tr ng-show="selectedClients.length">
+									<th class="text-center">الإسم</th>
+									<th class="text-center">الصفة</th>
+									<th class="text-center">رقم الهاتف</th>
+									<th class="text-center">إلغاء</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-hide="selectedClients.length">
+									<td colspan="3">
+										<h4 class="alert alert-danger">لم يتم إضافة موكلين</h4>
+									</td>
+								</tr>
+								<tr ng-show="selectedClients.length" ng-repeat="client in selectedClients" class="no-animate">
+									<td class="text-center">{{client.firstName}} {{client.lastName}}</td>
+									<td class="text-center">{{client.role}}</td>
+									<td class="text-center">{{client.mobilePhone}}</td>
+									<td class="text-center">
+										<span ng-click="removeSelectedClient($index)" class="glyphicon glyphicon-remove cursor"></span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-lg btn-warning" ng-click="step(1)"> السابق</button>
+						<button class="btn btn-lg btn-primary" ng-click="step(3)"> التالي</button>
+					</div>
 				</div>
-				<div class="form-group">
-					<select class="form-control" ng-model="newCase.court">
-						<option value="">-- المحكمة --</option>
-						<option ng-repeat="court in courts" value="{{court._id}}">{{court.name}}</option>
-					</select>
+				<div ng-show="step3">
+					<div class="form-group">
+						<button ng-click="showNewDefendantForm()" class="btn btn-lg btn-warning"> إضافة خصم <span class="glyphicon glyphicon-plus"></span></button>
+					</div>
+					<div class="form-group">
+						<div class="form-inline">
+							<div class="input-group input-group-lg">
+								<span class="input-group-addon">
+									<i class="text-muted glyphicon glyphicon-list icon-right"></i>
+								</span>
+								<select ng-model="newCase.defendant" class="form-control">
+									<option value="">-- الخصوم --</option>
+									<option ng-repeat="defendant in defendants" value="{{$index}}">
+										{{defendant.firstName}} {{defendant.lastName}}
+									</option>
+								</select>
+							</div>
+							<button ng-click="selectDefendant()" class="btn btn-lg btn-primary">إضافة</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<table class="table table-striped">
+							<thead ng-show="selectedDefendants.length">
+								<tr>
+									<th class="text-center">الإسم</th>
+									<th class="text-center">رقم الهاتف</th>
+									<th class="text-center">الصفة</th>
+									<th class="text-center">إلغاء</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-hide="selectedDefendants.length" class="no-animate">
+									<td colspan="3">
+										<h4 class="alert alert-danger">لم يتم إضافة خصوم القضية</h4>
+									</td>
+								</tr>
+								<tr ng-show="selectedDefendants.length" ng-repeat="defendant in selectedDefendants" class="no-animate">
+									<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
+									<td class="text-center">{{defendant.mobilePhone}}</td>
+									<td class="text-center">{{defendant.role}}</td>
+									<td class="text-center">
+										<span ng-click="removeSelectedDefendant($index, defendant._id)" class="glyphicon glyphicon-remove cursor"></span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-lg btn-warning" ng-click="step(2)"> السابق</button>
+						<button class="btn btn-lg btn-primary" ng-click="step(4)"> التالي</button>
+					</div>
 				</div>
-				<div class="form-group">
-					<select class="form-control" ng-model="newCase.client">
-						<option value="">-- الموكل --</option>
-						<option ng-repeat="client in clients" value="{{client.name}}">{{client.name}}</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label class="radio-inline">
-						مدعي
-						<input type="radio" name="inlineRadioOptions" id="" value="1">
-					</label>
-					<label class="radio-inline">
-						مدعى عليه
-						<input type="radio" name="inlineRadioOptions" id="" value="2">
-					</label>
-				</div>
-				<p>&nbsp;</p>
-				<div class="form-group">
-					<h4 class="lebel label-warning">الخصوم</h4>
-					<table class="table table-striped">
-						<thead ng-show="selectedDefendants.length">
-							<tr>
-								<th class="text-center">الإسم</th>
-								<th class="text-center">رقم الهاتف</th>
-								<th class="text-center">الصفة</th>
-								<th class="text-center">إلغاء</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-hide="selectedDefendants.length" class="no-animate">
-								<td colspan="3">
-									<h4 class="alert alert-danger">لم يتم إضافة خصوم القضية</h4>
-								</td>
-							</tr>
-							<tr ng-show="selectedDefendants.length" ng-repeat="defendant in selectedDefendants" class="no-animate">
-								<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
-								<td class="text-center">{{defendant.mobilePhone}}</td>
-								<td class="text-center">{{defendant.role}}</td>
-								<td class="text-center"><span class="glyphicon glyphicon-remove"></span></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="form-group">
-					<select class="form-control" ng-model="newCase.client">
-						<option value="">-- المستشار --</option>
-						<option ng-repeat="consultant in consultants" value="{{consultant.name}}">{{consultant.name}}</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<input type="text" ng-model="newCase.subject" class="form-control" placeholder="الموضوع">
-				</div>
-				<div class="form-group">
-					<textarea class="form-control" ng-model="newCase.facts" placeholder="الوقائع" rows="10"></textarea>
-				</div>
-				<div class="form-group">
-					<button class="btn btn-lg btn-block btn-success">إضافة قضية جديدة</button>
-					<button ng-click="closeModal()" class="btn btn-lg btn-block btn-danger">إلغاء</button>
+				<div ng-show="step4">
+					<div class="form-group">
+						<select class="form-control" ng-model="newCase.client">
+							<option value="">-- المستشار --</option>
+							<option ng-repeat="consultant in consultants" value="{{consultant.name}}">{{consultant.name}}</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<input type="text" ng-model="newCase.subject" class="form-control" placeholder="الموضوع">
+					</div>
+					<div class="form-group">
+						<textarea class="form-control" ng-model="newCase.facts" placeholder="الوقائع" rows="10"></textarea>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-lg btn-warning" ng-click="step(3)"> السابق</button>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-lg btn-block btn-success">إضافة قضية جديدة</button>
+					</div>
 				</div>
 			</form>
 		</div>

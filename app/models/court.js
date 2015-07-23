@@ -22,7 +22,9 @@ var courtSchema = new Schema({
 		required: 'عنواو المحكمة مطلوب',
 		default: '',
 		trim: true
-	}
+	},
+	user: [{ type: Schema.Types.ObjectId, ref: 'user' }],
+	created: {type: Date, default: Date.now}
 });
 
 module.exports = mongoose.model('courts', courtSchema);

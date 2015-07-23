@@ -1,8 +1,47 @@
 'use strict';
 
 angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases', 'connectAdminFactory', '$modal', '$modalInstance', 'connectDefendantFactory', function ($scope, cases, connectAdminFactory, $modal, $modalInstance, connectDefendantFactory) {
+	//init selected clients
+	$scope.selectedClients = [];
 	//init selected defendants
 	$scope.selectedDefendants = [];
+
+	//show selected "step"
+	$scope.step = function(num){
+		switch(num){
+			case 1:
+				$scope.pageTitle = 'البلاغ';
+				$scope.step1 = true;
+				$scope.step2 = false;
+				$scope.step3 = false;
+				$scope.step4 = false;
+				break;
+			case 2:
+				$scope.pageTitle = 'الموكلين';
+				$scope.step1 = false;
+				$scope.step2 = true;
+				$scope.step3 = false;
+				$scope.step4 = false;
+				break;
+			case 3:
+				$scope.pageTitle = 'الخصوم';
+				$scope.step1 = false;
+				$scope.step2 = false;
+				$scope.step3 = true;
+				$scope.step4 = false;
+				break;
+			case 4:
+				$scope.pageTitle = 'الوقائع';
+				$scope.step1 = false;
+				$scope.step2 = false;
+				$scope.step3 = false;
+				$scope.step4 = true;
+				break;
+		}
+	}
+
+	//init with step 1
+	$scope.step(1);
 
 	connectAdminFactory.query({page: 'court'}, function(response){
 		$scope.courts = response;
@@ -24,20 +63,16 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 		$modalInstance.dismiss('cancel');
 	}
 
-	$scope.showNewDefendantForm = function(){
-		$modal.open({
-			templateUrl: 'public/modules/defendant/view/create.defendant.view.html',
-			controller: 'indexDefendantController',
-			size: 'md',
-			resolve: {
-				defendants: function(){
-					return $scope.defendants
-				},
-				selectedDefendants: function(){
-					return $scope.selectedDefendants;
-				}
-			}
-		});
+	$scope.selectClient = function(){
+		if($scope.newCase.client){
+			$scope.selectedClients.push(angular.copy($scope.clients[$scope.newCase.client]));
+			$scope.clients.splice($scope.newCase.client, 1);
+		}
+	}
+
+	$scope.removeSelectedClient = function(index){
+		$scope.clients.push(angular.copy($scope.selectedClients[index]));
+		$scope.selectedClients.splice(index, 1);
 	}
 
 	$scope.showNewClientForm = function(){
@@ -45,9 +80,42 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 			templateUrl: 'public/modules/client/view/create.client.view.html',
 			controller: 'indexClientController',
 			size: 'md',
+			backdrop : 'static',
 			resolve: {
 				clients: function(){
 					return $scope.clients
+				},
+				selectedClients: function(){
+					return $scope.selectedClients;
+				}
+			}
+		});
+	}
+
+	$scope.selectDefendant = function(){
+		if($scope.newCase.defendant){
+			$scope.selectedDefendants.push(angular.copy($scope.defendants[$scope.newCase.defendant]));
+			$scope.defendants.splice($scope.newCase.defendant, 1);
+		}
+	}
+
+	$scope.removeSelectedDefendant = function(index, id){
+		$scope.defendants.push(angular.copy($scope.selectedDefendants[index]));
+		$scope.selectedDefendants.splice(index, 1);
+	}
+
+	$scope.showNewDefendantForm = function(){
+		$modal.open({
+			templateUrl: 'public/modules/defendant/view/create.defendant.view.html',
+			controller: 'indexDefendantController',
+			size: 'md',
+			backdrop : 'static',
+			resolve: {
+				defendants: function(){
+					return $scope.defendants
+				},
+				selectedDefendants: function(){
+					return $scope.selectedDefendants;
 				}
 			}
 		});

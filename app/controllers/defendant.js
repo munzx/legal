@@ -29,5 +29,20 @@ module.exports.create = function(req, res){
 			res.status(200).jsonp(result);	
 		}
 	});
+}
 
+module.exports.remove = function(req, res){
+	defendants.findById(req.params.id, function(err, defendant){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else {
+			defendant.remove(function(error){
+				if(error){
+					res.status(500).jsonp({message: error});
+				} else {
+					res.status(200).jsonp('تم محو بانات الخصم');
+				}
+			});
+		}
+	});
 }

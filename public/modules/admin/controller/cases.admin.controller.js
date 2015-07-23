@@ -10,6 +10,7 @@ angular.module('adminModule').controller('casesAdminController', ['$scope', 'con
 			templateUrl: 'public/modules/case/view/create.case.view.html',
 			controller: 'indexCaseController',
 			size: 'lg',
+			backdrop : 'static',
 			resolve: {
 				cases: function(){
 					return $scope.cases;

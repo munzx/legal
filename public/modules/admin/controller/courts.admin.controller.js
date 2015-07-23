@@ -10,6 +10,7 @@ angular.module('adminModule').controller('courtsAdminController', ['$scope', 'co
 			templateUrl: 'public/modules/court/view/create.court.view.html',
 			controller: 'indexCourtController',
 			size: 'md',
+			backdrop : 'static',
 			resolve: {
 				courts: function(){
 					return $scope.courts;

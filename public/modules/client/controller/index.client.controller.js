@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clientModule').controller('indexClientController', ['$scope', '$modalInstance', 'connectUserFactory', 'clients', function ($scope, $modalInstance, connectUserFactory, clients) {
+angular.module('clientModule').controller('indexClientController', ['$scope', '$modalInstance', 'connectUserFactory', 'clients', 'selectedClients', function ($scope, $modalInstance, connectUserFactory, clients, selectedClients) {
 	//init the client info
 	$scope.userInfo = {};
 	$scope.userInfo.role = 'client';
@@ -8,11 +8,10 @@ angular.module('clientModule').controller('indexClientController', ['$scope', '$
 	$scope.createNewClient = function(){
 		$scope.error = false;
 		connectUserFactory.save({}, {'userInfo': $scope.userInfo}, function(response){
-			clients.push(response);
+			selectedClients.push(response);
 			$modalInstance.dismiss('cancel');
 		}, function(error){
 			$scope.error = error.data.message;
-			console.log(error);
 		});
 	}
 
