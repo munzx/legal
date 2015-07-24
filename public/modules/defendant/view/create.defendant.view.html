@@ -37,9 +37,9 @@
 							<span class="input-group-addon">
 								<i class="text-muted glyphicon glyphicon-user"></i>
 							</span>
-							<select class="form-control" ng-model="newDefendant.role">
+							<select class="form-control" ng-model="newDefendant.caseRole">
 								<option value="">-- الصفة --</option>
-								<option value="first respondant">المدعى عليه الأول</option>
+								<option ng-repeat="role in caseRoles" value="{{role.name}}">{{role.name}}</option>
 							</select>
 						</div>
 					</div>

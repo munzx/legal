@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases', 'connectAdminFactory', '$modal', '$modalInstance', 'connectDefendantFactory', function ($scope, cases, connectAdminFactory, $modal, $modalInstance, connectDefendantFactory) {
+angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases', 'connectAdminFactory', '$modal', '$modalInstance', 'connectDefendantFactory', 'connectCaseRoleFactory', 'connectCaseFactory', function ($scope, cases, connectAdminFactory, $modal, $modalInstance, connectDefendantFactory, connectCaseRoleFactory, connectCaseFactory) {
 	//init newCase
 	$scope.newCase = {};
 	//init selected clients
@@ -81,6 +81,10 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 		$scope.defendants = response;
 	});
 
+	connectCaseRoleFactory.query({}, function(response){
+		$scope.caseRoles = response;
+	});
+
 	$scope.closeModal = function(){
 		$modalInstance.dismiss('cancel');
 	}
@@ -89,6 +93,7 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 		if($scope.newCase.client){
 			$scope.selectedClients.push(angular.copy($scope.clients[$scope.newCase.client]));
 			$scope.clients.splice($scope.newCase.client, 1);
+			$scope.newCase.client = '';
 		}
 	}
 
@@ -109,6 +114,9 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 				},
 				selectedClients: function(){
 					return $scope.selectedClients;
+				},
+				caseRoles: function(){
+					return $scope.caseRoles;
 				}
 			}
 		});
@@ -118,6 +126,7 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 		if($scope.newCase.defendant){
 			$scope.selectedDefendants.push(angular.copy($scope.defendants[$scope.newCase.defendant]));
 			$scope.defendants.splice($scope.newCase.defendant, 1);
+			$scope.newCase.defendant = '';
 		}
 	}
 
@@ -138,10 +147,45 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 				},
 				selectedDefendants: function(){
 					return $scope.selectedDefendants;
+				},
+				caseRoles: function(){
+					return $scope.caseRoles;
 				}
 			}
 		});
 	}
 
+	//get ids in objects array
+	var getIds = function(IDs){
+		var allIds = [];
+		IDs.forEach(function(info){
+			allIds.push(info._id);
+		});
+		return allIds;
+	}
+
+	$scope.createNewCase = function(){
+		$scope.error = false;
+		var caseInfo = {
+			defendant: getIds($scope.selectedDefendants),
+			client: getIds($scope.selectedClients),
+			caseDate: $scope.newCase.caseDate,
+			court: getIds($scope.courts),
+			reportNumber: $scope.newCase.reportNumber,
+			caseNumber: $scope.newCase.caseNumber,
+			subject: $scope.newCase.subject,
+			facts: $scope.newCase.facts,
+			consultant: $scope.consultants[$scope.newCase.consultant]._id,
+			status: 'open'
+		}
+
+		connectCaseFactory.save({}, {'caseInfo': caseInfo}, function(response){
+			cases.push(response);
+			$modalInstance.dismiss('cancel');
+		}, function(error){
+			$scope.error = error.data.message;
+		});
+
+	}
 
 }]);

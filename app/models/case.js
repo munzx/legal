@@ -4,18 +4,7 @@ Schema = mongoose.Schema;
 var caseSchema = mongoose.Schema({
 	defendant: [{ type: Schema.Types.ObjectId, ref: 'defendant' }],
 	client: [{ type: Schema.Types.ObjectId, ref: 'user' }],
-	clientRole: {
-		type: String,
-		default: '',
-		trim: true,
-		enum: ['claimant', 'respondant']
-	},
-	clientRoleHistory: [{
-		type: String,
-		default: '',
-		trim: true
-	}],
-	created: {
+	caseDate: {
 		type: Date, 
 		default: "",
 		required: 'تاريخ فتح القضية مطلوب'
@@ -44,9 +33,15 @@ var caseSchema = mongoose.Schema({
 		required: 'وقائع القضية مطلوبة',
 		trim: true
 	},
-	court: [{ type: Schema.Types.ObjectId, ref: 'user' }],
+	court: [{ type: Schema.Types.ObjectId, ref: 'court' }],
 	consultant: [{ type: Schema.Types.ObjectId, ref: 'user' }],
-	created: {type: Date, default: Date.now}
+	created: {type: Date, default: Date.now},
+	status: {
+		type: String,
+		default: 'open',
+		enum: ['open', 'close', 'pendding'],
+		lowercase: true
+	}
 });
 
 

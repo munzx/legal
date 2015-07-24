@@ -90,10 +90,9 @@
 							<span class="input-group-addon">
 								<i class="text-muted glyphicon glyphicon-list"></i>
 							</span>
-							<select class="form-control">
+							<select ng-model="userInfo.caseRole" class="form-control">
 								<option value="">-- الصفة --</option>
-								<option value="">مدعي</option>
-								<option value="1">مدعى عليه</option>
+								<option ng-repeat="role in caseRoles" value="{{role.name}}">{{role.name}}</option>
 							</select>
 						</div>
 					</div>

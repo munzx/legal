@@ -69,7 +69,7 @@
 								</tr>
 								<tr ng-show="selectedClients.length" ng-repeat="client in selectedClients" class="no-animate">
 									<td class="text-center">{{client.firstName}} {{client.lastName}}</td>
-									<td class="text-center">{{client.role}}</td>
+									<td class="text-center">{{client.caseRole}}</td>
 									<td class="text-center">{{client.mobilePhone}}</td>
 									<td class="text-center">
 										<span ng-click="removeSelectedClient($index)" class="glyphicon glyphicon-remove cursor"></span>
@@ -122,7 +122,7 @@
 								<tr ng-show="selectedDefendants.length" ng-repeat="defendant in selectedDefendants" class="no-animate">
 									<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
 									<td class="text-center">{{defendant.mobilePhone}}</td>
-									<td class="text-center">{{defendant.role}}</td>
+									<td class="text-center">{{defendant.caseRole}}</td>
 									<td class="text-center">
 										<span ng-click="removeSelectedDefendant($index, defendant._id)" class="glyphicon glyphicon-remove cursor"></span>
 									</td>
@@ -139,7 +139,7 @@
 					<div class="form-group">
 						<select class="form-control" ng-model="newCase.consultant">
 							<option value="">-- المستشار --</option>
-							<option ng-repeat="consultant in consultants" value="{{consultant.name}}">{{consultant.name}}</option>
+							<option ng-repeat="consultant in consultants" value="{{$index}}">{{consultant.name}}</option>
 						</select>
 					</div>
 					<div class="form-group">
@@ -152,7 +152,9 @@
 						<button class="btn btn-lg btn-warning" ng-click="step(3)"> السابق</button>
 					</div>
 					<div class="form-group">
-						<button ng-disabled="compeleteToProceedStep4()" class="btn btn-lg btn-block btn-success">إضافة قضية جديدة</button>
+						<button ng-disabled="compeleteToProceedStep4()" ng-click="createNewCase()" class="btn btn-lg btn-block btn-success">
+							إضافة قضية جديدة
+						</button>
 					</div>
 				</div>
 			</form>

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clientModule').controller('indexClientController', ['$scope', '$modalInstance', 'connectUserFactory', 'clients', 'selectedClients', function ($scope, $modalInstance, connectUserFactory, clients, selectedClients) {
+angular.module('clientModule').controller('indexClientController', ['$scope', '$modalInstance', 'connectUserFactory', 'clients', 'selectedClients', 'caseRoles', function ($scope, $modalInstance, connectUserFactory, clients, selectedClients, caseRoles) {
 	//init the client info
 	$scope.userInfo = {};
 	$scope.userInfo.role = 'client';
@@ -14,6 +14,8 @@ angular.module('clientModule').controller('indexClientController', ['$scope', '$
 			$scope.error = error.data.message;
 		});
 	}
+
+	$scope.caseRoles = caseRoles;
 
 	$scope.closeModal = function(){
 		$modalInstance.dismiss('cancel');

@@ -164,7 +164,9 @@ module.exports = function (app, express) {
 		//employees
 		.get('/admin/employee', ensureAuthenticated, isUser, employee.index)
 		//case
-		.get('/admin/case', ensureAuthenticated, isUser, courtCase.index)
+		.get('/case', ensureAuthenticated, isUser, courtCase.index)
+		.post('/case', ensureAuthenticated,isUser, courtCase.create)
+		.delete('/case/:id', ensureAuthenticated, isUser, courtCase.remove)
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)
 		.post('/caseRole', ensureAuthenticated, isUser, caseRole.create)

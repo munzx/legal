@@ -29,13 +29,13 @@ var defendantSchema = new Schema({
 		required: 'إسم المدعي مطلوب',
 		trim: true
 	},
-	role : {
+	caseRole : {
 		type: String,
 		default: '',
 		required: 'صفة الخصم مطلوبة',
 		trim: true
 	},
-	roleHistory: [{
+	caseRoleHistory: [{
 		type: String,
 		default: '',
 		trim: true

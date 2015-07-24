@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('adminModule').controller('casesAdminController', ['$scope', 'connectAdminFactory', '$state', '$modal', function ($scope, connectAdminFactory, $state, $modal) {
-	connectAdminFactory.query({page: 'case'}, function(response){
+angular.module('adminModule').controller('casesAdminController', ['$scope', 'connectCaseFactory', '$state', '$modal', function ($scope, connectCaseFactory, $state, $modal) {
+	connectCaseFactory.query({}, function(response){
 		$scope.cases = response;
 	});
 
