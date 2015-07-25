@@ -15,7 +15,7 @@
 						<span ng-click="removeDefendant($index, defendant._id)" class="glyphicon glyphicon-remove cursor"></span>
 					</td>
 					<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
-					<td class="text-center">{{defendant.role}}</td>
+					<td class="text-center">{{defendant.role | localize:'ar'}}</td>
 					<td class="text-center">{{defendant.mobilePhone}}</td>
 				</tr>
 			</tbody>

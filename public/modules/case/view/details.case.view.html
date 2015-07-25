@@ -4,7 +4,7 @@
 			<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>
-			<h4 class="modal-title text-center">تفاصيل القضية</h4>
+			<h4 class="modal-title text-center">تفاصيل القضية - {{selectedCase.status | localize:'ar'}}</h4>
 		</div>
 		<div class="modal-body">
 			<div class="row">
@@ -27,7 +27,7 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td class="text-center">{{selectedCase.caseDate}}</td>
+						<td class="text-center">{{selectedCase.caseDate | date: 'Z yyyy-MM-dd HH:mm:ss'}}</td>
 						<td class="text-center">{{selectedCase.court[0].name}}</td>
 						<td class="text-center">{{selectedCase.caseNumber}}</td>
 						<td class="text-center">{{selectedCase.reportNumber}}</td>
@@ -75,7 +75,7 @@
 						<th class="text-center">التحديث</th>
 					</tr>					
 					<tr ng-show="selectedCase.updates.length" ng-repeat="updateInfo in selectedCase.updates" class="no-animate">
-						<td class="text-center">{{updateInfo.created}}</td>
+						<td class="text-center">{{updateInfo.created | date: 'Z yyyy-MM-dd HH:mm:ss'}}</td>
 						<td class="text-center">{{updateInfo.user.firstName}} {{updateInfo.user.lastName}}</td>
 						<td>{{updateInfo.updateInfo}}</td>
 						<td class="text-center" colspan="2">{{updateInfo.updateType}}</td>

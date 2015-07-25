@@ -20,7 +20,7 @@
 						<td class="text-center">
 							<span class="glyphicon glyphicon-remove cursor" ng-click="removeClient($index, client._id)"></span>
 						</td>
-						<td class="text-center">{{client.created}}</td>
+						<td class="text-center">{{client.created | date: 'Z yyyy-MM-dd HH:mm:ss'}}</td>
 						<td class="text-center">{{client.email}}</td>
 						<td class="text-center">{{client.mobilePhone}}</td>
 						<td class="text-center">{{client.lastName}}</td>

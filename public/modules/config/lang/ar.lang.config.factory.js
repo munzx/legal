@@ -7,6 +7,8 @@ angular.module('yousufalsharif').factory('arLang', [function () {
 		'employee': 'موظف',
 		'user': 'مستخدم',
 		'consultant': 'مستشار',
-		'email already exist': 'البريد الإلكتروني غير متاح'
+		'email already exist': 'البريد الإلكتروني غير متاح',
+		'open': 'سارية',
+		'first respondant': 'المدعى عليه الأول'
 	}
 }]);

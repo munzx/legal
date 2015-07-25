@@ -22,9 +22,9 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="case in cases" ng-click="showCaseDetails($index)" class="no-animate cursor">
-						<td class="text-center">{{case.created}}</td>
-						<td class="text-center">{{case.caseDate}}</td>
-						<td class="text-center">{{case.status}}</td>
+						<td class="text-center">{{case.created | date: 'Z yyyy-MM-dd HH:mm:ss'}}</td>
+						<td class="text-center">{{case.caseDate | date: 'yyyy-MM-dd'}}</td>
+						<td class="text-center">{{case.status | localize:'ar'}}</td>
 						<td class="text-center">{{case.subject}}</td>
 						<td class="text-center">{{case.caseNumber}}</td>
 						<td class="text-center">{{case.reportNumber}}</td>
