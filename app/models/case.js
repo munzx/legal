@@ -2,8 +2,16 @@ var mongoose = require('mongoose'),
 Schema = mongoose.Schema;
 
 var caseSchema = mongoose.Schema({
-	defendant: [{ type: Schema.Types.ObjectId, ref: 'defendant' }],
-	client: [{ type: Schema.Types.ObjectId, ref: 'user' }],
+	defendant: [{
+		type: Schema.Types.ObjectId,
+		required: 'لم يتم إضافة خصوم',
+		ref: 'defendant'
+	}],
+	client: [{
+		type: Schema.Types.ObjectId,
+		required: 'لم يتم إضافة موكلين',
+		ref: 'user' 
+	}],
 	caseDate: {
 		type: Date, 
 		default: "",
@@ -33,9 +41,40 @@ var caseSchema = mongoose.Schema({
 		required: 'وقائع القضية مطلوبة',
 		trim: true
 	},
-	court: [{ type: Schema.Types.ObjectId, ref: 'court' }],
-	consultant: [{ type: Schema.Types.ObjectId, ref: 'user' }],
+	court: [{
+		type: Schema.Types.ObjectId,
+		required: 'لم يتم إضافة محاكم',
+		ref: 'court' 
+	}],
+	consultant: [{
+		type: Schema.Types.ObjectId,
+		required: '',
+		ref: 'user' 
+	}],
 	created: {type: Date, default: Date.now},
+	updates: [
+		{
+			updateType: {
+				type: String,
+				default: '',
+				required: 'نوع التحديث مطلوب'
+			},
+			updateInfo: {
+				type: String,
+				default: '',
+				required: 'الملاحظات مطلوبة'
+			},
+			user: {
+				type: Schema.Types.ObjectId,
+				required: 'المستخدم مطلوب',
+				ref: 'user'
+			},
+			created: {
+				type: Date,
+				default: Date.now
+			}
+		}
+	],
 	status: {
 		type: String,
 		default: 'open',
@@ -43,6 +82,5 @@ var caseSchema = mongoose.Schema({
 		lowercase: true
 	}
 });
-
 
 module.exports = mongoose.model('case', caseSchema);

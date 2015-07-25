@@ -1,0 +1,30 @@
+<section>
+	<div class="row">
+		<div class="col-md-12">
+			<button ng-click="showNewUpdateForm()" class="btn btn-lg btn-success icon-right">
+				إضافة نوع تحديث <span class="glyphicon glyphicon-plus"></span>
+			</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h4 ng-hide="updatetypes.length" class="alert alert-danger">لم يتم أضافة نوع تحديث</h4>
+			<table ng-show="updatetypes.length" class="table table-striped">
+				<thead>
+					<tr>
+						<th class="text-center">إلغاء</th>
+						<th class="text-center">الصفة</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="update in updatetypes" class="no-animate">
+						<td  class="text-center">
+							<span ng-click="removeUpdatetypes($index, update._id)" class="glyphicon glyphicon-remove cursor"></span>
+						</td>
+						<td class="text-center">{{update.name}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</section>

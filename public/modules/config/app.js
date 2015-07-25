@@ -2,7 +2,7 @@
 
 // intitiate the app and Inject all of the app module dependencies
 //configure the routes
-var yousufalsharif = angular.module('yousufalsharif', ['xeditable', 'akoenig.deckgrid', 'ngAnimate', 'infinite-scroll', 'adminModule', 'angulartics', 'angulartics.google.analytics', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'chart.js']);
+var yousufalsharif = angular.module('yousufalsharif', ['xeditable', 'akoenig.deckgrid', 'ngAnimate', 'infinite-scroll', 'adminModule', 'angulartics', 'angulartics.google.analytics', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'updateTypesModule', 'chart.js']);
 
 //RouteScopes & Routes Configurations 
 yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'ChartJsProvider', function ($urlRouterProvider, $stateProvider, $locationProvider, ChartJsProvider) {
@@ -108,6 +108,12 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			url: '/caserole',
 			templateUrl: 'public/modules/admin/view/caserole.admin.view.html',
 			controller: 'caseRoleAdminController',
+			cache: false
+		})
+		.state('admin.updatetypes', {
+			url: '/updatetypes',
+			templateUrl: 'public/modules/admin/view/update.admin.view.html',
+			controller: 'updateTypesAdminController',
 			cache: false
 		});
 		$locationProvider.html5Mode(true).hashPrefix('!');

@@ -18,4 +18,19 @@ angular.module('adminModule').controller('casesAdminController', ['$scope', 'con
 			}
 		});
 	}
+
+	$scope.showCaseDetails = function(index){
+		$modal.open({
+			templateUrl: 'public/modules/case/view/details.case.view.html',
+			controller: 'detailsCaseController',
+			size: 'lg',
+			backdrop: 'static',
+			resolve: {
+				selectedCase: function(){
+					return $scope.cases[index];
+				}
+			}
+		});
+	}
+
 }]);

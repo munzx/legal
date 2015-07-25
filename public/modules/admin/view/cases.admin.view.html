@@ -21,7 +21,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="case in cases" class="no-animate">
+					<tr ng-repeat="case in cases" ng-click="showCaseDetails($index)" class="no-animate cursor">
 						<td class="text-center">{{case.created}}</td>
 						<td class="text-center">{{case.caseDate}}</td>
 						<td class="text-center">{{case.status}}</td>

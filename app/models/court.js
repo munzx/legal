@@ -27,4 +27,4 @@ var courtSchema = new Schema({
 	created: {type: Date, default: Date.now}
 });
 
-module.exports = mongoose.model('courts', courtSchema);
+module.exports = mongoose.model('court', courtSchema);

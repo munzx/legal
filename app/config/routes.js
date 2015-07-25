@@ -11,6 +11,7 @@ var cms = require('../controllers/cms'),
 	client = require('../controllers/client'),
 	defendant = require('../controllers/defendant'),
 	caseRole = require('../controllers/caseRole'),
+	updateType = require('../controllers/updateType'), 
 	account = require('../controllers/account'),
 	courtCase = require('../controllers/case'),
 	passport = require('passport'),
@@ -167,10 +168,15 @@ module.exports = function (app, express) {
 		.get('/case', ensureAuthenticated, isUser, courtCase.index)
 		.post('/case', ensureAuthenticated,isUser, courtCase.create)
 		.delete('/case/:id', ensureAuthenticated, isUser, courtCase.remove)
+		.post('/case/caseupdate/:id', ensureAuthenticated, isUser, courtCase.insertCaseUpdate)
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)
 		.post('/caseRole', ensureAuthenticated, isUser, caseRole.create)
 		.delete('/caserole/:id', ensureAuthenticated, isUser, caseRole.remove)
+		//updateTypes
+		.get('/updatetype', ensureAuthenticated, isUser, updateType.index)
+		.post('/updatetype', ensureAuthenticated, isUser, updateType.create)
+		.delete('/updatetype/:id', ensureAuthenticated, isUser, updateType.remove)
 		//defendant
 		.get('/defendant', ensureAuthenticated, isUser, defendant.index)
 		.post('/defendant', ensureAuthenticated, isUser, defendant.create)

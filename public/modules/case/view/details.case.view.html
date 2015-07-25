@@ -1,0 +1,87 @@
+<section>
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title text-center">تفاصيل القضية</h4>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-md-12">
+					<button ng-click="showUpdateCase()" class="btn btn-lg btn-success icon-right">
+					 	إضافة تحديث <span class="glyphicon glyphicon-plus"></span>
+					 </button>
+				</div>
+			</div>
+
+			<h4 ng-show="error" class="alert alert-danger">{{error}}</h4>
+			<table class="table table-striped">
+				<thead>
+					<tr class="info">
+						<th class="text-center">تاريخ الإنشاء</th>
+						<th class="text-center">المحكمة</th>
+						<th class="text-center">رقم القضية</th>
+						<th class="text-center">رقم البلاغ</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="text-center">{{selectedCase.caseDate}}</td>
+						<td class="text-center">{{selectedCase.court[0].name}}</td>
+						<td class="text-center">{{selectedCase.caseNumber}}</td>
+						<td class="text-center">{{selectedCase.reportNumber}}</td>
+					</tr>
+					<tr class="success">
+						<td class="text-center" colspan="4"><h4>الموكلين</h4></td>
+					</tr>
+					<tr ng-repeat="client in selectedCase.client" class="no-animate">
+						<td colspan="2" class="text-center">{{client.mobilePhone}}</td>
+						<td class="text-center">{{client.caseRole}}</td>
+						<td class="text-center">{{client.firstName}} {{client.lastName}}</td>
+					</tr>
+					<tr class="danger">
+						<td class="text-center" colspan="4"><h4>الخصوم</h4></td>
+					</tr>
+					<tr ng-repeat="defendant in selectedCase.defendant" class="no-animate">
+						<td colspan="2"  class="text-center">{{defendant.mobilePhone}}</td>
+						<td class="text-center">{{defendant.caseRole}}</td>
+						<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
+					</tr>
+					<tr class="warning">
+						<td class="text-center" colspan="4"><h4>الوقائع</h4></td>
+					</tr>
+					<tr>
+						<td colspan="3"><h5>{{selectedCase.subject}}</h5></td>
+						<td><h4>الموضوع</h4></td>
+					</tr>
+					<tr>
+						<td colspan="4">
+							<p>{{selectedCase.facts}}</p>
+						</td>
+					</tr>
+					<tr class="primary">
+						<td class="text-center" colspan="4"><h4>التحديثات</h4></td>
+					</tr>
+					<tr>
+						<td colspan="4" ng-hide="selectedCase.updates.length">
+							<h4 class="alert alert-danger">لايوجد تحديثات</h4>
+						</td>
+					</tr>
+					<tr ng-show="selectedCase.updates.length">
+						<th class="text-center">التاريخ</th>
+						<th class="text-center">المستخدم</th>
+						<th class="text-center">الملاحظات</th>
+						<th class="text-center">التحديث</th>
+					</tr>					
+					<tr ng-show="selectedCase.updates.length" ng-repeat="updateInfo in selectedCase.updates" class="no-animate">
+						<td class="text-center">{{updateInfo.created}}</td>
+						<td class="text-center">{{updateInfo.user.firstName}} {{updateInfo.user.lastName}}</td>
+						<td>{{updateInfo.updateInfo}}</td>
+						<td class="text-center" colspan="2">{{updateInfo.updateType}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</section>
