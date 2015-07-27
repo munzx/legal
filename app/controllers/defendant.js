@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 
 
 module.exports.index = function (req, res) {
-	defendants.find({}, function(err, result){
+	defendants.find({}).sort('-created').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {

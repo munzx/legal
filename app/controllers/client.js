@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 	_ = require('lodash');
 
 module.exports.index = function (req, res) {
-	users.find({'role': 'client'}, {password: 0}, function(err, result){
+	users.find({'role': 'client'}, {password: 0}).sort('-created').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {

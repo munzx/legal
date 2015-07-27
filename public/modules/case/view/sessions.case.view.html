@@ -1,0 +1,22 @@
+<div class="row">
+	<div class="col-md-12">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th class="text-center">تاريخ الإنشاء</th>
+					<th class="text-center">المستخدم</th>
+					<th class="text-center">تاريخ و وقت الجلسة</th>
+					<th class="text-center">حالة الدعوى</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="session in sessions">
+					<td class="text-center">{{session.sessionCreated | date: 'Z yyyy-mm-dd'}}</td>
+					<td class="text-center">{{session.sessionUser.firstName}} {{session.sessionUser.lastName}}</td>
+					<td class="text-center">{{session.sessionDate | date: 'Z yyyy-mm-dd'}} - {{session.sessionTime | date: 'HH:mm'}} </td>
+					<td class="text-center">{{session.sessionStatus | localize:'ar'}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

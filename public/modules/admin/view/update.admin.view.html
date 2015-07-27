@@ -13,6 +13,8 @@
 				<thead>
 					<tr>
 						<th class="text-center">إلغاء</th>
+						<th class="text-center">عنوان الطلب</th>
+						<th class="text-center">طلب رقم معرف</th>
 						<th class="text-center">الصفة</th>
 					</tr>
 				</thead>
@@ -21,6 +23,8 @@
 						<td  class="text-center">
 							<span ng-click="removeUpdatetypes($index, update._id)" class="glyphicon glyphicon-remove cursor"></span>
 						</td>
+						<td class="text-center">{{update.requiredIdTitle || '---------'}}</td>
+						<td class="text-center">{{update.requiredId | localize:'ar'}}</td>
 						<td class="text-center">{{update.name}}</td>
 					</tr>
 				</tbody>

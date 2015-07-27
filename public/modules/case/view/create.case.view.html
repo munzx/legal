@@ -4,7 +4,7 @@
 			<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>
-			<h4 class="modal-title text-center">بيانات القضية {{'- ' + pageTitle}}</h4>
+			<h4 class="modal-title text-center">بيانات الدعوى {{'- ' + pageTitle}}</h4>
 		</div>
 		<div class="modal-body">
 			<h4 ng-show="error" class="alert alert-danger">{{error}}</h4>
@@ -12,13 +12,13 @@
 				<div ng-show="step1">
 					<div class="form-group">
 						<div class="row">
-							<div class="col-md-4">
+							<div class="col-md-4 add-space">
 								<input type="date" ng-model="newCase.caseDate" class="form-control">
 							</div>
-							<div class="col-md-4">
-								<input type="text" ng-model="newCase.caseNumber" class="form-control" placeholder="رقم القضية">
+							<div class="col-md-4 add-space">
+								<input type="text" ng-model="newCase.caseNumber" class="form-control" placeholder="رقم الدعوى">
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-4 add-space">
 								<input type="text" ng-model="newCase.reportNumber" class="form-control" placeholder="رقم البلاغ">
 							</div>
 						</div>
@@ -116,7 +116,7 @@
 							<tbody>
 								<tr ng-hide="selectedDefendants.length" class="no-animate">
 									<td colspan="3">
-										<h4 class="alert alert-danger">لم يتم إضافة خصوم القضية</h4>
+										<h4 class="alert alert-danger">لم يتم إضافة خصوم الدعوى</h4>
 									</td>
 								</tr>
 								<tr ng-show="selectedDefendants.length" ng-repeat="defendant in selectedDefendants" class="no-animate">

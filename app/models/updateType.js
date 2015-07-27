@@ -10,6 +10,14 @@ var updateTypesSchema = new Schema({
 		default: '',
 		required: 'نوع التحديث مطلوب'
 	},
+	requiredId: {
+		type: Boolean,
+		default: false
+	},
+	requiredIdTitle: {
+		type: String,
+		default: ''
+	},
 	user: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 	created: {type: Date, default: Date.now}
 });

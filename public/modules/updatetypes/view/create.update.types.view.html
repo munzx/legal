@@ -14,7 +14,16 @@
 						<span class="input-group-addon">
 							<i class="text-muted glyphicon glyphicon-star"></i>
 						</span>
-						<input class="form-control" type="text" ng-model="updateType.name">
+						<input class="form-control" type="text" ng-model="updateType.name" placeholder="إسم التحديث">
+					</div>
+				</div>
+				<div class="form-group">
+					<h4><label class="label label-default">طلب رقم معرف</label></h4>
+					<div class="input-group input-group-lg">
+						<span class="input-group-addon">
+							<input type="checkbox" ng-model="updateType.requiredId">
+						</span>
+						<input type="text" ng-disabled="!updateType.requiredId" ng-model="updateType.requiredIdTitle" class="form-control" placeholder="عنوان الطلب">
 					</div>
 				</div>
 				<div class="form-group">

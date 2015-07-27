@@ -9,6 +9,8 @@ angular.module('yousufalsharif').factory('arLang', [function () {
 		'consultant': 'مستشار',
 		'email already exist': 'البريد الإلكتروني غير متاح',
 		'open': 'سارية',
-		'first respondant': 'المدعى عليه الأول'
+		'first respondant': 'المدعى عليه الأول',
+		'true': 'نعم',
+		'false': 'لا'
 	}
 }]);

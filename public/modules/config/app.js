@@ -98,6 +98,12 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			controller: 'casesAdminController',
 			cache: false
 		})
+		.state('admin.sessions', {
+			url: '/sessions',
+			templateUrl: 'public/modules/case/view/sessions.case.view.html',
+			controller: 'sessionsCaseController',
+			cache: false
+		})
 		.state('admin.courts', {
 			url: '/courts',
 			templateUrl: 'public/modules/admin/view/courts.admin.view.html',

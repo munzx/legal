@@ -12,6 +12,10 @@ angular.module('defendantModule').controller('indexDefendantController', ['$scop
 
 	$scope.caseRoles = caseRoles;
 
+	console.log($scope.newDefendant);
+
+
+
 	$scope.closeModal = function(){
 		$modalInstance.dismiss('cancel');
 	}

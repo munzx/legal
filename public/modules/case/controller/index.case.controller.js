@@ -46,7 +46,7 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 	$scope.step(1);
 
 	$scope.compeleteToProceedStep1 = function(){
-		if(!$scope.newCase.caseDate || !$scope.newCase.caseNumber || !$scope.newCase.reportNumber || !$scope.newCase.court) return true;
+		if(!$scope.newCase.caseDate || !$scope.newCase.caseNumber || !$scope.newCase.court) return true;
 		return false;
 	}
 
@@ -180,7 +180,7 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 		}
 
 		connectCaseFactory.save({}, {'caseInfo': caseInfo}, function(response){
-			cases.push(response);
+			cases.unshift(response);
 			$modalInstance.dismiss('cancel');
 		}, function(error){
 			$scope.error = error.data.message;

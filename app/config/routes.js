@@ -168,6 +168,8 @@ module.exports = function (app, express) {
 		.get('/case', ensureAuthenticated, isUser, courtCase.index)
 		.post('/case', ensureAuthenticated,isUser, courtCase.create)
 		.delete('/case/:id', ensureAuthenticated, isUser, courtCase.remove)
+		.get('/case/sessions', isUser, ensureAuthenticated, courtCase.sessionDates)
+		.get('/case/sessions/last', courtCase.lastSessionDates)
 		.post('/case/caseupdate/:id', ensureAuthenticated, isUser, courtCase.insertCaseUpdate)
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)
