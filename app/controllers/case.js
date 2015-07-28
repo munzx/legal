@@ -5,6 +5,8 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./error'),
 	court = require('../models/court'),
 	_ = require('lodash'),
+	moment = require('moment'),
+	dateInput = require('../helpers/dateInput'),
 	users = require('../models/user');
 
 
@@ -61,6 +63,7 @@ module.exports.insertCaseUpdate = function(req, res){
 			} else if(caseInfo) {
 				var updateInfo = {
 						updateType: req.body.update.name,
+						updateId: req.body.update.session.updateId,
 						updateInfo: req.body.update.info,
 						user: req.user._id
 					}
@@ -102,34 +105,89 @@ module.exports.sessionDates = function(req, res){
 	});
 }
 
-module.exports.lastSessionDates = function(req, res){
-	cases.find({}).where('sessions').exists().populate('sessions').populate('sessions.user').sort('-newDate').exec(function(err, result){
+module.exports.upcomingSessions = function(req, res){
+	cases.find({}).where('sessions').exists().populate('sessions').populate('defendant').populate('client').populate('sessions.user').sort('-newDate').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
-			var lastSession = [],
+			var upcomingSessions = [],
 				allCases = result,
 				sessionInfo = {},
 				session = {};
 
 			allCases.forEach(function(caseInfo){
-				if(caseInfo.sessions.length > 0 && caseInfo.status !== 'close'){
-					//get last session
-					session = _.last(caseInfo.sessions);
-					sessionInfo.caseId = caseInfo._id;
-					sessionInfo.sessionStatus = caseInfo.status;
-					sessionInfo.sessionDate = session.newDate;
-					sessionInfo.sessionTime = session.newTime;
-					sessionInfo.sessionCreated = session.created;
-					sessionInfo.sessionUpdateId = session.updateId;
-					sessionInfo.sessionUser = session.user;
-					//get last session info and case info
-					lastSession.push(sessionInfo);
-					//cleart sessionInfo
-					sessionInfo = {};
+				if(caseInfo.sessions.length > 0){
+					var sessions = caseInfo.sessions;
+					sessions.forEach(function(info){
+						if(moment(info.newDate).utc().format() >= moment().utc().format()){
+							console.log(moment().utc().format());
+							console.log(moment(info.newDate).utc().format());
+							//get last session
+							session = info;
+							sessionInfo.caseId = caseInfo._id;
+							sessionInfo.defendant = caseInfo.defendant;
+							sessionInfo.client = caseInfo.client;
+							sessionInfo.caseNumber = caseInfo.caseNumber;
+							sessionInfo.sessionStatus = caseInfo.status;
+							sessionInfo.sessionDate = session.newDate;
+							sessionInfo.sessionTime = session.newTime;
+							sessionInfo.sessionCreated = session.created;
+							sessionInfo.sessionUpdateId = session.updateId;
+							sessionInfo.sessionUser = session.user;
+							//get last session info and case info
+							upcomingSessions.push(sessionInfo);
+							//cleart sessionInfo
+							sessionInfo = {};		
+						}
+					});
 				}
 			});
-			var sort = _.sortBy(lastSession, 'sessionDate');
+
+			var sort = _.sortBy(upcomingSessions, 'sessionDate');
+			res.status(200).jsonp(sort);
+		}
+	});
+}
+
+module.exports.previousSessions = function(req, res){
+	cases.find({}).where('sessions').exists().populate('sessions').populate('defendant').populate('client').populate('sessions.user').sort('-newDate').exec(function(err, result){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else {
+			var upcomingSessions = [],
+				allCases = result,
+				sessionInfo = {},
+				session = {};
+
+			allCases.forEach(function(caseInfo){
+				if(caseInfo.sessions.length > 0){
+					var sessions = caseInfo.sessions;
+					sessions.forEach(function(info){
+						if(moment(info.newDate).utc().format() <= moment().utc().format()){
+							console.log(moment().utc().format());
+							console.log(moment(info.newDate).utc().format());
+							//get last session
+							session = info;
+							sessionInfo.caseId = caseInfo._id;
+							sessionInfo.defendant = caseInfo.defendant;
+							sessionInfo.client = caseInfo.client;
+							sessionInfo.caseNumber = caseInfo.caseNumber;
+							sessionInfo.sessionStatus = caseInfo.status;
+							sessionInfo.sessionDate = session.newDate;
+							sessionInfo.sessionTime = session.newTime;
+							sessionInfo.sessionCreated = session.created;
+							sessionInfo.sessionUpdateId = session.updateId;
+							sessionInfo.sessionUser = session.user;
+							//get last session info and case info
+							upcomingSessions.push(sessionInfo);
+							//cleart sessionInfo
+							sessionInfo = {};		
+						}
+					});
+				}
+			});
+
+			var sort = _.sortBy(upcomingSessions, 'sessionDate');
 			res.status(200).jsonp(sort);
 		}
 	});

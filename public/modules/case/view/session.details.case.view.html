@@ -1,0 +1,45 @@
+<section>
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title text-center">تفاصيل الجلسة</h4>
+		</div>
+		<div class="modal-body">
+			<h5 class="alert alert-info text-center">
+				{{sessionInfo.sessionTime | date: 'Z HH:mm' }} - {{sessionInfo.sessionDate | date: 'yyyy-mm-dd'}}
+			</h5>
+			<table class="table table-condensed">
+				<tbody>
+					<tr>
+						<th class="text-center">تاريخ الإنشاء</th>
+						<th class="text-center" colspan="2">المستخدم</th>
+					</tr>
+					<tr>
+						<td class="text-center">{{sessionInfo.sessionCreated | date: 'Z HH:mm yyyy-mm-dd'}}</td>
+						<td class="text-center" colspan="2">
+							{{sessionInfo.sessionUser.firstName}} {{sessionInfo.sessionUser.lastName}}
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3" class="text-center alert alert-success">الموكلين</td>
+					</tr>
+					<tr ng-repeat="client in sessionInfo.client" class="no-animate">
+						<td class="text-center">{{client.mobilePhone}}</td>
+						<td class="text-center">{{client.caseRole}}</td>
+						<td class="text-center">{{client.firstName}} {{client.lastName}}</td>
+					</tr>
+					<tr>
+						<td colspan="3" class="text-center alert alert-danger">الخصوم</td>
+					</tr>
+					<tr ng-repeat="defendant in sessionInfo.defendant" class="no-animate">
+						<td class="text-center">{{defendant.mobilePhone}}</td>
+						<td class="text-center">{{defendant.caseRole}}</td>
+						<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</section>

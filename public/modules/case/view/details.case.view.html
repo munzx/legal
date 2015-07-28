@@ -22,7 +22,7 @@
 			<table class="table table-striped">
 				<thead>
 					<tr class="info">
-						<th class="text-center">تاريخ الإنشاء</th>
+						<th colspan="2" class="text-center">تاريخ الإنشاء</th>
 						<th class="text-center">المحكمة</th>
 						<th class="text-center">رقم الدعوى</th>
 						<th class="text-center">رقم البلاغ</th>
@@ -30,57 +30,59 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td class="text-center">{{selectedCase.caseDate | date: 'Z yyyy-MM-dd HH:mm:ss'}}</td>
+						<td colspan="2" class="text-center">{{selectedCase.caseDate | date: 'Z yyyy-MM-dd HH:mm:ss'}}</td>
 						<td class="text-center">{{selectedCase.court[0].name}}</td>
 						<td class="text-center">{{selectedCase.caseNumber}}</td>
 						<td class="text-center">{{selectedCase.reportNumber}}</td>
 					</tr>
 					<tr class="success">
-						<td class="text-center" colspan="4"><h4>الموكلين</h4></td>
+						<td class="text-center" colspan="5"><h4>الموكلين</h4></td>
 					</tr>
 					<tr ng-repeat="client in selectedCase.client" class="no-animate">
 						<td colspan="2" class="text-center">{{client.mobilePhone}}</td>
 						<td class="text-center">{{client.caseRole}}</td>
-						<td class="text-center">{{client.firstName}} {{client.lastName}}</td>
+						<td colspan="2" class="text-center">{{client.firstName}} {{client.lastName}}</td>
 					</tr>
 					<tr class="danger">
-						<td class="text-center" colspan="4"><h4>الخصوم</h4></td>
+						<td class="text-center" colspan="5"><h4>الخصوم</h4></td>
 					</tr>
 					<tr ng-repeat="defendant in selectedCase.defendant" class="no-animate">
-						<td colspan="2"  class="text-center">{{defendant.mobilePhone}}</td>
+						<td colspan="2" class="text-center">{{defendant.mobilePhone}}</td>
 						<td class="text-center">{{defendant.caseRole}}</td>
-						<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
+						<td colspan="2" class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
 					</tr>
 					<tr class="warning">
-						<td class="text-center" colspan="4"><h4>الوقائع</h4></td>
+						<td class="text-center" colspan="5"><h4>الوقائع</h4></td>
 					</tr>
 					<tr>
-						<td colspan="3"><h5>{{selectedCase.subject}}</h5></td>
+						<td colspan="4"><h5>{{selectedCase.subject}}</h5></td>
 						<td><h4>الموضوع</h4></td>
 					</tr>
 					<tr>
-						<td colspan="4">
+						<td colspan="5">
 							<p>{{selectedCase.facts}}</p>
 						</td>
 					</tr>
 					<tr class="primary">
-						<td class="text-center" colspan="4"><h4>التحديثات</h4></td>
+						<td class="text-center" colspan="5"><h4>التحديثات</h4></td>
 					</tr>
 					<tr>
-						<td colspan="4" ng-hide="selectedCase.updates.length">
+						<td colspan="5" ng-hide="selectedCase.updates.length">
 							<h4 class="alert alert-danger">لايوجد تحديثات</h4>
 						</td>
 					</tr>
 					<tr ng-show="selectedCase.updates.length">
-						<th class="text-center">التاريخ</th>
+						<th class="text-center">تاريخ الإدخال</th>
 						<th class="text-center">المستخدم</th>
 						<th class="text-center">الملاحظات</th>
+						<th class="text-center">الرقم</th>
 						<th class="text-center">التحديث</th>
 					</tr>					
 					<tr ng-show="selectedCase.updates.length" ng-repeat="updateInfo in selectedCase.updates" class="no-animate">
-						<td class="text-center">{{updateInfo.created | date: 'Z yyyy-MM-dd HH:mm:ss'}}</td>
+						<td class="text-center">{{updateInfo.created | date: 'yyyy-MM-dd HH:mm'}}</td>
 						<td class="text-center">{{updateInfo.user.firstName}} {{updateInfo.user.lastName}}</td>
 						<td>{{updateInfo.updateInfo}}</td>
+						<td class="text-center">{{updateInfo.updateId || '-------'}}</td>
 						<td class="text-center" colspan="2">{{updateInfo.updateType}}</td>
 					</tr>
 				</tbody>

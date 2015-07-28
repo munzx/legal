@@ -169,7 +169,8 @@ module.exports = function (app, express) {
 		.post('/case', ensureAuthenticated,isUser, courtCase.create)
 		.delete('/case/:id', ensureAuthenticated, isUser, courtCase.remove)
 		.get('/case/sessions', isUser, ensureAuthenticated, courtCase.sessionDates)
-		.get('/case/sessions/last', courtCase.lastSessionDates)
+		.get('/case/sessions/upcoming', courtCase.upcomingSessions)
+		.get('/case/sessions/previous', courtCase.previousSessions)
 		.post('/case/caseupdate/:id', ensureAuthenticated, isUser, courtCase.insertCaseUpdate)
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)

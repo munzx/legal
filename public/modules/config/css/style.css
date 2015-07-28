@@ -190,8 +190,12 @@ hr {
     margin-right: 0px;
 }
 
-h1, h2, h3, h4, h5, h6, p, li, ul, b, a, placeholder, input, option, select, checkbox, textarea, form, span, td, tr, th {
-    direction: rtl;
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
+
+h1, h2, h3, h4, h5, h6, p, li, ul, b, a, placeholder, input, option, select, checkbox, textarea, form, span, td, tr, th, ul, li {
+    direction: rtl !important;
 }
 
 .no-animate {

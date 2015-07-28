@@ -56,6 +56,10 @@ var caseSchema = mongoose.Schema({
 			default: '',
 			required: 'نوع التحديث مطلوب'
 		},
+		updateId: {
+			type: String,
+			default: ''
+		},
 		updateInfo: {
 			type: String,
 			default: '',
