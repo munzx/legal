@@ -100,7 +100,6 @@ module.exports.insertCaseUpdate = function(req, res){
 						res.status(500).jsonp({message: err});
 					} else {
 						cases.populate(updatedResult, [{path: 'updates.user'}, {path: 'client.user'}, {path: 'defendant.user'}], function(err, info){
-							console.log(info);
 							res.status(200).jsonp(info);
 						});
 					}
@@ -139,8 +138,6 @@ module.exports.upcomingSessions = function(req, res){
 					var sessions = caseInfo.sessions;
 					sessions.forEach(function(info){
 						if(moment(info.newDate).utc().format() >= moment().utc().format()){
-							console.log(moment().utc().format());
-							console.log(moment(info.newDate).utc().format());
 							//get last session
 							session = info;
 							sessionInfo.caseId = caseInfo._id;
@@ -183,8 +180,6 @@ module.exports.previousSessions = function(req, res){
 					var sessions = caseInfo.sessions;
 					sessions.forEach(function(info){
 						if(moment(info.newDate).utc().format() <= moment().utc().format()){
-							console.log(moment().utc().format());
-							console.log(moment(info.newDate).utc().format());
 							//get last session
 							session = info;
 							sessionInfo.caseId = caseInfo._id;

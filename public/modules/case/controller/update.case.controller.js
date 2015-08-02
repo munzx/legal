@@ -3,8 +3,6 @@
 angular.module('caseModule').controller('updateCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', 'connectUpdateTypeFactory', 'connectCaseRoleFactory', function ($scope, connectCaseFactory, selectedCase, $modalInstance, connectUpdateTypeFactory, connectCaseRoleFactory) {
 	$scope.selectedCase = selectedCase;
 
-	//console.log(selectedCase);
-
 	//init newDate
 	$scope.newUpdate = {};
 	$scope.newUpdate.session = {};
@@ -22,10 +20,6 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 	//save the client and the defendants current info
 	$scope.udatedClientInfo = angular.copy(selectedCase.client);
 	$scope.udatedDefendantInfo = angular.copy(selectedCase.defendant);
-
-	console.log('cleint info');
-
-	console.log($scope.udatedClientInfo);
 
 	$scope.updateclientNewRole = function(index, newRole){
 		//make the new role the last role in the array
@@ -65,7 +59,6 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 			selectedCase.defendant = response.defendant;
 			$modalInstance.dismiss('cancel');
 		}, function(error){
-			console.log(err);
 			$scope.error = error.data.message;
 		});
 	}
