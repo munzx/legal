@@ -1,6 +1,10 @@
 'use strict';
 
-angular.module('caseModule').controller('updateCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', 'connectUpdateTypeFactory', function ($scope, connectCaseFactory, selectedCase, $modalInstance, connectUpdateTypeFactory) {
+angular.module('caseModule').controller('updateCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', 'connectUpdateTypeFactory', 'connectCaseRoleFactory', function ($scope, connectCaseFactory, selectedCase, $modalInstance, connectUpdateTypeFactory, connectCaseRoleFactory) {
+	$scope.selectedCase = selectedCase;
+
+	//console.log(selectedCase);
+
 	//init newDate
 	$scope.newUpdate = {};
 	$scope.newUpdate.session = {};
@@ -11,20 +15,57 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		$scope.error = error.data.message;
 	});
 
+	connectCaseRoleFactory.query({}, function(response){
+		$scope.caseRoles = response;
+	});
+
+	//save the client and the defendants current info
+	$scope.udatedClientInfo = angular.copy(selectedCase.client);
+	$scope.udatedDefendantInfo = angular.copy(selectedCase.defendant);
+
+	console.log('cleint info');
+
+	console.log($scope.udatedClientInfo);
+
+	$scope.updateclientNewRole = function(index, newRole){
+		//make the new role the last role in the array
+		//use this to avoid adding new roles everytime the user change the value
+		//thats why push is not used
+		$scope.udatedClientInfo[index].role[selectedCase.client[index].role.length] = newRole;
+	}
+
+	$scope.updateDefendantNewRole = function(index, newRole){
+		//make the new role the last role in the array
+		//use this to avoid adding new roles everytime the user change the value
+		//thats why push is not used
+		$scope.udatedDefendantInfo[index].role[selectedCase.defendant[index].role.length] = newRole;
+	}
+
 	$scope.checkIfIdRequired = function(){
-		$scope.showRequireId = $scope.caseUpdates[$scope.newUpdate.name].requiredId;
-		$scope.showRequireIdTitle = $scope.caseUpdates[$scope.newUpdate.name].requiredIdTitle;
+		$scope.showRequireId = $scope.caseUpdates[$scope.newUpdate.name].requiredId || '';
+		$scope.requireRoleUpdate = $scope.caseUpdates[$scope.newUpdate.name].requireRoleUpdate || '';
+		$scope.showRequireIdTitle = $scope.caseUpdates[$scope.newUpdate.name].requiredIdTitle || '';
+		//if the 'requireId' is empty then make it empty instead of false to avoid error
 		$scope.newUpdate.session.updateId = ($scope.showRequireId === false)? $scope.newUpdate.session.updateId: '';
 	}
 
 	$scope.addNewCaseUpdate = function(){
-		//get the real name through the array index
+		//the name in the 'caseUpdates' variable is the index!!! so we use
+		//the following to get the real name through the array index
 		$scope.newUpdate.name = $scope.caseUpdates[$scope.newUpdate.name].name;
+		//add the roles updates to the case update info
+		$scope.newUpdate.clientInfo = $scope.udatedClientInfo;
+		$scope.newUpdate.defendantInfo = $scope.udatedDefendantInfo;
+
 		connectCaseFactory.save({'action': 'caseupdate', 'id': selectedCase._id}, {'update': $scope.newUpdate}, function(response){
 			selectedCase.updates = response.updates;
 			selectedCase.sessions = response.sessions;
+			//update the case clients and defendants info
+			selectedCase.client = response.client;
+			selectedCase.defendant = response.defendant;
 			$modalInstance.dismiss('cancel');
 		}, function(error){
+			console.log(err);
 			$scope.error = error.data.message;
 		});
 	}

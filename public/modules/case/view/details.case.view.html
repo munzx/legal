@@ -39,17 +39,17 @@
 						<td class="text-center" colspan="5"><h4>الموكلين</h4></td>
 					</tr>
 					<tr ng-repeat="client in selectedCase.client" class="no-animate">
-						<td colspan="2" class="text-center">{{client.mobilePhone}}</td>
-						<td class="text-center">{{client.caseRole}}</td>
-						<td colspan="2" class="text-center">{{client.firstName}} {{client.lastName}}</td>
+						<td colspan="2" class="text-center">{{client.user.mobilePhone}}</td>
+						<td class="text-center">{{client.role[client.role.length - 1]}}</td>
+						<td colspan="2" class="text-center">{{client.user.firstName}} {{client.user.lastName}}</td>
 					</tr>
 					<tr class="danger">
 						<td class="text-center" colspan="5"><h4>الخصوم</h4></td>
 					</tr>
 					<tr ng-repeat="defendant in selectedCase.defendant" class="no-animate">
-						<td colspan="2" class="text-center">{{defendant.mobilePhone}}</td>
-						<td class="text-center">{{defendant.caseRole}}</td>
-						<td colspan="2" class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
+						<td colspan="2" class="text-center">{{defendant.user.mobilePhone}}</td>
+						<td class="text-center">{{defendant.role[defendant.role.length - 1]}}</td>
+						<td colspan="2" class="text-center">{{defendant.user.firstName}} {{defendant.user.lastName}}</td>
 					</tr>
 					<tr class="warning">
 						<td class="text-center" colspan="5"><h4>الوقائع</h4></td>

@@ -3,6 +3,8 @@
 angular.module('caseModule').controller('detailsCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', '$modal', function ($scope, connectCaseFactory, selectedCase, $modalInstance, $modal) {
 	$scope.selectedCase = selectedCase;
 
+	console.log($scope.selectedCase);
+
 	$scope.nextSessionDate = function(){
 		return ($scope.selectedCase.sessions.length)? $scope.selectedCase.sessions[selectedCase.sessions.length - 1].newDate: '';
 	}

@@ -69,7 +69,12 @@
 								</tr>
 								<tr ng-show="selectedClients.length" ng-repeat="client in selectedClients" class="no-animate">
 									<td class="text-center">{{client.firstName}} {{client.lastName}}</td>
-									<td class="text-center">{{client.caseRole}}</td>
+									<td class="text-center">
+										<select class="form-control" ng-model='client.caseRole'>
+											<option value="">-- الصفة --</option>
+											<option ng-repeat='role in caseRoles' value="{{role.name}}">{{role.name}}</option>
+										</select>
+									</td>
 									<td class="text-center">{{client.mobilePhone}}</td>
 									<td class="text-center">
 										<span ng-click="removeSelectedClient($index)" class="glyphicon glyphicon-remove cursor"></span>
@@ -122,7 +127,12 @@
 								<tr ng-show="selectedDefendants.length" ng-repeat="defendant in selectedDefendants" class="no-animate">
 									<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
 									<td class="text-center">{{defendant.mobilePhone}}</td>
-									<td class="text-center">{{defendant.caseRole}}</td>
+									<td>
+										<select class="form-control" ng-model='defendant.caseRole'>
+											<option value="">-- الصفة --</option>
+											<option ng-repeat='role in caseRoles' value="{{role.name}}">{{role.name}}</option>
+										</select>
+									</td>
 									<td class="text-center">
 										<span ng-click="removeSelectedDefendant($index, defendant._id)" class="glyphicon glyphicon-remove cursor"></span>
 									</td>

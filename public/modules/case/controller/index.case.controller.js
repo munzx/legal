@@ -164,11 +164,23 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 		return allIds;
 	}
 
+	//get ids and roles in objects array
+	var getIdsAndRoles = function(usersInfo){
+		var allIds = [];
+		usersInfo.forEach(function(info){
+			allIds.push({
+				user: info._id,
+				role: info.caseRole
+			});
+		});
+		return allIds;
+	}
+
 	$scope.createNewCase = function(){
 		$scope.error = false;
 		var caseInfo = {
-			defendant: getIds($scope.selectedDefendants),
-			client: getIds($scope.selectedClients),
+			defendant: getIdsAndRoles($scope.selectedDefendants),
+			client: getIdsAndRoles($scope.selectedClients),
 			caseDate: $scope.newCase.caseDate,
 			court: getIds($scope.courts),
 			reportNumber: $scope.newCase.reportNumber,

@@ -5,7 +5,6 @@
 				<tr>
 					<th class="text-center">إلغاء</th>
 					<th class="text-center">رقم الهاتف</th>
-					<th class="text-center">الصفة</th>
 					<th class="text-center">الإسم</th>
 				</tr>
 			</thead>
@@ -14,9 +13,8 @@
 					<td class="text-center">
 						<span ng-click="removeDefendant($index, defendant._id)" class="glyphicon glyphicon-remove cursor"></span>
 					</td>
-					<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
-					<td class="text-center">{{defendant.role | localize:'ar'}}</td>
 					<td class="text-center">{{defendant.mobilePhone}}</td>
+					<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
 				</tr>
 			</tbody>
 		</table>

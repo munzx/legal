@@ -3,14 +3,30 @@ Schema = mongoose.Schema;
 
 var caseSchema = mongoose.Schema({
 	defendant: [{
-		type: Schema.Types.ObjectId,
-		required: 'لم يتم إضافة خصوم',
-		ref: 'defendant'
+		user: {
+			type: Schema.Types.ObjectId,
+			required: 'لم يتم إضافة خصوم',
+			ref: 'defendant'
+		},
+		role: [{
+			type: String,
+			default: '',
+			required: 'صفة الخصم مطلوبة',
+			trim: true
+		}]
 	}],
 	client: [{
-		type: Schema.Types.ObjectId,
-		required: 'لم يتم إضافة موكلين',
-		ref: 'user' 
+		user: {
+			type: Schema.Types.ObjectId,
+			required: 'لم يتم إضافة موكلين',
+			ref: 'user' 
+		},
+		role: [{
+			type: String,
+			default: '',
+			required: 'صفة الخصم مطلوبة',
+			trim: true
+		}]
 	}],
 	caseDate: {
 		type: Date, 

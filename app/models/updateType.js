@@ -14,6 +14,10 @@ var updateTypesSchema = new Schema({
 		type: Boolean,
 		default: false
 	},
+	requireRoleUpdate: {
+		type: Boolean,
+		default: false
+	},
 	requiredIdTitle: {
 		type: String,
 		default: ''

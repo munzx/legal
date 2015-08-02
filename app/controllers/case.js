@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
 
 
 module.exports.index = function (req, res) {
-	cases.find({}).sort('-created').populate('court').populate('client').populate('defendant').populate('updates.user').exec(function(err, result){
+	cases.find({}).sort('-created').populate('court').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
@@ -28,7 +28,7 @@ module.exports.create = function(req, res){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
-			cases.findById(result._id).sort('-created').populate('court').populate('client').populate('defendant').populate('updates.user').exec(function(err, result){
+			cases.findById(result._id).sort('-created').populate('court').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
 				if(err){
 					res.status(500).jsonp({message: err});
 				} else {
@@ -75,13 +75,32 @@ module.exports.insertCaseUpdate = function(req, res){
 						user: req.user._id
 					}
 
+				var updateClientsInfo = req.body.update.clientInfo;
+				var updateDefendantsInfo = req.body.update.defendantInfo;
+
+				//empty the value so we dont get duplicated results
+				caseInfo.client = [];
+				caseInfo.defendant = [];
+
+				updateClientsInfo.forEach(function(info){
+					info.user = info.user._id;
+					caseInfo.client.push(info)
+				});
+
+				updateDefendantsInfo.forEach(function(info){
+					info.user = info.user._id;
+					caseInfo.defendant.push(info);
+				});
+
 				caseInfo.sessions.push(updateSession);
 				caseInfo.updates.push(updateInfo);
+
 				caseInfo.save(function(error, updatedResult){
 					if(err){
 						res.status(500).jsonp({message: err});
 					} else {
-						cases.populate(updatedResult, {path: 'updates.user'}, function(err, info){
+						cases.populate(updatedResult, [{path: 'updates.user'}, {path: 'client.user'}, {path: 'defendant.user'}], function(err, info){
+							console.log(info);
 							res.status(200).jsonp(info);
 						});
 					}

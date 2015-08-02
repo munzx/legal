@@ -18,12 +18,21 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<h4><label class="label label-default">طلب رقم معرف</label></h4>
+					<label class="label label-default">طلب رقم معرف</label>
 					<div class="input-group input-group-lg">
 						<span class="input-group-addon">
 							<input type="checkbox" ng-model="updateType.requiredId">
 						</span>
 						<input type="text" ng-disabled="!updateType.requiredId" ng-model="updateType.requiredIdTitle" class="form-control" placeholder="عنوان الطلب">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" ng-model="updateType.requireRoleUpdate">
+							&nbsp; &nbsp; &nbsp;
+							طلب تحديث الصفات
+						</label>
 					</div>
 				</div>
 				<div class="form-group">
