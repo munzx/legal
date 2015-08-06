@@ -72,7 +72,7 @@ var caseSchema = mongoose.Schema({
 			default: '',
 			required: 'نوع التحديث مطلوب'
 		},
-		updateId: {
+		updateId: { //if the user wants to give this update an id (for examble report number)
 			type: String,
 			default: ''
 		},
@@ -101,15 +101,15 @@ var caseSchema = mongoose.Schema({
 			default: '',
 			required: 'التوقسق مطلوب'
 		},
-		updateId: {
-			type: String,
-			default: ''
-		},
 		user: {
 			type: Schema.Types.ObjectId,
 			required: 'المستخدم مطلوب',
 			ref: 'user'
 		},
+		lawyer: [{
+			type: Schema.Types.ObjectId,
+			ref: 'user'
+		}],
 		created: {
 			type: Date,
 			default: Date.now

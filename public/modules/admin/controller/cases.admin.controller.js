@@ -3,7 +3,6 @@
 angular.module('adminModule').controller('casesAdminController', ['$scope', 'connectCaseFactory', '$state', '$modal', function ($scope, connectCaseFactory, $state, $modal) {
 	connectCaseFactory.query({}, function(response){
 		$scope.cases = response;
-		console.log($scope.cases);
 	});
 
 	$scope.showNewCaseForm = function(){

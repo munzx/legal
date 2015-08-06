@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./error'),
 	court = require('../models/court'),
 	_ = require('lodash'),
-	moment = require('moment'),
+	moment = require('moment-range'),
 	dateInput = require('../helpers/dateInput'),
 	users = require('../models/user');
 
@@ -124,7 +124,7 @@ module.exports.sessionDates = function(req, res){
 }
 
 module.exports.upcomingSessions = function(req, res){
-	cases.find({}).where('sessions').exists().populate('sessions').populate('defendant').populate('client').populate('sessions.user').sort('-newDate').exec(function(err, result){
+	cases.find({}).where('sessions').exists().populate('sessions').populate('defendant.user').populate('court').populate('client.user').populate('sessions.user').populate('sessions.lawyer').sort('-newDate').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
@@ -137,9 +137,54 @@ module.exports.upcomingSessions = function(req, res){
 				if(caseInfo.sessions.length > 0){
 					var sessions = caseInfo.sessions;
 					sessions.forEach(function(info){
-						if(moment(info.newDate).utc().format() >= moment().utc().format()){
+						if(moment(info.newDate).format() >= moment().format()){
 							//get last session
 							session = info;
+							sessionInfo.court = caseInfo.court;
+							sessionInfo.caseId = caseInfo._id;
+							sessionInfo.defendant = caseInfo.defendant;
+							sessionInfo.client = caseInfo.client;
+							sessionInfo.caseNumber = caseInfo.caseNumber;
+							sessionInfo.lawyer = session.lawyer;
+							sessionInfo.sessionStatus = caseInfo.status;
+							sessionInfo.sessionDate = session.newDate;
+							sessionInfo.sessionTime = session.newTime;
+							sessionInfo.sessionCreated = session.created;
+							sessionInfo.sessionUpdateId = session.updateId;
+							sessionInfo.sessionUser = session.user;
+							//get last session info and case info
+							upcomingSessions.push(sessionInfo);
+							//cleart sessionInfo
+							sessionInfo = {};		
+						}
+					});
+				}
+			});
+
+			var sort = _.sortBy(upcomingSessions, 'sessionDate');
+			res.status(200).jsonp(sort);
+		}
+	});
+}
+
+module.exports.previousSessions = function(req, res){
+	cases.find({}).where('sessions').exists().populate('sessions').populate('defendant.user').populate('client.user').populate('court').populate('sessions.user').populate('sessions.lawyer').sort('-newDate').exec(function(err, result){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else {
+			var upcomingSessions = [],
+				allCases = result,
+				sessionInfo = {},
+				session = {};
+
+			allCases.forEach(function(caseInfo){
+				if(caseInfo.sessions.length > 0){
+					var sessions = caseInfo.sessions;
+					sessions.forEach(function(info){
+						if(moment(info.newDate).format() <= moment().format()){
+							//get last session
+							session = info;
+							sessionInfo.court = caseInfo.court;
 							sessionInfo.caseId = caseInfo._id;
 							sessionInfo.defendant = caseInfo.defendant;
 							sessionInfo.client = caseInfo.client;
@@ -165,44 +210,64 @@ module.exports.upcomingSessions = function(req, res){
 	});
 }
 
-module.exports.previousSessions = function(req, res){
-	cases.find({}).where('sessions').exists().populate('sessions').populate('defendant').populate('client').populate('sessions.user').sort('-newDate').exec(function(err, result){
+
+module.exports.byDate = function(req, res){
+	var dataDates;
+	var userDateInput = dateInput(req.body.info.dateFrom, req.body.info.dateTo, function (result) {
+		dataDates = result;
+	});
+
+	cases.find({"sessions.newDate": {"$gte": dataDates.from, "$lt": dataDates.to}}).populate('sessions.lawyer').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
-			var upcomingSessions = [],
-				allCases = result,
-				sessionInfo = {},
-				session = {};
+			if(req.body.info.lawyerID && req.body.info.courtID && req.body.info.dateFrom && req.body.info.dateTo){
+				var allCases = result,
+					range = moment().range(dataDates.from, dataDates.to);
 
-			allCases.forEach(function(caseInfo){
-				if(caseInfo.sessions.length > 0){
-					var sessions = caseInfo.sessions;
-					sessions.forEach(function(info){
-						if(moment(info.newDate).utc().format() <= moment().utc().format()){
-							//get last session
-							session = info;
-							sessionInfo.caseId = caseInfo._id;
-							sessionInfo.defendant = caseInfo.defendant;
-							sessionInfo.client = caseInfo.client;
-							sessionInfo.caseNumber = caseInfo.caseNumber;
-							sessionInfo.sessionStatus = caseInfo.status;
-							sessionInfo.sessionDate = session.newDate;
-							sessionInfo.sessionTime = session.newTime;
-							sessionInfo.sessionCreated = session.created;
-							sessionInfo.sessionUpdateId = session.updateId;
-							sessionInfo.sessionUser = session.user;
-							//get last session info and case info
-							upcomingSessions.push(sessionInfo);
-							//cleart sessionInfo
-							sessionInfo = {};		
+				allCases.forEach(function(caseInfo){
+					var sessionInfo = caseInfo.sessions;
+					sessionInfo.forEach(function(info){
+						var infoNewDate = moment(info.newDate).utc();
+						if(range.contains(infoNewDate)){
+							info.lawyer.push(req.body.info.lawyerID);
+							caseInfo.save(function(err){
+								if(err){
+									console.log(err);
+								}
+							});
 						}
 					});
-				}
-			});
+				});
+				res.status(200).jsonp({message:'تم تحديث المهام بنجاح'});
+			} else {
+				res.status(500).jsonp({message: 'يرجى التأكد من إدخال جميع البيانات المطلوبة'});
+			}
+		}
+	});
+}
 
-			var sort = _.sortBy(upcomingSessions, 'sessionDate');
-			res.status(200).jsonp(sort);
+module.exports.byCase = function(req, res){
+	cases.findById(req.body.info.caseID).populate('sessions.lawyer').exec(function(err, caseInfo){
+		if(err){
+			res.status(500).jsonp({message: errorHandler(err)})
+		} else {
+			if(req.body.info){
+				var getCaseInfo = caseInfo.sessions;
+				getCaseInfo.forEach(function(info){
+					info.lawyer.push(req.body.info.lawyerID)
+				});
+
+				caseInfo.save(function(err, result){
+					if(err){
+						res.status(500).jsonp({message: err});
+					} else {
+						res.status(200).jsonp({message:'تم تحديث المهام بنجاح'});
+					}
+				});
+			} else {
+				res.status(500).jsonp({message: 'يرجى التأكد من إدخال جميع البيانات المطلوبة'});
+			}
 		}
 	});
 }

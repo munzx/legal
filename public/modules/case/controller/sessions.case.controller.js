@@ -21,6 +21,20 @@ angular.module('caseModule').controller('sessionsCaseController', ['$scope', 'co
 		});
 	}
 
+	$scope.sechedule = function(){
+		$modal.open({
+			templateUrl: 'public/modules/case/view/tasks.case.view.html',
+			controller: 'tasksCaseController',
+			size: 'lg',
+			backdrop : 'static',
+			resolve: {
+				upcoming: function(){
+					return $scope.upcoming;
+				}
+			}
+		});
+	}
+
 	//init upcoming
 	$scope.upcoming();
 
@@ -28,7 +42,8 @@ angular.module('caseModule').controller('sessionsCaseController', ['$scope', 'co
 		$modal.open({
 			templateUrl: 'public/modules/case/view/session.details.case.view.html',
 			controller: 'sessionDetailsCaseController',
-			backDrop: 'static',
+			size: 'md',
+			backdrop : 'static',
 			resolve: {
 				sessionInfo: function(){
 					return $scope.sessions[index];

@@ -4,12 +4,16 @@ var moment = require('moment');
 
 module.exports = function dateInput (dateFrom, dateTo, callback) {
 	if(dateFrom){
-		dateFrom = moment(new Date(dateFrom)).isValid() ? moment(new Date(dateFrom)).utc().format() : moment().subtract(28, 'days').utc().format();
+		dateFrom = moment(new Date(dateFrom)).isValid() ? moment(new Date(dateFrom)).format() : moment().format();
 	} else {
-		dateFrom = moment().subtract(28, 'day').utc().format();
+		dateFrom = moment().subtract(28, 'day').format();
 	}
 
-	dateTo = moment(new Date(dateFrom)).add(28, 'days').utc().format();
+	if(dateTo){
+		dateTo = moment(new Date(dateTo)).isValid() ? moment(new Date(dateTo)).format() : moment().format();
+	} else {
+		dateTo = moment().add(28, 'day').format();
+	}
 
 	callback({"from": dateFrom, "to": dateTo});
 }

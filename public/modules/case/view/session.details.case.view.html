@@ -26,17 +26,17 @@
 						<td colspan="3" class="text-center alert alert-success">الموكلين</td>
 					</tr>
 					<tr ng-repeat="client in sessionInfo.client" class="no-animate">
-						<td class="text-center">{{client.mobilePhone}}</td>
-						<td class="text-center">{{client.caseRole}}</td>
-						<td class="text-center">{{client.firstName}} {{client.lastName}}</td>
+						<td class="text-center">{{client.user.mobilePhone}}</td>
+						<td class="text-center">{{client.role[client.role.length - 1]}}</td>
+						<td class="text-center">{{client.user.firstName}} {{client.user.lastName}}</td>
 					</tr>
 					<tr>
 						<td colspan="3" class="text-center alert alert-danger">الخصوم</td>
 					</tr>
 					<tr ng-repeat="defendant in sessionInfo.defendant" class="no-animate">
-						<td class="text-center">{{defendant.mobilePhone}}</td>
-						<td class="text-center">{{defendant.caseRole}}</td>
-						<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
+						<td class="text-center">{{defendant.user.mobilePhone}}</td>
+						<td class="text-center">{{defendant.role[defendant.role.length - 1]}}</td>
+						<td class="text-center">{{defendant.user.firstName}} {{defendant.user.lastName}}</td>
 					</tr>
 				</tbody>
 			</table>

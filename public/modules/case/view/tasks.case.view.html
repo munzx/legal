@@ -1,0 +1,99 @@
+<section>
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title text-center">المهام</h4>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-md-12">
+					<h4 ng-show="success" class="alert alert-success">{{success}} &nbsp;</h4>
+					<h4 ng-show="error" class="alert alert-danger">{{error}} &nbsp;</h4>
+
+					<div class="row">
+						<div class="col-md-12">
+						    <div class="btn-group icon-right">
+						        <label class="btn btn-default" ng-model="radioModel" btn-radio="'byCase'">بالدعوى</label>
+						        <label class="btn btn-default" ng-model="radioModel" btn-radio="'byDate'">بالتاريخ</label>
+						    </div>
+						</div>
+					</div>
+					<!-- by case -->
+					<div class="row">
+						<div class="col-md-12" ng-show="radioModel == 'byCase' ">
+							<form class="form">
+								<table class="table table-striped">
+									<thead>
+										<th class="text-center">الدعوى</th>
+										<th class="text-center">التاريخ</th>
+										<th class="text-center">مسؤولية</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat="case in cases">
+											<td class="text-center">{{case.caseNumber}}</td>
+											<td class="text-center">{{case.created | date: 'yyyy-MM-dd'}}</td>
+											<td class="text-center">
+												<select class="form-control" ng-model="caseSelectedEmployeeIndex" ng-change="updateTaskbyCase(case._id, caseSelectedEmployeeIndex)">
+													<option value="">-- المحامي --</option>
+													<option ng-repeat="employee in employees" value="{{$index}}">
+														{{employee.firstName}} {{employee.lastName}}
+													</option>
+												</select>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</form>
+						</div>
+						<!-- byDate -->
+						<div class="col-md-12 no-animate" ng-show="radioModel == 'byDate' ">
+							<div class="row">
+						        <div class="col-md-6">
+						            <p class="input-group">
+						            	<span class="input-group-addon" id="sizing-addon1">إلى</span>
+						            	<input type="date" class="form-control" ng-model="updateTaskByDateTo"/>
+						            	<span class="input-group-btn">
+						                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></button>
+						              </span>
+						            </p>
+						        </div>
+						        <div class="col-md-6">
+						            <p class="input-group">
+						            	<span class="input-group-addon" id="sizing-addon1">من</span>
+						            	<input type="date" class="form-control" ng-model="updateTaskByDateFrom"/>
+						            	<span class="input-group-btn">
+						                <button type="button" class="btn btn-default"><i class="glyphicon glyphicon-calendar"></i></button>
+						              </span>
+						            </p>
+						        </div>
+							</div>
+							<form class="form">
+								<table class="table table-striped">
+									<thead>
+										<th class="text-center">المحكمة</th>
+										<th class="text-center">مسؤولية</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat='court in courts' class="no-animate">
+											<td class="text-center">{{court.name}}</td>
+											<td class="text-center">
+												<select class="form-control" ng-model="selectedEmployeeIndex" ng-change="updateTaskBydate(court._id, selectedEmployeeIndex)">
+													<option value="">-- المحامي --</option>
+													<option ng-repeat="employee in employees" value="{{$index}}">
+														{{employee.firstName}} {{employee.lastName}}
+													</option>
+												</select>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
