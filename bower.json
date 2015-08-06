@@ -29,7 +29,8 @@
     "ngInfiniteScroll": "~1.2.1",
     "angular-animate": "~1.4.0",
     "angular-deckgrid": "~0.5.0",
-    "angular-xeditable": "~0.1.9"
+    "angular-xeditable": "~0.1.9",
+    "angular-print": "~0.3.7"
   },
   "resolutions": {
     "angular": "~1.4.0"
