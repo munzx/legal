@@ -1,13 +1,13 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-	cases = require('../models/case'),
-	errorHandler = require('./error'),
-	court = require('../models/court'),
-	_ = require('lodash'),
-	moment = require('moment-range'),
-	dateInput = require('../helpers/dateInput'),
-	users = require('../models/user');
+cases = require('../models/case'),
+errorHandler = require('./error'),
+court = require('../models/court'),
+_ = require('lodash'),
+moment = require('moment-range'),
+dateInput = require('../helpers/dateInput'),
+users = require('../models/user');
 
 
 module.exports.index = function (req, res) {
@@ -22,7 +22,7 @@ module.exports.index = function (req, res) {
 
 module.exports.create = function(req, res){
 	var newCase = new cases,
-		caseInfo = _.extend(newCase, req.body.caseInfo);
+	caseInfo = _.extend(newCase, req.body.caseInfo);
 
 	caseInfo.save(function(err, result){
 		if(err){
@@ -62,17 +62,19 @@ module.exports.insertCaseUpdate = function(req, res){
 				res.status(500).jsonp({message: err});
 			} else if(caseInfo) {
 				var updateInfo = {
-						updateType: req.body.update.name,
-						updateId: req.body.update.session.updateId,
-						updateInfo: req.body.update.info,
-						user: req.user._id
-					}
+					updateType: req.body.update.name,
+					updateId: req.body.update.session.updateId,
+					updateInfo: req.body.update.info,
+					memoRequired: req.body.update.memoRequired,
+					memoRequiredDate: req.body.update.memoRequiredDate,
+					user: req.user._id
+				}
 
 				var updateSession = {
-						newDate: req.body.update.session.newDate,
-						newTime: req.body.update.session.newTime,
-						user: req.user._id
-					}
+					newDate: req.body.update.session.newDate,
+					newTime: req.body.update.session.newTime,
+					user: req.user._id
+				}
 
 				var updateClientsInfo = req.body.update.clientInfo || [];
 				var updateDefendantsInfo = req.body.update.defendantInfo || [];
@@ -96,31 +98,31 @@ module.exports.insertCaseUpdate = function(req, res){
 				caseInfo.sessions.push(updateSession);
 				caseInfo.updates.push(updateInfo);
 
+
+				console.log(caseInfo);
+
 				caseInfo.save(function(error, updatedResult){
 					if(error){
 						res.status(500).jsonp(error);
 					} else if(updatedResult) {
-						console.log('break');
-						console.log(updatedResult);
 						cases.populate(updatedResult, [{path: 'updates.user'}, {path: 'client.user'}, {path: 'defendant.user'}], function(err, caseAllInfo){
 							if(err){
-								console.log(err);
 								res.status(500).jsonp(err);
 							} else {
 								res.status(200).jsonp(caseAllInfo);
 							}
 						});
 					} else {
-						console.log('Nothing saved!!!');		
+						res.status(500).jsonp({message: 'لم يتم تسجيل البيانات'});		
 					}
 				});
 			} else {
 				res.status(500).jsonp({message: 'لم يتم العثور على الدعوى'});
 			}
 		});
-	} else {
-		res.status(500).jsonp({message: 'لم يتم توفير رقم المعرف'})
-	}
+} else {
+	res.status(500).jsonp({message: 'لم يتم توفير رقم المعرف'})
+}
 }
 
 module.exports.sessionDates = function(req, res){
@@ -139,9 +141,9 @@ module.exports.upcomingSessions = function(req, res){
 			res.status(500).jsonp({message: err});
 		} else {
 			var upcomingSessions = [],
-				allCases = result,
-				sessionInfo = {},
-				session = {};
+			allCases = result,
+			sessionInfo = {},
+			session = {};
 
 			allCases.forEach(function(caseInfo){
 				if(caseInfo.sessions.length > 0){
@@ -171,10 +173,10 @@ module.exports.upcomingSessions = function(req, res){
 				}
 			});
 
-			var sort = _.sortBy(upcomingSessions, 'sessionDate');
-			res.status(200).jsonp(sort);
-		}
-	});
+var sort = _.sortBy(upcomingSessions, 'sessionDate');
+res.status(200).jsonp(sort);
+}
+});
 }
 
 module.exports.previousSessions = function(req, res){
@@ -183,9 +185,9 @@ module.exports.previousSessions = function(req, res){
 			res.status(500).jsonp({message: err});
 		} else {
 			var upcomingSessions = [],
-				allCases = result,
-				sessionInfo = {},
-				session = {};
+			allCases = result,
+			sessionInfo = {},
+			session = {};
 
 			allCases.forEach(function(caseInfo){
 				if(caseInfo.sessions.length > 0){
@@ -233,7 +235,7 @@ module.exports.byDate = function(req, res){
 		} else {
 			if(req.body.info.lawyerID && req.body.info.courtID && req.body.info.dateFrom && req.body.info.dateTo){
 				var allCases = result,
-					range = moment().range(dataDates.from, dataDates.to);
+				range = moment().range(dataDates.from, dataDates.to);
 
 				allCases.forEach(function(caseInfo){
 					var sessionInfo = caseInfo.sessions;
@@ -287,7 +289,43 @@ module.exports.memos = function(req, res){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
-			res.status(200).jsonp(result);
+			var upcomingupdates = [],
+			allCases = result,
+			updateInfo = {},
+			update = {};
+
+			allCases.forEach(function(caseInfo){
+				if(caseInfo.updates.length > 0){
+					var updates = caseInfo.updates;
+					updates.forEach(function(info){
+						//get last update
+						update = info;
+						if(update.memoRequired){
+							updateInfo.court = caseInfo.court;
+							updateInfo.caseId = caseInfo._id;
+							updateInfo.defendant = caseInfo.defendant;
+							updateInfo.client = caseInfo.client;
+							updateInfo.caseNumber = caseInfo.caseNumber;
+							updateInfo.memoConsultant = update.memoConsultant;
+							updateInfo.memoRequired = update.memoRequired;
+							updateInfo.memoRequiredDate = update.memoRequiredDate;
+							updateInfo.memoStatus = update.status;
+							updateInfo.updateDate = update.newDate;
+							updateInfo.updateTime = update.newTime;
+							updateInfo.updateCreated = update.created;
+							updateInfo.updateId = update._id;
+							updateInfo.updateUser = update.user;
+							//get last update info and case info
+							upcomingupdates.push(updateInfo);
+							//cleart updateInfo
+							updateInfo = {};
+						}			
+					});
+				}
+			});
+
+			var sort = _.sortBy(upcomingupdates, 'sessionDate');
+			res.status(200).jsonp(sort);
 		}
 	});
 }

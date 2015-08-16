@@ -47,25 +47,21 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		//the name in the 'caseUpdates' variable is the index!!! so we use
 		//the following to get the real name through the array index
 		//if a memo is required 'memoRequired' then make it true
-		console.log($scope.caseUpdates[$scope.newUpdate.name]);
 		$scope.newUpdate.memoRequired = $scope.caseUpdates[$scope.newUpdate.name].requestMemo? true: false;
 		$scope.newUpdate.name = $scope.caseUpdates[$scope.newUpdate.name].name;
 		//add the roles updates to the case update info
 		$scope.newUpdate.clientInfo = $scope.udatedClientInfo;
 		$scope.newUpdate.defendantInfo = $scope.udatedDefendantInfo;
 
-		// console.log($scope.newUpdate);  
-
 		connectCaseFactory.save({'action': 'caseupdate', 'id': selectedCase._id}, {'update': $scope.newUpdate}, function(response){
-			console.log(response);
 			selectedCase.updates = response.updates;
 			selectedCase.sessions = response.sessions;
+			$scope.newUpdate.memoRequired = false;
 			//update the case clients and defendants info
 			selectedCase.client = response.client;
 			selectedCase.defendant = response.defendant;
 			$modalInstance.dismiss('cancel');
 		}, function(error){
-			console.log('something went wrong');
 			$scope.error = error.message;
 		});
 	}
