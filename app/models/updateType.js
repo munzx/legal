@@ -1,7 +1,7 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+Schema = mongoose.Schema;
 
 
 var updateTypesSchema = new Schema({
@@ -21,6 +21,10 @@ var updateTypesSchema = new Schema({
 	requiredIdTitle: {
 		type: String,
 		default: ''
+	},
+	requestMemo: {
+		type: Boolean,
+		default: false
 	},
 	user: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 	created: {type: Date, default: Date.now}

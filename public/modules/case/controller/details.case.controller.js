@@ -4,10 +4,16 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 	$scope.selectedCase = selectedCase;
 
 	$scope.nextSessionDate = function(){
-		return ($scope.selectedCase.sessions.length)? $scope.selectedCase.sessions[selectedCase.sessions.length - 1].newDate: '';
+		if($scope.selectedCase.sessions){
+			return ($scope.selectedCase.sessions.length)? $scope.selectedCase.sessions[selectedCase.sessions.length - 1].newDate: '';
+		}
+		return '';
 	}
 	$scope.nextSessionTime = function(){
-		return ($scope.selectedCase.sessions.length)? $scope.selectedCase.sessions[selectedCase.sessions.length - 1].newTime: '';
+		if($scope.selectedCase.sessions){
+			return ($scope.selectedCase.sessions.length)? $scope.selectedCase.sessions[selectedCase.sessions.length - 1].newTime: '';
+		}
+		return '';
 	}
 
 	$scope.showUpdateCase = function(){

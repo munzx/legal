@@ -1,0 +1,79 @@
+<!-- <div class="row">
+	<div class="col-md-12">
+		<ul class="nav nav-pills icon-right">
+			<li role="presentation" ng-click="previous()" class="{{activePrevious}}"><a href="#">السابقة</a></li>
+			<li role="presentation" ng-click="upcoming()" class="{{activeUpcoming}}"><a href="#">القادمة</a></li>
+		</ul>
+		<button ng-disabled="activePrevious" class="btn btn-info btn-lg" ng-click="sechedule()">
+			المهام
+			<span class="glyphicon glyphicon-list"></span>
+		</button>
+		<button print-btn print-landscape class="btn btn-warning btn-lg">
+			طباعة
+			<span class="glyphicon glyphicon-print"></span>
+		</button>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="visible-md visible-lg visible-print">
+				<table class="table table-striped table-hover table-condensed" print-table="sessions">
+					<thead>
+						<tr>
+							<th class="text-center">الحالة</th>
+							<th class="text-center" >تاريخ التسليم</th>
+							<th class="text-center">المستشار</th>
+							<th class="text-center">المحكمة</th>
+							<th class="text-center">الخصم و صفته</th>
+							<th class="text-center">الموكل و صفته</th>
+							<th class="text-center">نوعها</th>
+							<th class="text-center">رقم الدعوى</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="session in sessions" class="no-animate">
+							<td class="text-center"></td>
+							<td class="text-center">{{session.sessionDate | date: 'yyyy-MM-dd'}}</td>
+							<td class="text-center">
+								{{session.lawyer[session.lawyer.length - 1].firstName || '-----------'}}
+								{{session.lawyer[session.lawyer.length - 1].lastName || '-----------'}}
+							</td>
+							<td class="text-center">{{session.court[0].name}}</td>
+							<td class="text-center">
+								<p ng-repeat="defendant in session.defendant">
+									{{defendant.user.firstName}} {{defendant.user.lastName}} - {{defendant.role[defendant.role.length - 1]}}
+								</p>
+							</td>
+							<td class="text-center">
+								<p ng-repeat="client in session.client">
+									{{client.user.firstName}} {{client.user.lastName}} - {{client.role[client.role.length - 1]}}
+								</p>
+							</td>
+							<td class="text-center">إختبارية</td>
+							<td class="text-center">{{session.caseNumber}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="table-responsive hidden-md hidden-lg">
+				<table class="table table-striped table-hover table-condensed">
+					<thead>
+						<tr>
+							<th class="text-center">تاريخ الإنشاء</th>
+							<th class="text-center">المستخدم</th>
+							<th class="text-center">تاريخ و وقت الجلسة</th>
+							<th class="text-center">رقم الدعوى</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="session in sessions" class="cursor no-animate" ng-click="showSessionDetails($index)">
+							<td class="text-center">{{session.sessionCreated | date: 'yyyy-MM-dd'}}</td>
+							<td class="text-center">{{session.sessionUser.firstName}} {{session.sessionUser.lastName}}</td>
+							<td class="text-center">{{session.sessionDate | date: 'yyyy-MM-dd'}} - {{session.sessionTime | date: 'HH:mm'}} </td>
+							<td class="text-center">{{session.caseNumber}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div> -->

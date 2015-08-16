@@ -62,6 +62,16 @@ gulp.task('minifyJS', function () {
 			.pipe(connect.reload());
 });
 
+// Concat , rename , compact then save the minified JS files
+gulp.task('DevMinifyJS', function () {
+	return gulp.src(paths.jsFiles)
+			.pipe(plumber())
+			.pipe(concat('app.js'))
+			.pipe(rename('app.min.js'))
+			.pipe(gulp.dest(paths.desFolder))
+			.pipe(connect.reload());
+});
+
 gulp.task('minifyCSS', function () {
 	return gulp.src(paths.cssFiles)
 			.pipe(plumber())
@@ -75,6 +85,8 @@ gulp.task('minifyCSS', function () {
 
 // Build the minified files
 gulp.task('build', ['inspect', 'htmlReload', 'minifyJS', 'minifyCSS']);
+//dont uglify js files
+gulp.task('DevBuild', ['inspect', 'htmlReload', 'DevMinifyJS', 'minifyCSS']);
 
 // Start nodeJS server and watch for gulp "watch" on start and end
 gulp.task('serve', function() {

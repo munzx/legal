@@ -81,6 +81,24 @@ var caseSchema = mongoose.Schema({
 			default: '',
 			required: 'الملاحظات مطلوبة'
 		},
+		memoRequired: {
+			type: Boolean,
+			default: false
+		},
+		memoRequiredDate: {
+			type: Date,
+			default: ''
+		},
+		memoStatus: {
+			type: String,
+			default: 'pendding',
+			enum: ['close', 'pendding'],
+			lowercase: true
+		},
+		memoConsultant: [{
+			type: Schema.Types.ObjectId,
+			ref: 'user'
+		}],
 		user: {
 			type: Schema.Types.ObjectId,
 			required: 'المستخدم مطلوب',

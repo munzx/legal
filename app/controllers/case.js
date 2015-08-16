@@ -71,37 +71,47 @@ module.exports.insertCaseUpdate = function(req, res){
 				var updateSession = {
 						newDate: req.body.update.session.newDate,
 						newTime: req.body.update.session.newTime,
-						updateId: req.body.update.session.updateId,
 						user: req.user._id
 					}
 
-				var updateClientsInfo = req.body.update.clientInfo;
-				var updateDefendantsInfo = req.body.update.defendantInfo;
+				var updateClientsInfo = req.body.update.clientInfo || [];
+				var updateDefendantsInfo = req.body.update.defendantInfo || [];
 
-				//empty the value so we dont get duplicated results
-				caseInfo.client = [];
-				caseInfo.defendant = [];
+				if(updateClientsInfo.length > 0 && updateDefendantsInfo.length > 0){
+					//empty the value so we dont get duplicated results
+					caseInfo.client = [];
+					caseInfo.defendant = [];
 
-				updateClientsInfo.forEach(function(info){
-					info.user = info.user._id;
-					caseInfo.client.push(info)
-				});
+					updateClientsInfo.forEach(function(info){
+						info.user = info.user._id;
+						caseInfo.client.push(info)
+					});
 
-				updateDefendantsInfo.forEach(function(info){
-					info.user = info.user._id;
-					caseInfo.defendant.push(info);
-				});
+					updateDefendantsInfo.forEach(function(info){
+						info.user = info.user._id;
+						caseInfo.defendant.push(info);
+					});
+				}
 
 				caseInfo.sessions.push(updateSession);
 				caseInfo.updates.push(updateInfo);
 
 				caseInfo.save(function(error, updatedResult){
-					if(err){
-						res.status(500).jsonp({message: err});
-					} else {
-						cases.populate(updatedResult, [{path: 'updates.user'}, {path: 'client.user'}, {path: 'defendant.user'}], function(err, info){
-							res.status(200).jsonp(info);
+					if(error){
+						res.status(500).jsonp(error);
+					} else if(updatedResult) {
+						console.log('break');
+						console.log(updatedResult);
+						cases.populate(updatedResult, [{path: 'updates.user'}, {path: 'client.user'}, {path: 'defendant.user'}], function(err, caseAllInfo){
+							if(err){
+								console.log(err);
+								res.status(500).jsonp(err);
+							} else {
+								res.status(200).jsonp(caseAllInfo);
+							}
 						});
+					} else {
+						console.log('Nothing saved!!!');		
 					}
 				});
 			} else {
@@ -268,6 +278,16 @@ module.exports.byCase = function(req, res){
 			} else {
 				res.status(500).jsonp({message: 'يرجى التأكد من إدخال جميع البيانات المطلوبة'});
 			}
+		}
+	});
+}
+
+module.exports.memos = function(req, res){
+	cases.find({"updates.memoRequired": true}).sort('-created').exec(function(err, result){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else {
+			res.status(200).jsonp(result);
 		}
 	});
 }

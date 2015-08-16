@@ -30,7 +30,8 @@
     "angular-animate": "~1.4.0",
     "angular-deckgrid": "~0.5.0",
     "angular-xeditable": "~0.1.9",
-    "angular-print": "~0.3.7"
+    "angular-print": "~0.3.7",
+    "angular-bootstrap-material": "git@github.com:heyflock/angular-bootstrap-material.git#master"
   },
   "resolutions": {
     "angular": "~1.4.0"
