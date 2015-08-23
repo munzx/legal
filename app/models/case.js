@@ -91,8 +91,8 @@ var caseSchema = mongoose.Schema({
 		},
 		memoStatus: {
 			type: String,
-			default: 'pendding',
-			enum: ['close', 'pendding'],
+			default: 'pending',
+			enum: ['closed', 'pending', 'done'],
 			lowercase: true
 		},
 		memoConsultant: [{

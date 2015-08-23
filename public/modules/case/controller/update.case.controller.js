@@ -49,6 +49,7 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		//if a memo is required 'memoRequired' then make it true
 		$scope.newUpdate.memoRequired = $scope.caseUpdates[$scope.newUpdate.name].requestMemo? true: false;
 		$scope.newUpdate.name = $scope.caseUpdates[$scope.newUpdate.name].name;
+		$scope.newUpdate.memoRequiredDate = $scope.newUpdate.session.newDate
 		//add the roles updates to the case update info
 		$scope.newUpdate.clientInfo = $scope.udatedClientInfo;
 		$scope.newUpdate.defendantInfo = $scope.udatedDefendantInfo;

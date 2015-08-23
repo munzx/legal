@@ -3,6 +3,7 @@
 angular.module('yousufalsharif').factory('arLang', [function () {
 	return {
 		'admin': 'إداري',
+		'pending': 'معلقة',
 		'client': 'موكل',
 		'employee': 'موظف',
 		'user': 'مستخدم',

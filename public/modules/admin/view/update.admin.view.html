@@ -13,6 +13,7 @@
 				<thead>
 					<tr>
 						<th class="text-center">إلغاء</th>
+						<th class="text-center">عنوان الطلب</th>
 						<th class="text-center">طلب مذكرة</th>
 						<th class="text-center">طلب تحديث الصفة</th>
 						<th class="text-center">عنوان الطلب</th>
@@ -24,6 +25,10 @@
 					<tr ng-repeat="update in updatetypes" class="no-animate">
 						<td  class="text-center">
 							<span ng-click="removeUpdatetypes($index, update._id)" class="glyphicon glyphicon-remove cursor"></span>
+						</td>
+						<td class="text-center">
+							{{update.requestMemoTitle}}
+							<p ng-hide="update.requestMemoTitle">----</p>
 						</td>
 						<td class="text-center">{{update.requestMemo | localize: 'ar'}}</td>
 						<td class="text-center">{{update.requireRoleUpdate | localize:'ar'}}</td>

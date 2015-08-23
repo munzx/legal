@@ -98,9 +98,6 @@ module.exports.insertCaseUpdate = function(req, res){
 				caseInfo.sessions.push(updateSession);
 				caseInfo.updates.push(updateInfo);
 
-
-				console.log(caseInfo);
-
 				caseInfo.save(function(error, updatedResult){
 					if(error){
 						res.status(500).jsonp(error);
@@ -235,12 +232,12 @@ module.exports.byDate = function(req, res){
 		} else {
 			if(req.body.info.lawyerID && req.body.info.courtID && req.body.info.dateFrom && req.body.info.dateTo){
 				var allCases = result,
-				range = moment().range(dataDates.from, dataDates.to);
+				range = moment().range(moment(dataDates.from).subtract(1, 'day'), moment(dataDates.to).add(1, 'day'));
 
 				allCases.forEach(function(caseInfo){
 					var sessionInfo = caseInfo.sessions;
 					sessionInfo.forEach(function(info){
-						var infoNewDate = moment(info.newDate).utc();
+						var infoNewDate = moment(info.newDate);
 						if(range.contains(infoNewDate)){
 							info.lawyer.push(req.body.info.lawyerID);
 							caseInfo.save(function(err){
@@ -284,8 +281,8 @@ module.exports.byCase = function(req, res){
 	});
 }
 
-module.exports.memos = function(req, res){
-	cases.find({"updates.memoRequired": true}).sort('-created').exec(function(err, result){
+module.exports.memosPending = function(req, res){
+	cases.find({"updates.memoRequired": true}).populate('court').populate('client.user').populate('defendant.user').populate('updates.user').populate('updates.memoConsultant').sort('-created').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
@@ -300,7 +297,7 @@ module.exports.memos = function(req, res){
 					updates.forEach(function(info){
 						//get last update
 						update = info;
-						if(update.memoRequired){
+						if(update.memoRequired && update.memoStatus == 'pending'){
 							updateInfo.court = caseInfo.court;
 							updateInfo.caseId = caseInfo._id;
 							updateInfo.defendant = caseInfo.defendant;
@@ -309,7 +306,7 @@ module.exports.memos = function(req, res){
 							updateInfo.memoConsultant = update.memoConsultant;
 							updateInfo.memoRequired = update.memoRequired;
 							updateInfo.memoRequiredDate = update.memoRequiredDate;
-							updateInfo.memoStatus = update.status;
+							updateInfo.memoStatus = update.memoStatus;
 							updateInfo.updateDate = update.newDate;
 							updateInfo.updateTime = update.newTime;
 							updateInfo.updateCreated = update.created;
@@ -326,6 +323,74 @@ module.exports.memos = function(req, res){
 
 			var sort = _.sortBy(upcomingupdates, 'sessionDate');
 			res.status(200).jsonp(sort);
+		}
+	});
+}
+
+module.exports.memosClosed = function(req, res){
+	cases.find({"updates.memoRequired": true}).populate('court').populate('client.user').populate('defendant.user').populate('updates.user').populate('updates.memoConsultant').sort('-created').exec(function(err, result){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else {
+			var upcomingupdates = [],
+			allCases = result,
+			updateInfo = {},
+			update = {};
+
+			allCases.forEach(function(caseInfo){
+				if(caseInfo.updates.length > 0){
+					var updates = caseInfo.updates;
+					updates.forEach(function(info){
+						//get last update
+						update = info;
+						if(update.memoRequired && update.memoStatus == 'closed'){
+							updateInfo.court = caseInfo.court;
+							updateInfo.caseId = caseInfo._id;
+							updateInfo.defendant = caseInfo.defendant;
+							updateInfo.client = caseInfo.client;
+							updateInfo.caseNumber = caseInfo.caseNumber;
+							updateInfo.memoConsultant = update.memoConsultant;
+							updateInfo.memoRequired = update.memoRequired;
+							updateInfo.memoRequiredDate = update.memoRequiredDate;
+							updateInfo.memoStatus = update.memoStatus;
+							updateInfo.updateDate = update.newDate;
+							updateInfo.updateTime = update.newTime;
+							updateInfo.updateCreated = update.created;
+							updateInfo.updateId = update._id;
+							updateInfo.updateUser = update.user;
+							//get last update info and case info
+							upcomingupdates.push(updateInfo);
+							//cleart updateInfo
+							updateInfo = {};
+						}			
+					});
+				}
+			});
+
+			var sort = _.sortBy(upcomingupdates, 'sessionDate');
+			res.status(200).jsonp(sort);
+		}
+	});
+}
+
+module.exports.insertMemoConsultant = function(req, res){
+	cases.findById(req.body.update.caseId).populate('updates.user').exec(function(err, caseInfo){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else {
+			var memoUpdateInfo = caseInfo.updates.id(req.body.update.memoId);
+			if(memoUpdateInfo){
+				memoUpdateInfo.memoConsultant.push(req.body.update.memoConsultantId);
+				caseInfo.save(function(err, info){
+					if(err){
+						res.status(500).jsonp({message: err});
+					} else {
+						res.status(200).jsonp(info);
+					}
+				});
+			} else {
+				res.status(500).jsonp({message: err});
+			}
 		}
 	});
 }

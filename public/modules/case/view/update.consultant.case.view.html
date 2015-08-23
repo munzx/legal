@@ -1,0 +1,56 @@
+<section>
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title text-center">المهام</h4>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-md-12">
+					<h4 ng-show="success" class="alert alert-success">{{success}} &nbsp;</h4>
+					<h4 ng-show="error" class="alert alert-danger">{{error}} &nbsp;</h4>
+					<table class="table table-striped">
+						<tbody>
+							<tr>
+								<td class="text-center">{{memoInfo.caseNumber}}</td>
+								<th class="text-center">رقم الدعوى</th>
+							</tr>
+							<tr>
+								<td class="text-center">إختبارية</td>
+								<th class="text-center">نوعها</th>
+							</tr>
+							<tr>
+								<td class="text-center">{{memoInfo.court[0].name}}</td>
+								<th class="text-center">المحكمة</th>
+							</tr>
+							<tr>
+								<td class="text-center">{{memoInfo.memoRequiredDate | date: 'yyyy-MM-dd'}}</td>
+								<th class="text-center">تاريخ التسليم</th>
+							</tr>
+							<tr>
+								<td class="text-center">{{memoInfo.memoStatus}}</td>
+								<th class="text-center">الحالة</th>
+							</tr>
+							<tr>
+								<td class="text-center">
+									<select ng-model="consultantIndex" class="form-control">
+										<option value="">-- المستشترين --</option>
+										<option ng-repeat="consultant in consultants" value="{{$index}}">
+											{{consultant.firstName}} {{consultant.lastName}}
+										</option>
+									</select>
+								</td>
+								<th class="text-center">
+									المستشارين
+								</th>
+							</tr>
+						</tbody>
+					</table>
+					<button class="btn btn-lg btn-block btn-success" ng-disabled="!consultantIndex" ng-click="updateConsultant()">حفظ</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

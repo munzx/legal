@@ -174,7 +174,9 @@ module.exports = function (app, express) {
 		.post('/case/caseupdate/:id', ensureAuthenticated, isUser, courtCase.insertCaseUpdate)
 		.post('/case/tasks/updatebydate', courtCase.byDate)
 		.post('/case/tasks/updatebycase', courtCase.byCase)
-		.get('/case/memos', courtCase.memos)
+		.get('/case/memos/pending', courtCase.memosPending)
+		.get('/case/memos/closed', courtCase.memosClosed)
+		.post('/case/memos/insertconsultant', courtCase.insertMemoConsultant)
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)
 		.post('/caseRole', ensureAuthenticated, isUser, caseRole.create)

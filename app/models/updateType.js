@@ -26,6 +26,10 @@ var updateTypesSchema = new Schema({
 		type: Boolean,
 		default: false
 	},
+	requestMemoTitle: {
+		type: String,
+		default: ''
+	},
 	user: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 	created: {type: Date, default: Date.now}
 });

@@ -3,7 +3,6 @@
 angular.module('adminModule').controller('updateTypesAdminController', ['$scope', '$modal', 'connectUpdateTypeFactory', function ($scope, $modal, connectUpdateTypeFactory) {
 	connectUpdateTypeFactory.query({}, function(response){
 		$scope.updatetypes = response;
-		console.log($scope.updatetypes);
 	}, function(error){
 		$scope.error = error.data.message;
 	});
