@@ -4,14 +4,14 @@
 			<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
 			</button>
-			<h4 class="modal-title text-center">الموكلين</h4>
+			<h4 class="modal-title text-center">الخصم</h4>
 		</div>
 		<div class="modal-body">
 			<div class="row">
 				<div class="col-md-12">
 					<h4 ng-show="error" class="alert alert-danger">{{error | localize:'ar'}}</h4>
-					<button class="btn btn-md btn-default icon-right" ng-click="showCreateClientForm()">
-						موكل جديد <span class="glyphicon glyphicon-plus"></span>
+					<button class="btn btn-md btn-default icon-right" ng-click="showCreateDefendantForm()">
+						خصم جديد <span class="glyphicon glyphicon-plus"></span>
 					</button>
 				</div>
 			</div>
@@ -19,7 +19,7 @@
 				<div class="col-md-12">
 					<select ng-model="userIndex" name="userInfo.user" class="form-control" required>
 						<option value="">-- الموكل --</option>
-						<option ng-repeat="client in clients" value="{{$index}}">{{client.firstName}} {{client.lastName}}</option>
+						<option ng-repeat="defendant in defendants" value="{{$index}}">{{defendant.firstName}} {{defendant.lastName}}</option>
 					</select>
 				</div>
 			</div>
@@ -33,7 +33,7 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<button ng-click="createNewClient()" ng-disabled="!userInfo" class="btn btn-md btn-block btn-success">إضافة</button>
+					<button ng-click="createNewDefendant()" ng-disabled="!userInfo" class="btn btn-md btn-block btn-success">إضافة</button>
 				</div>
 			</div>
 		</div>

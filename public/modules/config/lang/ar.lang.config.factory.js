@@ -13,6 +13,7 @@ angular.module('yousufalsharif').factory('arLang', [function () {
 		'first respondant': 'المدعى عليه الأول',
 		'true': 'نعم',
 		'false': 'لا',
-		'client already exists': 'الموكل مضاف مسبقا'
+		'client already exists': 'الموكل مضاف مسبقا',
+		'defendant already exists': 'الخصم مضاف مسبقا'
 	}
 }]);

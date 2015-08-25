@@ -48,12 +48,18 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 		});
 	}
 
-	$scope.showCreateDefendantForm = function(){
+	$scope.showAddDefendantSwitch = function(){
 		$modal.open({
-			templateUrl: 'public/modules/defendant/view/create.defendant.view.html',
-			controller: 'addDefendantController',
-			backdrop: 'static'
+			templateUrl: 'public/modules/defendant/view/switch.defendant.view.html',
+			controller: 'switchDefendantController',
+			backdrop: 'static',
+			resolve: {
+				selectedCase: function(){
+					return $scope.selectedCase;
+				}
+			}
 		});
 	}
+
 
 }]);

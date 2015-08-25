@@ -11,6 +11,10 @@ angular.module('clientModule').controller('switchClientController', ['$scope', '
 		$scope.caseRoles = response;
 	});
 
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
+
 	$scope.createNewClient = function(){
 		$scope.error = false;
 		$scope.userInfo.userId = $scope.clients[$scope.userIndex]._id;
@@ -20,10 +24,6 @@ angular.module('clientModule').controller('switchClientController', ['$scope', '
 		}, function(error){
 			$scope.error = error.data.message;
 		});
-	}
-
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
 	}
 
 	$scope.showCreateClientForm = function(){

@@ -1,0 +1,65 @@
+<section>
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title text-center">بيانات الخصم</h4>
+			</div>
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-12">
+						<h4 ng-show="error" class="alert alert-danger">{{error | localize:'ar'}}</h4>
+					</div>
+				</div>
+				<form class="form" name="newDefendantForm">
+					<div class="form-group">
+						<div class="input-group input-group-lg">
+							<span class="input-group-addon">
+								<i class="text-muted glyphicon glyphicon-star"></i>
+							</span>
+							<input type="text" class="form-control" name="newDefendantForm.firstName" ng-model="newDefendant.firstName" placeholder="الإسم الأول" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group input-group-lg">
+							<span class="input-group-addon">
+								<i class="text-muted glyphicon glyphicon-star"></i>
+							</span>
+							<input type="text" class="form-control" name="newDefendantForm.lastName" ng-model="newDefendant.lastName" placeholder="الإسم الثاني" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group input-group-lg">
+							<span class="input-group-addon">
+								<i class="text-muted glyphicon glyphicon-phone-alt"></i>
+							</span>
+							<input type="text" class="form-control" name="newDefendantForm.mobilePhone" ng-model="newDefendant.mobilePhone" placeholder="رقم الهاتف" required>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group input-group-lg">
+							<span class="input-group-addon">
+								<i class="text-muted glyphicon glyphicon-globe"></i>
+							</span>
+							<textarea class="form-control" name="newDefendantForm.address" ng-model="newDefendant.address" placeholder="العنوان" rows="8" required></textarea>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group input-group-lg">
+							<span class="input-group-addon">
+								<i class="text-muted glyphicon glyphicon-asterisk"></i>
+							</span>
+							<select name="newDefendantForm.defendantRole" data-ng-model="newDefendant.defendantRole" class="form-control" required>
+								<option value="">-- الصفة --</option>
+								<option ng-repeat="role in caseRoles" value="{{role.name}}">{{role.name}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<button ng-click="createNewDefendant()" ng-disabled="newDefendantForm.$invalid" class="btn btn-lg btn-block btn-success">إضافة خصم</button>
+					</div>
+				</form>
+			</div>
+		</div>
+</section>

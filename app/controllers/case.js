@@ -7,7 +7,8 @@ court = require('../models/court'),
 _ = require('lodash'),
 moment = require('moment-range'),
 dateInput = require('../helpers/dateInput'),
-users = require('../models/user');
+users = require('../models/user'),
+defendants = require('../models/defendant');
 
 
 module.exports.index = function (req, res) {
@@ -467,6 +468,92 @@ module.exports.insertNewClient = function(req, res){
 				}
 			});
 		} else {
+			res.status(500).jsonp({message: 'Case not found'});
+		}
+	});
+}
+
+
+//insert already created defendant to a case
+module.exports.insertDefendant = function(req, res){
+	cases.findById(req.body.caseId).populate('updates.user').exec(function(err, caseInfo){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else if(caseInfo) {
+			var defendantInfo = {
+				user: req.body.userInfo.userId,
+				role: req.body.userInfo.role,
+				added: true
+			}
+
+			var find = _.find(caseInfo.defendant, function(info){
+				return defendantInfo.user.toString() == info.user.toString();
+			});
+
+			if(find != undefined){
+				res.status(500).jsonp({message: 'defendant already exists'});
+			} else {
+				caseInfo.defendant.push(defendantInfo);
+				caseInfo.save(function(err, result){
+					if(err){
+						console.log(err);
+						res.status(500).jsonp({message: err});
+					} else {
+						cases.populate(result, {path: 'defendant.user'}, function(err, userInfo){
+							//get the last defendant , the one just been inserted
+							res.status(200).jsonp(userInfo.defendant[userInfo.defendant.length - 1]);
+						});
+					}
+				});
+			}
+		} else {
+			res.status(500).jsonp({message: 'Case not found'});
+		}
+	});
+}
+
+//create a new defendant and insert its information to an existing case
+module.exports.insertNewDefendant = function(req, res){
+	console.log('Bism Allah');
+	cases.findById(req.body.caseId).populate('updates.user').exec(function(err, caseInfo){
+		if(err){
+			console.log(err);
+			res.status(500).jsonp({message: err});
+		} else if(caseInfo) {
+			//create new defendant
+			var defendant = new defendants,
+			newdefendant = _.extend(defendant, req.body.userInfo);
+
+			console.log(newdefendant);
+
+			defendant.save(function(err, result){
+				if(err){
+					console.log('err');
+					console.log(err);
+					res.status(500).jsonp({message: err});
+				} else {
+					var defendantInfo = {
+						user: result._id,
+						role: req.body.userInfo.defendantRole,
+						added: true
+					}
+
+					caseInfo.defendant.push(defendantInfo);
+					caseInfo.save(function(err, result){
+						if(err){
+							console.log(err);
+							res.status(500).jsonp({message: err});
+						} else {
+							cases.populate(result, {path: 'defendant.user'}, function(err, userInfo){
+								//get the last defendant , the one just been inserted
+								res.status(200).jsonp(userInfo.defendant[userInfo.defendant.length - 1]);
+							});
+						}
+					});
+				}
+			});
+		} else {
+			console.log('not found');
 			res.status(500).jsonp({message: 'Case not found'});
 		}
 	});
