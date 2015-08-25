@@ -321,10 +321,10 @@ module.exports.memosPending = function(req, res){
 				}
 			});
 
-			var sort = _.sortBy(upcomingupdates, 'sessionDate');
-			res.status(200).jsonp(sort);
-		}
-	});
+var sort = _.sortBy(upcomingupdates, 'sessionDate');
+res.status(200).jsonp(sort);
+}
+});
 }
 
 module.exports.memosClosed = function(req, res){
@@ -367,10 +367,10 @@ module.exports.memosClosed = function(req, res){
 				}
 			});
 
-			var sort = _.sortBy(upcomingupdates, 'sessionDate');
-			res.status(200).jsonp(sort);
-		}
-	});
+var sort = _.sortBy(upcomingupdates, 'sessionDate');
+res.status(200).jsonp(sort);
+}
+});
 }
 
 module.exports.insertMemoConsultant = function(req, res){
@@ -391,6 +391,83 @@ module.exports.insertMemoConsultant = function(req, res){
 			} else {
 				res.status(500).jsonp({message: err});
 			}
+		}
+	});
+}
+
+//insert already created client to a case
+module.exports.insertClient = function(req, res){
+	cases.findById(req.body.caseId).populate('updates.user').exec(function(err, caseInfo){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else if(caseInfo) {
+			var clientInfo = {
+				user: req.body.userInfo.userId,
+				role: req.body.userInfo.role,
+				added: true
+			}
+
+			var find = _.find(caseInfo.client, function(info){
+				return clientInfo.user.toString() == info.user.toString();
+			});
+
+			if(find != undefined){
+				res.status(500).jsonp({message: 'client already exists'});
+			} else {
+				caseInfo.client.push(clientInfo);
+				caseInfo.save(function(err, result){
+					if(err){
+						console.log(err);
+						res.status(500).jsonp({message: err});
+					} else {
+						cases.populate(result, {path: 'client.user'}, function(err, userInfo){
+							//get the last client , the one just been inserted
+							res.status(200).jsonp(userInfo.client[userInfo.client.length - 1]);
+						});
+					}
+				});
+			}
+		} else {
+			res.status(500).jsonp({message: 'Case not found'});
+		}
+	});
+}
+
+//create a new client and insert its information to an existing case
+module.exports.insertNewClient = function(req, res){
+	cases.findById(req.body.caseId).populate('updates.user').exec(function(err, caseInfo){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else if(caseInfo) {
+			//create new client
+			var client = new users,
+			newClient = _.extend(client, req.body.userInfo);
+
+			client.save(function(err, result){
+				if(err){
+					res.status(500).jsonp({message: err});
+				} else {
+					var clientInfo = {
+						user: result._id,
+						role: req.body.userInfo.clientRole,
+						added: true
+					}
+
+					caseInfo.client.push(clientInfo);
+					caseInfo.save(function(err, result){
+						if(err){
+							res.status(500).jsonp({message: err});
+						} else {
+							cases.populate(result, {path: 'client.user'}, function(err, userInfo){
+								//get the last client , the one just been inserted
+								res.status(200).jsonp(userInfo.client[userInfo.client.length - 1]);
+							});
+						}
+					});
+				}
+			});
+		} else {
+			res.status(500).jsonp({message: 'Case not found'});
 		}
 	});
 }

@@ -177,6 +177,8 @@ module.exports = function (app, express) {
 		.get('/case/memos/pending', courtCase.memosPending)
 		.get('/case/memos/closed', courtCase.memosClosed)
 		.post('/case/memos/insertconsultant', courtCase.insertMemoConsultant)
+		.post('/case/client', ensureAuthenticated, isAdmin, courtCase.insertClient)
+		.post('/case/client/new', ensureAuthenticated, isAdmin, courtCase.insertNewClient)
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)
 		.post('/caseRole', ensureAuthenticated, isUser, caseRole.create)

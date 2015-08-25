@@ -12,6 +12,7 @@ angular.module('yousufalsharif').factory('arLang', [function () {
 		'open': 'سارية',
 		'first respondant': 'المدعى عليه الأول',
 		'true': 'نعم',
-		'false': 'لا'
+		'false': 'لا',
+		'client already exists': 'الموكل مضاف مسبقا'
 	}
 }]);

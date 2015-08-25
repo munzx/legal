@@ -13,20 +13,28 @@ var caseSchema = mongoose.Schema({
 			default: '',
 			required: 'صفة الخصم مطلوبة',
 			trim: true
-		}]
+		}],
+		added: { //to see if the defendant has been added to a case from the begining or leter on "in case the user role was defendant"
+			type: Boolean,
+			default: 'false'
+		}
 	}],
 	client: [{
 		user: {
 			type: Schema.Types.ObjectId,
 			required: 'لم يتم إضافة موكلين',
-			ref: 'user' 
+			ref: 'user'
 		},
 		role: [{
 			type: String,
 			default: '',
 			required: 'صفة الخصم مطلوبة',
 			trim: true
-		}]
+		}],
+		added: { //to see if the client has been added to a case from the begining or leter on "in case the user role was client"
+			type: Boolean,
+			default: 'false'
+		}
 	}],
 	caseDate: {
 		type: Date, 

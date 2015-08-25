@@ -1,0 +1,41 @@
+<section>
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title text-center">الموكلين</h4>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-md-12">
+					<h4 ng-show="error" class="alert alert-danger">{{error | localize:'ar'}}</h4>
+					<button class="btn btn-md btn-default icon-right" ng-click="showCreateClientForm()">
+						موكل جديد <span class="glyphicon glyphicon-plus"></span>
+					</button>
+				</div>
+			</div>
+			<div class="row add-space">
+				<div class="col-md-12">
+					<select ng-model="userIndex" class="form-control">
+						<option value="">-- الموكل --</option>
+						<option ng-repeat="client in clients" value="{{$index}}">{{client.firstName}} {{client.lastName}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="row add-space">
+				<div class="col-md-12">
+					<select ng-model="userInfo.role" class="form-control">
+						<option value="">-- الصفة --</option>
+						<option ng-repeat="role in caseRoles" value="{{role.name}}">{{role.name}}</option>
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<button ng-click="createNewClient()" class="btn btn-md btn-block btn-success">إضافة</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

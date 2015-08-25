@@ -7,15 +7,28 @@
 			<h4 class="modal-title text-center">تفاصيل الدعوى - {{selectedCase.status | localize:'ar'}}</h4>
 		</div>
 		<div class="modal-body">
-			<div class="row">
+			<div class="row add-space">
 				<div class="col-md-6">
-					<h4 ng-show="nextSessionDate()"><span class="label label-default">موعد الجلسة القادمة {{nextSessionDate() | date: 'yyyy-MM-dd' }} الساعة {{nextSessionTime() | date: 'HH-mm Z'}}</span></h4>
-					<h4 ng-hide="nextSessionDate()"><span class="label label-default"> لم يتم تحديد موعد الجلسة القادمة</span></h4>
+					<div style="float: left;">
+						<h4 ng-show="nextSessionDate()"><span class="label label-default">موعد الجلسة القادمة {{nextSessionDate() | date: 'yyyy-MM-dd' }} الساعة {{nextSessionTime() | date: 'HH-mm Z'}}</span></h4>
+						<h4 ng-hide="nextSessionDate()"><span class="label label-default"> لم يتم تحديد موعد الجلسة القادمة</span></h4>
+					</div>
 				</div>
 				<div class="col-md-6">
-					<button ng-click="showUpdateCase()" class="btn btn-lg btn-success icon-right">
-					 	إضافة تحديث <span class="glyphicon glyphicon-plus"></span>
-					 </button>
+					<div class="icon-right">
+						<button ng-click="showUpdateCase()" class="btn btn-sm btn-default">
+						 	المستندات <span class="glyphicon glyphicon-folder-close"></span>
+						 </button>
+						<button ng-click="showCreateDefendantForm()" class="btn btn-sm btn-danger">
+						 	إضافة خصم <span class="glyphicon glyphicon-plus"></span>
+						 </button>
+						<button ng-click="showAddClientSwitch()" class="btn btn-sm btn-success">
+						 	إضافة موكل <span class="glyphicon glyphicon-plus"></span>
+						 </button>
+						<button ng-click="showUpdateCase()" class="btn btn-sm btn-info">
+						 	إضافة تحديث <span class="glyphicon glyphicon-plus"></span>
+						 </button>
+					</div>
 				</div>
 			</div>
 			<h4 ng-show="error" class="alert alert-danger">{{error}}</h4>
@@ -41,7 +54,9 @@
 					<tr ng-repeat="client in selectedCase.client" class="no-animate">
 						<td colspan="2" class="text-center">{{client.user.mobilePhone}}</td>
 						<td class="text-center">{{client.role[client.role.length - 1]}}</td>
-						<td colspan="2" class="text-center">{{client.user.firstName}} {{client.user.lastName}}</td>
+						<td colspan="2" class="text-center">
+							{{client.user.firstName}} {{client.user.lastName}} <span ng-class="{'label label-info': client.added}">{{client.added ? 'مضاف': ''}}</span>
+						</td>
 					</tr>
 					<tr class="danger">
 						<td class="text-center" colspan="5"><h4>الخصوم</h4></td>
