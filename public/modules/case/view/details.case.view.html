@@ -64,7 +64,10 @@
 					<tr ng-repeat="defendant in selectedCase.defendant" class="no-animate">
 						<td colspan="2" class="text-center">{{defendant.user.mobilePhone}}</td>
 						<td class="text-center">{{defendant.role[defendant.role.length - 1]}}</td>
-						<td colspan="2" class="text-center">{{defendant.user.firstName}} {{defendant.user.lastName}}</td>
+						<td colspan="2" class="text-center">
+							{{defendant.user.firstName}} {{defendant.user.lastName}} 
+							<span ng-class="{'label label-info': defendant.added}">{{defendant.added ? 'مضاف': ''}}</span>
+						</td>
 					</tr>
 					<tr class="warning">
 						<td class="text-center" colspan="5"><h4>الوقائع</h4></td>
