@@ -416,14 +416,26 @@ module.exports.insertClient = function(req, res){
 				res.status(500).jsonp({message: 'client already exists'});
 			} else {
 				caseInfo.client.push(clientInfo);
+				//add an update
+				caseInfo.updates.push({
+					updateType: 'إضافة موكل',
+					updateInfo: 'إضافة موكل إلى القضية',
+					user: req.user._id
+				});
+	
 				caseInfo.save(function(err, result){
 					if(err){
 						console.log(err);
 						res.status(500).jsonp({message: err});
 					} else {
-						cases.populate(result, {path: 'client.user'}, function(err, userInfo){
+						cases.populate(result, [{path: 'client.user'}, {path: 'updates.user'}], function(err, userInfo){
 							//get the last client , the one just been inserted
-							res.status(200).jsonp(userInfo.client[userInfo.client.length - 1]);
+							//get the last update as well
+							var info = {
+								'update': userInfo.updates[userInfo.updates.length - 1],
+								'client': userInfo.client[userInfo.client.length - 1]
+							}
+							res.status(200).jsonp(info);
 						});
 					}
 				});
@@ -455,13 +467,25 @@ module.exports.insertNewClient = function(req, res){
 					}
 
 					caseInfo.client.push(clientInfo);
+					//add an update
+					caseInfo.updates.push({
+						updateType: 'إضافة موكل',
+						updateInfo: 'إضافة موكل إلى القضية',
+						user: req.user._id
+					});
+
 					caseInfo.save(function(err, result){
 						if(err){
 							res.status(500).jsonp({message: err});
 						} else {
-							cases.populate(result, {path: 'client.user'}, function(err, userInfo){
+							cases.populate(result, [{path: 'client.user'}, {path: 'updates.user'}], function(err, userInfo){
 								//get the last client , the one just been inserted
-								res.status(200).jsonp(userInfo.client[userInfo.client.length - 1]);
+								//get the last update as well
+								var info = {
+									'update': userInfo.updates[userInfo.updates.length - 1],
+									'client': userInfo.client[userInfo.client.length - 1]
+								}
+								res.status(200).jsonp(info);
 							});
 						}
 					});
@@ -494,14 +518,26 @@ module.exports.insertDefendant = function(req, res){
 				res.status(500).jsonp({message: 'defendant already exists'});
 			} else {
 				caseInfo.defendant.push(defendantInfo);
+				//add an update
+				caseInfo.updates.push({
+					updateType: 'إضافة خصم',
+					updateInfo: 'إضافة خصم إلى القضية',
+					user: req.user._id
+				});
+
 				caseInfo.save(function(err, result){
 					if(err){
 						console.log(err);
 						res.status(500).jsonp({message: err});
 					} else {
-						cases.populate(result, {path: 'defendant.user'}, function(err, userInfo){
+						cases.populate(result, [{path: 'defendant.user'}, {path: 'updates.user'}], function(err, userInfo){
 							//get the last defendant , the one just been inserted
-							res.status(200).jsonp(userInfo.defendant[userInfo.defendant.length - 1]);
+							//get the last update as well
+							var info = {
+								'update': userInfo.updates[userInfo.updates.length - 1],
+								'defendant': userInfo.defendant[userInfo.defendant.length - 1]
+							}
+							res.status(200).jsonp(info);
 						});
 					}
 				});
@@ -524,12 +560,8 @@ module.exports.insertNewDefendant = function(req, res){
 			var defendant = new defendants,
 			newdefendant = _.extend(defendant, req.body.userInfo);
 
-			console.log(newdefendant);
-
 			defendant.save(function(err, result){
 				if(err){
-					console.log('err');
-					console.log(err);
 					res.status(500).jsonp({message: err});
 				} else {
 					var defendantInfo = {
@@ -539,21 +571,31 @@ module.exports.insertNewDefendant = function(req, res){
 					}
 
 					caseInfo.defendant.push(defendantInfo);
+					//add an update
+					caseInfo.updates.push({
+						updateType: 'إضافة خصم',
+						updateInfo: 'إضافة خصم إلى القضية',
+						user: req.user._id
+					});
+
 					caseInfo.save(function(err, result){
 						if(err){
-							console.log(err);
 							res.status(500).jsonp({message: err});
 						} else {
-							cases.populate(result, {path: 'defendant.user'}, function(err, userInfo){
+							cases.populate(result, [{path: 'defendant.user'}, {path: 'updates.user'}], function(err, userInfo){
 								//get the last defendant , the one just been inserted
-								res.status(200).jsonp(userInfo.defendant[userInfo.defendant.length - 1]);
+								//get the last update as well
+								var info = {
+									'update': userInfo.updates[userInfo.updates.length - 1],
+									'defendant': userInfo.defendant[userInfo.defendant.length - 1]
+								}
+								res.status(200).jsonp(info);
 							});
 						}
 					});
 				}
 			});
 		} else {
-			console.log('not found');
 			res.status(500).jsonp({message: 'Case not found'});
 		}
 	});

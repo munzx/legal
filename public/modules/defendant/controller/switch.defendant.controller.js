@@ -21,7 +21,8 @@ angular.module('defendantModule').controller('switchDefendantController', ['$sco
 		$scope.error = false;
 		$scope.userInfo.userId = $scope.defendants[$scope.userIndex]._id;
 		connectCaseFactory.save({'action': 'defendant'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
-			$scope.selectedCase.defendant.push(response);
+			$scope.selectedCase.defendant.push(response.defendant);
+			$scope.selectedCase.updates.push(response.update);
 			$modalInstance.dismiss('cancel');
 		}, function(error){
 			$scope.error = error.data.message;

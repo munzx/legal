@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('clientModule').controller('addClientController', ['$scope', '$modalInstance', 'connectCaseFactory', 'caseId', 'clients', 'closeParentModal', 'connectCaseRoleFactory', function ($scope, $modalInstance, connectCaseFactory, caseId, clients, closeParentModal, connectCaseRoleFactory) {
+angular.module('clientModule').controller('addClientController', ['$scope', '$modalInstance', 'connectCaseFactory', 'selectedCase', 'closeParentModal', 'connectCaseRoleFactory', function ($scope, $modalInstance, connectCaseFactory, selectedCase, closeParentModal, connectCaseRoleFactory) {
 	connectCaseRoleFactory.query({}, function(response){
 		$scope.caseRoles = response;
 	});
@@ -13,8 +13,9 @@ angular.module('clientModule').controller('addClientController', ['$scope', '$mo
 		$scope.error = false;
 		$scope.userInfo.role = 'client';
 		console.log($scope.userInfo);
-		connectCaseFactory.save({'action': 'client', 'subaction': 'new'}, {'caseId': caseId, 'userInfo': $scope.userInfo}, function(response){
-			clients.push(response);
+		connectCaseFactory.save({'action': 'client', 'subaction': 'new'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
+			selectedCase.clients.push(response.client);
+			selectedCase.updates.push(response.update);
 			$modalInstance.dismiss('cancel');
 			closeParentModal();
 		}, function(error){
