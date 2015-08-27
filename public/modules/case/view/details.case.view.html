@@ -51,22 +51,41 @@
 					<tr class="success">
 						<td class="text-center" colspan="5"><h4>الموكلين</h4></td>
 					</tr>
-					<tr ng-repeat="client in selectedCase.client" class="no-animate">
-						<td colspan="2" class="text-center">{{client.user.mobilePhone}}</td>
+					<tr ng-repeat="client in selectedCase.client" class="no-animate" class="text-center" ng-mouseenter="show = true" ng-mouseleave="show = false">
+						<td colspan="1">
+							<span ng-show="show" style="float: left;" class="text-muted">
+								<span class="glyphicon glyphicon-remove cursor" ng-click="showRemoveClientConfirmForm($index)"></span>
+							</span>
+						</td>
+						<td colspan="1" class="text-center">
+							{{client.user.mobilePhone}}
+						</td>
 						<td class="text-center">{{client.role[client.role.length - 1]}}</td>
 						<td colspan="2" class="text-center">
-							{{client.user.firstName}} {{client.user.lastName}} <span ng-class="{'label label-info': client.added}">{{client.added ? 'مضاف': ''}}</span>
+							{{client.user.firstName}} {{client.user.lastName}}
+							<label class="label label-danger" ng-show="client.removed">حذف</label>
+							<span tooltip="{{client.created | date: 'yyyy-MM-dd'}}" tooltip-placement="left" class="cursor" ng-class="{'label label-info': client.added}">
+								{{client.added ? 'مضاف': ''}}
+							</span>
 						</td>
 					</tr>
 					<tr class="danger">
 						<td class="text-center" colspan="5"><h4>الخصوم</h4></td>
 					</tr>
-					<tr ng-repeat="defendant in selectedCase.defendant" class="no-animate">
-						<td colspan="2" class="text-center">{{defendant.user.mobilePhone}}</td>
+					<tr ng-repeat="defendant in selectedCase.defendant" class="no-animate" class="no-animate" class="text-center" ng-mouseenter="show = true" ng-mouseleave="show = false">
+						<td>
+							<span ng-show="show" style="float: left;" class="text-muted">
+								<span class="glyphicon glyphicon-remove cursor" ng-click="showRemoveDefendantConfirmForm($index)"></span>
+							</span>
+						</td>
+						<td colspan="1" class="text-center">{{defendant.user.mobilePhone}}</td>
 						<td class="text-center">{{defendant.role[defendant.role.length - 1]}}</td>
 						<td colspan="2" class="text-center">
 							{{defendant.user.firstName}} {{defendant.user.lastName}} 
-							<span ng-class="{'label label-info': defendant.added}">{{defendant.added ? 'مضاف': ''}}</span>
+							<label class="label label-danger" ng-show="defendant.removed">حذف</label>
+							<span ng-class="{'label label-info': defendant.added}" tooltip="{{defendant.created | date: 'yyyy-MM-dd'}}" tooltip-placement="left" class="cursor">
+								{{defendant.added ? 'مضاف': ''}}
+							</span>
 						</td>
 					</tr>
 					<tr class="warning">

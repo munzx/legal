@@ -179,6 +179,8 @@ module.exports = function (app, express) {
 		.post('/case/memos/insertconsultant', courtCase.insertMemoConsultant)
 		.post('/case/client', ensureAuthenticated, isAdmin, courtCase.insertClient)
 		.post('/case/client/new', ensureAuthenticated, isAdmin, courtCase.insertNewClient)
+		.delete('/case/:caseId/client/:clientId', ensureAuthenticated, isAdmin, courtCase.clientSilentRemove)
+		.delete('/case/:caseId/defendant/:defendantId', ensureAuthenticated, isAdmin, courtCase.defendantSilentRemove)
 		.post('/case/defendant', ensureAuthenticated, isAdmin, courtCase.insertDefendant)
 		.post('/case/defendant/new', ensureAuthenticated, isAdmin, courtCase.insertNewDefendant)
 		//caseRoles

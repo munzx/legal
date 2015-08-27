@@ -61,5 +61,83 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 		});
 	}
 
+	$scope.showRemoveClientConfirmForm = function(index){
+		var modalInstance = $modal.open({
+			templateUrl: 'public/modules/config/view/message/confirm.message.config.view.html',
+			backdrop: 'static',
+			controller: ['$scope', '$modalInstance', 'client', 'selectedCase', function($scope, $modalInstance, client, selectedCase){
+				$scope.message = {};
+				$scope.message.title = 'حذف موكل';
+				$scope.message.text = ' هل ترغب بحذف الموكل ' + client.user.firstName + ' ' + ' ' + client.user.lastName + ' ?';
+				$scope.message.confirm = 'نعم';
+				$scope.message.cancel = 'لا';
+
+				$scope.confirm = function(){
+					connectCaseFactory.remove({'caseId': selectedCase._id, 'action': 'client', 'id': client._id}, function(response){
+						selectedCase.client[index].removed = true;
+						$modalInstance.dismiss('cancel');
+					}, function(error){
+						console.log(error);
+					});
+				}
+
+				$scope.cancel = function(){
+					$modalInstance.dismiss('cancel');
+				}
+
+				$scope.closeModal = function(){
+					$modalInstance.dismiss('cancel');
+				}
+			}],
+			resolve: {
+				client: function(){
+					return $scope.selectedCase.client[index];
+				},
+				selectedCase: function(){
+					return $scope.selectedCase;
+				}
+			}
+		});
+	}
+
+	$scope.showRemoveDefendantConfirmForm = function(index){
+		var modalInstance = $modal.open({
+			templateUrl: 'public/modules/config/view/message/confirm.message.config.view.html',
+			backdrop: 'static',
+			controller: ['$scope', '$modalInstance', 'defendant', 'selectedCase', function($scope, $modalInstance, defendant, selectedCase){
+				$scope.message = {};
+				$scope.message.title = 'حذف موكل';
+				$scope.message.text = ' هل ترغب بحذف الموكل ' + defendant.user.firstName + ' ' + ' ' + defendant.user.lastName + ' ?';
+				$scope.message.confirm = 'نعم';
+				$scope.message.cancel = 'لا';
+
+				$scope.confirm = function(){
+					connectCaseFactory.remove({'caseId': selectedCase._id, 'action': 'defendant', 'id': defendant._id}, function(response){
+						$modalInstance.dismiss('cancel');
+						selectedCase.defendant[index].removed = true;
+					}, function(error){
+						console.log(error);
+					});
+				}
+
+				$scope.cancel = function(){
+					$modalInstance.dismiss('cancel');
+				}
+
+				$scope.closeModal = function(){
+					$modalInstance.dismiss('cancel');
+				}
+			}],
+			resolve: {
+				defendant: function(){
+					return $scope.selectedCase.defendant[index];
+				},
+				selectedCase: function(){
+					return $scope.selectedCase;
+				}
+			}
+		});
+	}
+
 
 }]);

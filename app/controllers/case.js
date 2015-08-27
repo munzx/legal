@@ -600,3 +600,58 @@ module.exports.insertNewDefendant = function(req, res){
 		}
 	});
 }
+
+
+module.exports.clientSilentRemove = function(req, res){
+	cases.findById(req.params.caseId).exec(function(err, caseInfo){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else if(caseInfo) {
+			var clientInfo = caseInfo.client.id(req.params.clientId);
+			if(clientInfo.removed == false){
+				clientInfo.removed = true;
+				clientInfo.removeUser = req.user._id;
+
+				caseInfo.save(function(err, result){
+					if(err){
+						res.status(500).jsonp({message: err});
+					} else {
+						res.status(200).jsonp(result);
+					}
+				});
+			} else {
+				res.status(500).jsonp({message: 'Already deleted'});
+			}
+		} else {
+			console.log('not found');
+			res.status(500).jsonp({message: 'case not found'});
+		}
+	});
+}
+
+module.exports.defendantSilentRemove = function(req, res){
+	cases.findById(req.params.caseId).exec(function(err, caseInfo){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else if(caseInfo) {
+			var defendantInfo = caseInfo.defendant.id(req.params.defendantId);
+			if(defendantInfo.removed == false){
+				defendantInfo.removed = true;
+				defendantInfo.removeUser = req.user._id;
+
+				caseInfo.save(function(err, result){
+					if(err){
+						res.status(500).jsonp({message: err});
+					} else {
+						res.status(200).jsonp(result);
+					}
+				});
+			} else {
+				res.status(500).jsonp({message: 'Already deleted'});
+			}
+		} else {
+			console.log('not found');
+			res.status(500).jsonp({message: 'case not found'});
+		}
+	});
+}

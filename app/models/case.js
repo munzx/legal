@@ -17,6 +17,18 @@ var caseSchema = mongoose.Schema({
 		added: { //to see if the defendant has been added to a case from the begining or leter on "in case the user role was defendant"
 			type: Boolean,
 			default: 'false'
+		},
+		created: {
+			type: Date,
+			default: Date.now
+		},
+		removed: {
+			type: Boolean,
+			default: false
+		},
+		removeUser: {
+			type: Schema.Types.ObjectId,
+			ref: 'user'
 		}
 	}],
 	client: [{
@@ -34,6 +46,18 @@ var caseSchema = mongoose.Schema({
 		added: { //to see if the client has been added to a case from the begining or leter on "in case the user role was client"
 			type: Boolean,
 			default: 'false'
+		},
+		created: {
+			type: Date,
+			default: Date.now
+		},
+		removed: {
+			type: Boolean,
+			default: false
+		},
+		removeUser: {
+			type: Schema.Types.ObjectId,
+			ref: 'user'
 		}
 	}],
 	caseDate: {
@@ -115,6 +139,14 @@ var caseSchema = mongoose.Schema({
 		created: {
 			type: Date,
 			default: Date.now
+		},
+		removed: {
+			type: Boolean,
+			default: false
+		},
+		removeUser: {
+			type: Schema.Types.ObjectId,
+			ref: 'user'
 		}
 	}],
 	sessions: [{
@@ -139,6 +171,14 @@ var caseSchema = mongoose.Schema({
 		created: {
 			type: Date,
 			default: Date.now
+		},
+		removed: {
+			type: Boolean,
+			default: false
+		},
+		removeUser: {
+			type: Schema.Types.ObjectId,
+			ref: 'user'
 		}
 	}],
 	status: {
@@ -146,6 +186,18 @@ var caseSchema = mongoose.Schema({
 		default: 'open',
 		enum: ['open', 'close', 'pendding'],
 		lowercase: true
+	},
+	removed: {
+		type: Boolean,
+		default: false
+	},
+	removeDate: {
+		type: Date,
+		default: ''
+	},
+	removeUser: {
+		type: Schema.Types.ObjectId,
+		ref: 'user'
 	},
 	created: {type: Date, default: Date.now}
 });
