@@ -3,7 +3,6 @@
 angular.module('adminModule').controller('usersAdminController', ['$scope', '$state', 'connectUserFactory', '$modal', function ($scope, $state, connectUserFactory, $modal) {
 	connectUserFactory.query({}, function(response){
 		$scope.users = response;
-		console.log($scope.users);
 	}, function(error){
 		$scope.error = error.data.message;
 	});

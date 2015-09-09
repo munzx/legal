@@ -75,6 +75,7 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 				$scope.confirm = function(){
 					connectCaseFactory.remove({'caseId': selectedCase._id, 'action': 'client', 'id': client._id}, function(response){
 						selectedCase.client[index].removed = true;
+						selectedCase.updates = response.updates;
 						$modalInstance.dismiss('cancel');
 					}, function(error){
 						console.log(error);
@@ -107,14 +108,16 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 			controller: ['$scope', '$modalInstance', 'defendant', 'selectedCase', function($scope, $modalInstance, defendant, selectedCase){
 				$scope.message = {};
 				$scope.message.title = 'حذف موكل';
-				$scope.message.text = ' هل ترغب بحذف الموكل ' + defendant.user.firstName + ' ' + ' ' + defendant.user.lastName + ' ?';
+				$scope.message.text = ' هل ترغب بحذف الخصم ' + defendant.user.firstName + ' ' + ' ' + defendant.user.lastName + ' ?';
 				$scope.message.confirm = 'نعم';
 				$scope.message.cancel = 'لا';
 
 				$scope.confirm = function(){
 					connectCaseFactory.remove({'caseId': selectedCase._id, 'action': 'defendant', 'id': defendant._id}, function(response){
 						$modalInstance.dismiss('cancel');
+						console.log(response);
 						selectedCase.defendant[index].removed = true;
+						selectedCase.updates = response.updates;
 					}, function(error){
 						console.log(error);
 					});

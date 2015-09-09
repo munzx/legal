@@ -53,7 +53,7 @@
 					</tr>
 					<tr ng-repeat="client in selectedCase.client" class="no-animate" class="text-center" ng-mouseenter="show = true" ng-mouseleave="show = false">
 						<td colspan="1">
-							<span ng-show="show" style="float: left;" class="text-muted">
+							<span ng-show="show && !client.removed" style="float: left;" class="text-muted">
 								<span class="glyphicon glyphicon-remove cursor" ng-click="showRemoveClientConfirmForm($index)"></span>
 							</span>
 						</td>
@@ -74,7 +74,7 @@
 					</tr>
 					<tr ng-repeat="defendant in selectedCase.defendant" class="no-animate" class="no-animate" class="text-center" ng-mouseenter="show = true" ng-mouseleave="show = false">
 						<td>
-							<span ng-show="show" style="float: left;" class="text-muted">
+							<span ng-show="show && !defendant.removed" style="float: left;" class="text-muted">
 								<span class="glyphicon glyphicon-remove cursor" ng-click="showRemoveDefendantConfirmForm($index)"></span>
 							</span>
 						</td>
@@ -120,7 +120,10 @@
 						<td class="text-center">{{updateInfo.user.firstName}} {{updateInfo.user.lastName}}</td>
 						<td>{{updateInfo.updateInfo}}</td>
 						<td class="text-center">{{updateInfo.updateId || '-------'}}</td>
-						<td class="text-center" colspan="2">{{updateInfo.updateType}}</td>
+						<td class="text-center" colspan="2">
+							{{updateInfo.updateType}}
+							<label class="label label-danger" ng-show="updateInfo.removed">حذف</label>
+						</td>
 					</tr>
 				</tbody>
 			</table>

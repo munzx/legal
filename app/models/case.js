@@ -99,6 +99,9 @@ var caseSchema = mongoose.Schema({
 		ref: 'user' 
 	}],
 	updates: [{
+		refId: { //if any collection is linked to this update then insert the collection id here
+			type: Schema.Types.ObjectId
+		},
 		updateType: {
 			type: String,
 			default: '',

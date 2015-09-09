@@ -177,12 +177,13 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 	}
 
 	$scope.createNewCase = function(){
+		console.log($scope.courts);
 		$scope.error = false;
 		var caseInfo = {
 			defendant: getIdsAndRoles($scope.selectedDefendants),
 			client: getIdsAndRoles($scope.selectedClients),
 			caseDate: $scope.newCase.caseDate,
-			court: getIds($scope.courts),
+			court: $scope.newCase.court,
 			reportNumber: $scope.newCase.reportNumber,
 			caseNumber: $scope.newCase.caseNumber,
 			subject: $scope.newCase.subject,
@@ -190,6 +191,8 @@ angular.module('caseModule').controller('indexCaseController', ['$scope', 'cases
 			consultant: $scope.consultants[$scope.newCase.consultant]._id,
 			status: 'open'
 		}
+
+		console.log(caseInfo);
 
 		connectCaseFactory.save({}, {'caseInfo': caseInfo}, function(response){
 			cases.unshift(response);

@@ -416,26 +416,32 @@ module.exports.insertClient = function(req, res){
 				res.status(500).jsonp({message: 'client already exists'});
 			} else {
 				caseInfo.client.push(clientInfo);
-				//add an update
-				caseInfo.updates.push({
-					updateType: 'إضافة موكل',
-					updateInfo: 'إضافة موكل إلى القضية',
-					user: req.user._id
-				});
-	
 				caseInfo.save(function(err, result){
 					if(err){
-						console.log(err);
 						res.status(500).jsonp({message: err});
 					} else {
-						cases.populate(result, [{path: 'client.user'}, {path: 'updates.user'}], function(err, userInfo){
-							//get the last client , the one just been inserted
-							//get the last update as well
-							var info = {
-								'update': userInfo.updates[userInfo.updates.length - 1],
-								'client': userInfo.client[userInfo.client.length - 1]
+						//add an update
+						caseInfo.updates.push({
+							updateType: 'إضافة موكل',
+							updateInfo: 'إضافة موكل إلى القضية',
+							refId: result.client[result.client.length - 1]._id,
+							user: req.user._id
+						});
+			
+						caseInfo.save(function(err, result){
+							if(err){
+								res.status(500).jsonp({message: err});
+							} else {
+								cases.populate(result, [{path: 'client.user'}, {path: 'updates.user'}], function(err, userInfo){
+									//get the last client , the one just been inserted
+									//get the last update as well
+									var info = {
+										'update': userInfo.updates[userInfo.updates.length - 1],
+										'client': userInfo.client[userInfo.client.length - 1]
+									}
+									res.status(200).jsonp(info);
+								});
 							}
-							res.status(200).jsonp(info);
 						});
 					}
 				});
@@ -467,25 +473,32 @@ module.exports.insertNewClient = function(req, res){
 					}
 
 					caseInfo.client.push(clientInfo);
-					//add an update
-					caseInfo.updates.push({
-						updateType: 'إضافة موكل',
-						updateInfo: 'إضافة موكل إلى القضية',
-						user: req.user._id
-					});
-
 					caseInfo.save(function(err, result){
 						if(err){
 							res.status(500).jsonp({message: err});
 						} else {
-							cases.populate(result, [{path: 'client.user'}, {path: 'updates.user'}], function(err, userInfo){
-								//get the last client , the one just been inserted
-								//get the last update as well
-								var info = {
-									'update': userInfo.updates[userInfo.updates.length - 1],
-									'client': userInfo.client[userInfo.client.length - 1]
+							//add an update
+							caseInfo.updates.push({
+								updateType: 'إضافة موكل',
+								updateInfo: 'إضافة موكل إلى القضية',
+								refId: result.client[result.client.length - 1]._id,
+								user: req.user._id
+							});
+
+							caseInfo.save(function(err, result){
+								if(err){
+									res.status(500).jsonp({message: err});
+								} else {
+									cases.populate(result, [{path: 'client.user'}, {path: 'updates.user'}], function(err, userInfo){
+										//get the last client , the one just been inserted
+										//get the last update as well
+										var info = {
+											'update': userInfo.updates[userInfo.updates.length - 1],
+											'client': userInfo.client[userInfo.client.length - 1]
+										}
+										res.status(200).jsonp(info);
+									});
 								}
-								res.status(200).jsonp(info);
 							});
 						}
 					});
@@ -518,26 +531,32 @@ module.exports.insertDefendant = function(req, res){
 				res.status(500).jsonp({message: 'defendant already exists'});
 			} else {
 				caseInfo.defendant.push(defendantInfo);
-				//add an update
-				caseInfo.updates.push({
-					updateType: 'إضافة خصم',
-					updateInfo: 'إضافة خصم إلى القضية',
-					user: req.user._id
-				});
-
 				caseInfo.save(function(err, result){
 					if(err){
-						console.log(err);
 						res.status(500).jsonp({message: err});
 					} else {
-						cases.populate(result, [{path: 'defendant.user'}, {path: 'updates.user'}], function(err, userInfo){
-							//get the last defendant , the one just been inserted
-							//get the last update as well
-							var info = {
-								'update': userInfo.updates[userInfo.updates.length - 1],
-								'defendant': userInfo.defendant[userInfo.defendant.length - 1]
+						//add an update
+						caseInfo.updates.push({
+							updateType: 'إضافة خصم',
+							updateInfo: 'إضافة خصم إلى القضية',
+							refId: result.defendant[result.defendant.length - 1]._id,
+							user: req.user._id
+						});
+
+						caseInfo.save(function(err, result){
+							if(err){
+								res.status(500).jsonp({message: err});
+							} else {
+								cases.populate(result, [{path: 'defendant.user'}, {path: 'updates.user'}], function(err, userInfo){
+									//get the last defendant , the one just been inserted
+									//get the last update as well
+									var info = {
+										'update': userInfo.updates[userInfo.updates.length - 1],
+										'defendant': userInfo.defendant[userInfo.defendant.length - 1]
+									}
+									res.status(200).jsonp(info);
+								});
 							}
-							res.status(200).jsonp(info);
 						});
 					}
 				});
@@ -571,25 +590,32 @@ module.exports.insertNewDefendant = function(req, res){
 					}
 
 					caseInfo.defendant.push(defendantInfo);
-					//add an update
-					caseInfo.updates.push({
-						updateType: 'إضافة خصم',
-						updateInfo: 'إضافة خصم إلى القضية',
-						user: req.user._id
-					});
-
 					caseInfo.save(function(err, result){
 						if(err){
 							res.status(500).jsonp({message: err});
 						} else {
-							cases.populate(result, [{path: 'defendant.user'}, {path: 'updates.user'}], function(err, userInfo){
-								//get the last defendant , the one just been inserted
-								//get the last update as well
-								var info = {
-									'update': userInfo.updates[userInfo.updates.length - 1],
-									'defendant': userInfo.defendant[userInfo.defendant.length - 1]
+							//add an update
+							caseInfo.updates.push({
+								updateType: 'إضافة خصم',
+								updateInfo: 'إضافة خصم إلى القضية',
+								refId: result.defendant[result.defendant.length - 1]._id,
+								user: req.user._id
+							});
+
+							caseInfo.save(function(err, result){
+								if(err){
+									res.status(500).jsonp({message: err});
+								} else {
+									cases.populate(result, [{path: 'defendant.user'}, {path: 'updates.user'}], function(err, userInfo){
+										//get the last defendant , the one just been inserted
+										//get the last update as well
+										var info = {
+											'update': userInfo.updates[userInfo.updates.length - 1],
+											'defendant': userInfo.defendant[userInfo.defendant.length - 1]
+										}
+										res.status(200).jsonp(info);
+									});
 								}
-								res.status(200).jsonp(info);
 							});
 						}
 					});
@@ -607,10 +633,21 @@ module.exports.clientSilentRemove = function(req, res){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else if(caseInfo) {
-			var clientInfo = caseInfo.client.id(req.params.clientId);
+			var clientInfo = caseInfo.client.id(req.params.clientId),
+				getUpdateIndex = _.findIndex(caseInfo.updates, function(info){
+					return clientInfo._id.equals(info.refId);
+				});
+
 			if(clientInfo.removed == false){
 				clientInfo.removed = true;
 				clientInfo.removeUser = req.user._id;
+
+				//make the update "which is linked by refId to this client in this case" marked removed
+				//only if the update found
+				if(getUpdateIndex !== -1){
+					caseInfo.updates[getUpdateIndex].removed = true;
+					caseInfo.updates[getUpdateIndex].removeUser = req.user._id;
+				}
 
 				caseInfo.save(function(err, result){
 					if(err){
@@ -634,10 +671,21 @@ module.exports.defendantSilentRemove = function(req, res){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else if(caseInfo) {
-			var defendantInfo = caseInfo.defendant.id(req.params.defendantId);
+			var defendantInfo = caseInfo.defendant.id(req.params.defendantId),
+				getUpdateIndex = _.findIndex(caseInfo.updates, function(info){
+					return defendantInfo._id.equals(info.refId);
+				});
+
 			if(defendantInfo.removed == false){
 				defendantInfo.removed = true;
 				defendantInfo.removeUser = req.user._id;
+
+				//make the update "which is linked by refId to this client in this case" marked removed
+				//only if the update found
+				if(getUpdateIndex !== -1){
+					caseInfo.updates[getUpdateIndex].removed = true;
+					caseInfo.updates[getUpdateIndex].removeUser = req.user._id;
+				}
 
 				caseInfo.save(function(err, result){
 					if(err){

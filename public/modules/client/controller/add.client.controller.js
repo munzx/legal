@@ -12,9 +12,8 @@ angular.module('clientModule').controller('addClientController', ['$scope', '$mo
 	$scope.createNewClient = function(){
 		$scope.error = false;
 		$scope.userInfo.role = 'client';
-		console.log($scope.userInfo);
 		connectCaseFactory.save({'action': 'client', 'subaction': 'new'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
-			selectedCase.clients.push(response.client);
+			selectedCase.client.push(response.client);
 			selectedCase.updates.push(response.update);
 			$modalInstance.dismiss('cancel');
 			closeParentModal();

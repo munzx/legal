@@ -15,7 +15,7 @@ angular.module('clientModule').controller('switchClientController', ['$scope', '
 		$modalInstance.dismiss('cancel');
 	}
 
-	$scope.createNewClient = function(){
+	$scope.creatClient = function(){
 		$scope.error = false;
 		$scope.userInfo.userId = $scope.clients[$scope.userIndex]._id;
 		connectCaseFactory.save({'action': 'client'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
@@ -34,7 +34,7 @@ angular.module('clientModule').controller('switchClientController', ['$scope', '
 			backdrop: 'static',
 			resolve: {
 				selectedCase: function(){
-					return $scope.selectedCase._id;
+					return $scope.selectedCase;
 				},
 				closeParentModal: function(){
 					return $scope.closeModal;
