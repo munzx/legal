@@ -13,43 +13,16 @@
 		<div class="collapse navbar-collapse" collapse="!navbarCollapsed">
 			<ul class="nav navbar-nav navbar-right">
 				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.tasks"><b> المهام</b></a>
+					<a ui-sref="consultant.tasks"><b> المهام</b></a>
 				</li>
 				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.memos"><b> المذكرات</b></a>
+					<a ui-sref="consultant.cases"><b> القضايا</b></a>
 				</li>
 				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.sessions"><b> الجلسات</b></a>
+					<a ui-sref="consultant.sessions"><b> الجلسات</b></a>
 				</li>
 				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.updatetypes"><b>أنواع التحديثات</b></a>
-				</li>
-				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.caseRole"><b>الصفات</b></a>
-				</li>
-				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.courts"><b>المحاكم</b></a>
-				</li>
-				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.cases"><b>القضايا</b></a>
-				</li>
-				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.defendants"><b>الخصوم</b></a>
-				</li>
-				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.clients"><b>الموكلين</b></a>
-				</li>
-				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.employees"><b>الموظفين</b></a>
-				</li>
-				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.consultants"><b>المستشارين</b></a>
-				</li>
-				<li  ui-sref-active="active" ng-show="loggedLink">
-					<a ui-sref="admin.users"><b>المستخدمين</b></a>
-				</li>
-				<li  ng-show="loggedLink">
-					<a ui-sref="admin"><b>الرئيسية</b></a>
+					<a ui-sref="consultant.memos"><b> المذكرات</b></a>
 				</li>
 				<li class="dropdown" dropdown ng-show="loggedLink" >
 					<a href class="dropdown-toggle" dropdown-toggle data-toggle="dropdown" is-open="status.isopen" dropdown-toggle ng-disabled="disabled">

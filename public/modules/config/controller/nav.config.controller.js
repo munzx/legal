@@ -11,6 +11,8 @@ angular.module('yousufalsharif').controller('navConfig', ['$rootScope', '$scope'
 		$scope.navbarCollapsed = false;
 	});
 
+	$scope.user = registerUserConfigFactory.getUser();
+
 	// Watch the user
 	$rootScope.$watch('logged', function () {
 		if($rootScope.logged){
@@ -22,6 +24,14 @@ angular.module('yousufalsharif').controller('navConfig', ['$rootScope', '$scope'
 				case 'admin':
 					//navigation menu
 					$scope.nav = 'public/modules/config/view/admin.nav.html';
+					break;
+				case 'employee':
+					//navigation menu
+					$scope.nav = 'public/modules/config/view/employee.nav.html';
+					break;
+				case 'consultant':
+					//navigation menu
+					$scope.nav = 'public/modules/config/view/consultant.nav.html';
 					break;
 				default :
 					//navigation menu

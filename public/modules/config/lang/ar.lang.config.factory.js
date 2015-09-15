@@ -4,6 +4,7 @@ angular.module('yousufalsharif').factory('arLang', [function () {
 	return {
 		'admin': 'إداري',
 		'pending': 'معلقة',
+		'close': 'مغلقة',
 		'client': 'موكل',
 		'employee': 'موظف',
 		'user': 'مستخدم',

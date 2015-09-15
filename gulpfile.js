@@ -21,7 +21,7 @@ function onError(err) {
 var paths = {
 	desFolder: 'public/dest/',
 	htmlFiles: ['public/modules/*/*/*.html', 'public/modules/*/*/*.ejs'],
-	jsFiles: ['public/modules/*/*.js', 'public/modules/*/*/*.js'],
+	jsFiles: ['public/modules/*/*.js', 'public/modules/*/*/*.js', 'public/modules/*/*/*.*.js'],
 	cssFiles: ['public/modules/*/*.css', 'public/modules/*/*/*.css'],
 	server: {
 		index: 'server.js',

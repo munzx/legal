@@ -4,5 +4,6 @@ angular.module('adminModule').controller('indexAdminController', ['$scope', '$st
 	$scope.user = registerUserConfigFactory.getUser();
 
 	if($scope.user === false) $state.go('signin');
+	if($scope.user.role !== 'admin') $state.go('signin');
 
 }]);

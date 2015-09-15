@@ -8,7 +8,7 @@ angular.module('adminModule').controller('casesAdminController', ['$scope', 'con
 	$scope.showNewCaseForm = function(){
 		$modal.open({
 			templateUrl: 'public/modules/case/view/create.case.view.html',
-			controller: 'indexCaseController',
+			controller: 'createCaseController',
 			size: 'lg',
 			backdrop : 'static',
 			resolve: {

@@ -14,7 +14,6 @@ angular.module('userModule').controller('indexUserController', ['$scope', 'users
 			$scope.userCreated = true;
 		}, function(error){
 			$scope.error = error.data.message;
-	
 		});
 	}
 

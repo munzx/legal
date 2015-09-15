@@ -14,6 +14,7 @@ var cms = require('../controllers/cms'),
 	updateType = require('../controllers/updateType'), 
 	account = require('../controllers/account'),
 	courtCase = require('../controllers/case'),
+	calendar = require('../controllers/calendar'),
 	passport = require('passport'),
 	authLocal = require('./auth/local.strategy');
 
@@ -46,7 +47,7 @@ module.exports = function (app, express) {
 	//grant the admin an access to any of the user route/controller
 	function isUser(req, res, next){
 		if(req.user){
-			if(req.user.role === 'user' || req.user.role === 'admin'){
+			if(req.user.role === 'consultant' || req.user.role === 'employee'  || req.user.role === 'admin'){
 				next();
 			} else {
 				res.status(403).json('Access Denied');
@@ -157,7 +158,7 @@ module.exports = function (app, express) {
 		//courts
 		.get('/admin/court', court.index)
 		.post('/admin/court', ensureAuthenticated, isUser, court.create)
-		.delete('/admin/court/:id', ensureAuthenticated, isUser, court.remove)
+		.delete('/admin/court/:id', ensureAuthenticated, isEmployee, court.remove)
 		//clients
 		.get('/admin/client', ensureAuthenticated, isUser, client.index)
 		//consultants
@@ -166,42 +167,49 @@ module.exports = function (app, express) {
 		.get('/admin/employee', ensureAuthenticated, isUser, employee.index)
 		//case
 		.get('/case', ensureAuthenticated, isUser, courtCase.index)
-		.post('/case', ensureAuthenticated,isUser, courtCase.create)
+		.post('/case', ensureAuthenticated, isUser, courtCase.create)
 		.delete('/case/:id', ensureAuthenticated, isUser, courtCase.remove)
 		.get('/case/sessions', isUser, ensureAuthenticated, courtCase.sessionDates)
-		.get('/case/sessions/upcoming', courtCase.upcomingSessions)
-		.get('/case/sessions/previous', courtCase.previousSessions)
+		.get('/case/sessions/upcoming', ensureAuthenticated, isUser, courtCase.upcomingSessions)
+		.get('/case/sessions/previous', ensureAuthenticated, isUser, courtCase.previousSessions)
 		.post('/case/caseupdate/:id', ensureAuthenticated, isUser, courtCase.insertCaseUpdate)
-		.post('/case/tasks/updatebydate', courtCase.byDate)
-		.post('/case/tasks/updatebycase', courtCase.byCase)
-		.get('/case/memos/pending', courtCase.memosPending)
-		.get('/case/memos/closed', courtCase.memosClosed)
-		.post('/case/memos/insertconsultant', courtCase.insertMemoConsultant)
-		.post('/case/client', ensureAuthenticated, isAdmin, courtCase.insertClient)
-		.post('/case/client/new', ensureAuthenticated, isAdmin, courtCase.insertNewClient)
-		.delete('/case/:caseId/client/:clientId', ensureAuthenticated, isAdmin, courtCase.clientSilentRemove)
-		.delete('/case/:caseId/defendant/:defendantId', ensureAuthenticated, isAdmin, courtCase.defendantSilentRemove)
-		.post('/case/defendant', ensureAuthenticated, isAdmin, courtCase.insertDefendant)
-		.post('/case/defendant/new', ensureAuthenticated, isAdmin, courtCase.insertNewDefendant)
+		.post('/case/tasks/updatebydate', ensureAuthenticated, isUser, courtCase.byDate)
+		.post('/case/tasks/updatebycase', ensureAuthenticated, isUser, courtCase.byCase)
+		.get('/case/memos/pending', ensureAuthenticated, isUser, courtCase.memosPending)
+		.get('/case/memos/closed', ensureAuthenticated, isUser, courtCase.memosClosed)
+		.post('/case/memos/insertconsultant', ensureAuthenticated, isUser, courtCase.insertMemoConsultant)
+		.get('/case/consultant/:id/memos', courtCase.consultantMemos)
+		.post('/case/client', ensureAuthenticated, isUser, courtCase.insertClient)
+		.post('/case/client/new', ensureAuthenticated, isUser, courtCase.insertNewClient)
+		.delete('/case/:caseId/client/:clientId', ensureAuthenticated, isUser, courtCase.clientSilentRemove)
+		.delete('/case/:caseId/defendant/:defendantId', ensureAuthenticated, isUser, courtCase.defendantSilentRemove)
+		.post('/case/defendant', ensureAuthenticated, isUser, courtCase.insertDefendant)
+		.post('/case/defendant/new', ensureAuthenticated, isUser, courtCase.insertNewDefendant)
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)
-		.post('/caseRole', ensureAuthenticated, isUser, caseRole.create)
-		.delete('/caserole/:id', ensureAuthenticated, isUser, caseRole.remove)
+		.post('/caseRole', ensureAuthenticated, isAdmin, caseRole.create)
+		.delete('/caserole/:id', ensureAuthenticated, isAdmin, caseRole.remove)
 		//updateTypes
 		.get('/updatetype', ensureAuthenticated, isUser, updateType.index)
-		.post('/updatetype', ensureAuthenticated, isUser, updateType.create)
-		.delete('/updatetype/:id', ensureAuthenticated, isUser, updateType.remove)
+		.post('/updatetype', ensureAuthenticated, isAdmin, updateType.create)
+		.delete('/updatetype/:id', ensureAuthenticated, isAdmin, updateType.remove)
 		//defendant
 		.get('/defendant', ensureAuthenticated, isUser, defendant.index)
-		.post('/defendant', ensureAuthenticated, isUser, defendant.create)
-		.delete('/defendant/:id', ensureAuthenticated, isUser, defendant.remove)
+		.post('/defendant', ensureAuthenticated, isAdmin, defendant.create)
+		.delete('/defendant/:id', ensureAuthenticated, isAdmin, defendant.remove)
 		//Users
 		.get('/user', users.index) //get all users
 		.post('/user', ensureAuthenticated, isUser, users.create) //create a new user
-		.put('/user', ensureAuthenticated, isUser, users.update) //update user info
+		.put('/user', ensureAuthenticated, isAdmin, users.update) //update user info
 		.put('/user/password', ensureAuthenticated, isUser, users.changePassword) //update the user password
 		.delete('/user/:id', ensureAuthenticated, isAdmin, users.remove) //delete user
 		.get('/user/:name', ensureAuthenticated, isUser, users.getByName) //get a user by name
+		//calendar
+		.get('/calendar', ensureAuthenticated, isUser, calendar.index)
+		.post('/calendar', ensureAuthenticated, isUser, calendar.create)
+		.get('/calendar/:id/done', ensureAuthenticated, isUser, calendar.markDone)
+		.get('/calendar/:id/reject', ensureAuthenticated, isUser, calendar.rejectTask)
+		.delete('/calendar/:id/softRemove', ensureAuthenticated, isUser, calendar.softRemove)
 	);
 
 	//404 Route/Page has not been found

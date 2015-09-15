@@ -10,8 +10,12 @@ angular.module('authModule').controller('signinAuthController', ['registerUserCo
 			} else {
 				if(data.role == 'admin'){
 					$location.path('/admin');
-				} else {
-					$location.path('/profile');
+				} else if(data.role == 'client') {
+					$location.path('/client');
+				} else if(data.role == 'employee'){
+					$location.path('/employee');
+				} else if(data.role == 'consultant'){
+					$location.path('/consultant');
 				}
 			}
 		})

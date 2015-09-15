@@ -2,7 +2,7 @@
 
 // intitiate the app and Inject all of the app module dependencies
 //configure the routes
-var yousufalsharif = angular.module('yousufalsharif', ['xeditable', 'akoenig.deckgrid', 'ngAnimate', 'infinite-scroll', 'adminModule', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'updateTypesModule', 'consultantModule', 'chart.js', 'AngularPrint']);
+var yousufalsharif = angular.module('yousufalsharif', ['xeditable', 'akoenig.deckgrid', 'ngAnimate', 'infinite-scroll', 'adminModule', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'updateTypesModule', 'consultantModule', 'chart.js', 'AngularPrint', 'employeeModule', 'calendarModule']);
 
 //RouteScopes & Routes Configurations 
 yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'ChartJsProvider', function ($urlRouterProvider, $stateProvider, $locationProvider, ChartJsProvider) {
@@ -127,7 +127,67 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			templateUrl: 'public/modules/admin/view/update.admin.view.html',
 			controller: 'updateTypesAdminController',
 			cache: false
-		});
+		})
+		.state('admin.tasks', {
+			url: '/tasks',
+			templateUrl: 'public/modules/calendar/view/index.calendar.view.html',
+			controller: 'indexCalendarController',
+			cache: false
+		})
+		.state('employee', {
+			url: '/employee',
+			templateUrl: 'public/modules/employee/view/index.employee.view.html',
+			controller: 'indexEmployeeController'
+		})
+		.state('employee.sessions', {
+			url: '/sessions',
+			templateUrl: 'public/modules/employee/view/sessions.employee.view.html',
+			controller: 'sessionsEmployeeController',
+			cache: false
+		})
+		.state('employee.cases', {
+			url: '/cases',
+			templateUrl: 'public/modules/admin/view/cases.admin.view.html',
+			controller: 'casesAdminController',
+			cache: false
+		})
+		.state('employee.tasks', {
+			url: '/tasks',
+			templateUrl: 'public/modules/calendar/view/index.calendar.view.html',
+			controller: 'indexCalendarController',
+			cache: false
+		})
+		.state('consultant', {
+			url: '/consultant',
+			templateUrl: 'public/modules/consultant/view/index.consultant.view.html',
+			controller: 'indexConsultantController',
+			cache: false
+		})
+		.state('consultant.memos', {
+			url: '/memos',
+			templateUrl: 'public/modules/consultant/view/memos.consultant.view.html',
+			controller: 'memosConsultantController',
+			cache: false
+		})
+		.state('consultant.tasks', {
+			url: '/tasks',
+			templateUrl: 'public/modules/calendar/view/index.calendar.view.html',
+			controller: 'indexCalendarController',
+			cache: false
+		})
+		.state('consultant.sessions', {
+			url: '/sessions',
+			templateUrl: 'public/modules/consultant/view/sessions.consultant.view.html',
+			controller: 'sessionsConsultantController',
+			cache: false
+		})
+		.state('consultant.cases', {
+			url: '/cases',
+			templateUrl: 'public/modules/admin/view/cases.admin.view.html',
+			controller: 'casesAdminController',
+			cache: false
+		})
+
 		$locationProvider.html5Mode(true).hashPrefix('!');
 }])
 .run(['$rootScope', '$location', 'editableOptions', '$state', function ($rootScope, $location, editableOptions, $state) {
