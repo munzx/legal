@@ -1,22 +1,24 @@
-<div class="row">
-	<div class="col-md-12">
-		<ul class="nav nav-pills icon-right">
-			<li role="presentation" ng-click="previous()" class="{{activePrevious}}"><a href="#">السابقة</a></li>
-			<li role="presentation" ng-click="upcoming()" class="{{activeUpcoming}}"><a href="#">القادمة</a></li>
-		</ul>
-		<button ng-disabled="activePrevious" class="btn btn-info btn-lg" ng-click="sechedule()">
-			المهام
-			<span class="glyphicon glyphicon-list"></span>
-		</button>
-		<button print-btn print-landscape class="btn btn-warning btn-lg">
-			طباعة
-			<span class="glyphicon glyphicon-print"></span>
-		</button>
+<section>
+	<div class="row add-space">
+		<div class="col-md-12">
+			<ul class="nav nav-pills icon-right">
+				<li role="presentation" ng-click="previous()" class="{{activePrevious}}"><a href="#">السابقة</a></li>
+				<li role="presentation" ng-click="upcoming()" class="{{activeUpcoming}}"><a href="#">القادمة</a></li>
+			</ul>
+			<button ng-disabled="activePrevious" class="btn btn-info btn-md" ng-click="sechedule()">
+				المهام
+				<span class="glyphicon glyphicon-list"></span>
+			</button>
+			<button print-btn print-landscape class="btn btn-warning btn-md">
+				طباعة
+				<span class="glyphicon glyphicon-print"></span>
+			</button>
+		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-12">
 			<div class="visible-md visible-lg visible-print">
-				<table class="table table-striped table-hover table-condensed" print-table="sessions">
+				<table class="table table-striped table-hover table-bordered table-condensed" print-table="sessions">
 					<thead>
 						<tr>
 							<th class="text-center" >تاريخ الجلسة</th>
@@ -74,4 +76,4 @@
 			</div>
 		</div>
 	</div>
-</div>
+</section>

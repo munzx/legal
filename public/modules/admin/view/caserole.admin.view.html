@@ -1,24 +1,30 @@
-<div class="row">
-	<div class="col-md-12">
-		<button ng-click="showNewCaseRoleForm()" class="btn btn-md btn-success icon-right">إضافة صفة</button>
+<section>
+	<div class="row add-space">
+		<div class="col-md-12">
+			<button ng-click="showNewCaseRoleForm()" class="btn btn-md btn-info icon-right">
+				إضافة صفة <span class="glyphicon glyphicon-plus"></span>
+			</button>
+		</div>
 	</div>
-	<div class="col-md-12">
-		<h4 ng-hide="caseRoles.length" class="alert alert-danger">لم يتم إضافة صفات</h4>
-		<table ng-show="caseRoles.length" class="table table-striped">
-			<thead>
-				<tr>
-					<th class="text-center">إلغاء</th>
-					<th class="text-center">الصفة</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="role in caseRoles" class="no-animate">
-					<td ng-click="removeCaseRole($index, role._id)" class="text-center">
-						<span class="glyphicon glyphicon-remove cursor"></span>
-					</td>
-					<td class="text-center">{{role.name}}</td>
-				</tr>
-			</tbody>
-		</table>
+	<div class="row">
+		<div class="col-md-12">
+			<h4 ng-hide="caseRoles.length" class="alert alert-danger">لم يتم إضافة صفات</h4>
+			<table ng-show="caseRoles.length" class="table table-condensed table-hover table-striped">
+				<thead>
+					<tr>
+						<th class="text-center">إلغاء</th>
+						<th class="text-center">الصفة</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="role in caseRoles" class="no-animate">
+						<td ng-click="removeCaseRole($index, role._id)" class="text-center">
+							<span class="glyphicon glyphicon-remove cursor"></span>
+						</td>
+						<td class="text-center">{{role.name}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
-</div>
+</section>

@@ -1,8 +1,10 @@
-<div data-ui-view>
-	<div class="row">
+<section>
+	<div class="row add-space">
 		<div class="col-md-12">
-			<button ng-click="showNewCourtForm()" class="btn btn-success btn-lg icon-right">  إضافة محكمة <span class="glyphicon glyphicon-plus"></span></button>
+			<button ng-click="showNewCourtForm()" class="btn btn-info btn-md icon-right">  إضافة محكمة <span class="glyphicon glyphicon-plus"></span></button>
 		</div>
+	</div>
+	<div class="row">
 		<div ng-hide="courts.length" class="col-md-12">
 			<h4 class="alert alert-danger">لم يتم إضافة أي محكمة</h4>
 		</div>
@@ -27,4 +29,4 @@
 			</tbody>
 		</table>
 	</div>
-</div>
+</section>

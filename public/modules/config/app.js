@@ -100,8 +100,8 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 		})
 		.state('admin.cases', {
 			url: '/cases',
-			templateUrl: 'public/modules/admin/view/cases.admin.view.html',
-			controller: 'casesAdminController',
+			templateUrl: 'public/modules/case/view/index.case.view.html',
+			controller: 'indexCaseController',
 			cache: false
 		})
 		.state('admin.sessions', {
@@ -147,8 +147,8 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 		})
 		.state('employee.cases', {
 			url: '/cases',
-			templateUrl: 'public/modules/admin/view/cases.admin.view.html',
-			controller: 'casesAdminController',
+			templateUrl: 'public/modules/case/view/index.case.view.html',
+			controller: 'indexCaseController',
 			cache: false
 		})
 		.state('employee.tasks', {
@@ -183,8 +183,8 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 		})
 		.state('consultant.cases', {
 			url: '/cases',
-			templateUrl: 'public/modules/admin/view/cases.admin.view.html',
-			controller: 'casesAdminController',
+			templateUrl: 'public/modules/case/view/index.case.view.html',
+			controller: 'indexCaseController',
 			cache: false
 		})
 
