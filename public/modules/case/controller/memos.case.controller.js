@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('adminModule').controller('memosAdminController', ['$scope', 'connectCaseFactory', '$modal', function ($scope, connectCaseFactory, $modal) {
+angular.module('caseModule').controller('memosCaseController', ['$scope', 'connectCaseFactory', '$modal', function ($scope, connectCaseFactory, $modal) {
 	$scope.memosPending = function(){
 		connectCaseFactory.query({'action': 'memos', 'subaction': 'pending'}, function(response){
 			$scope.memos = response;

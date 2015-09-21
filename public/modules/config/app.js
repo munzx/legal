@@ -66,8 +66,8 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 		})
 		.state('admin.memos', {
 			url: '/memos',
-			templateUrl: 'public/modules/admin/view/memos.admin.view.html',
-			controller: 'memosAdminController',
+			templateUrl: 'public/modules/case/view/memos.case.view.html',
+			controller: 'memosCaseController',
 			cache: false
 		})
 		.state('admin.users', {
