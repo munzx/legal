@@ -1,6 +1,10 @@
 'use strict';
 
-angular.module('caseModule').controller('memosCaseController', ['$scope', 'connectCaseFactory', '$modal', function ($scope, connectCaseFactory, $modal) {
+angular.module('caseModule').controller('memosCaseController', ['$scope', 'connectCaseFactory', '$modal', 'registerUserConfigFactory', function ($scope, connectCaseFactory, $modal, registerUserConfigFactory) {
+	$scope.user = registerUserConfigFactory.getUser();
+	if($scope.user === false) $state.go('signin');
+	$scope.isAdmin = ($scope.user.role === 'admin')? true: false;
+
 	$scope.memosPending = function(){
 		connectCaseFactory.query({'action': 'memos', 'subaction': 'pending'}, function(response){
 			$scope.memos = response;

@@ -33,7 +33,8 @@
 								<p ng-hide="memo.memoRequiredDate">----</p>
 							</td>
 							<td class="text-center">
-								<a href="" ng-click="showUpdateConsultantForm($index)">{{fullName(memo.memoConsultant) || 'empty'}}</a>
+								<a href="" ng-show="isAdmin" ng-click="showUpdateConsultantForm($index)">{{fullName(memo.memoConsultant) || 'empty'}}</a>
+								<span ng-hide="isAdmin">{{fullName(memo.memoConsultant) || 'empty'}}</span>
 							</td>
 							<td class="text-center">{{memo.court[0].name}}</td>
 							<td class="text-center">

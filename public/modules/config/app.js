@@ -165,8 +165,8 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 		})
 		.state('consultant.memos', {
 			url: '/memos',
-			templateUrl: 'public/modules/consultant/view/memos.consultant.view.html',
-			controller: 'memosConsultantController',
+			templateUrl: 'public/modules/case/view/memos.case.view.html',
+			controller: 'memosCaseController',
 			cache: false
 		})
 		.state('consultant.tasks', {
