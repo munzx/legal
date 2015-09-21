@@ -1,6 +1,9 @@
 'use strict';
 
-angular.module('adminModule').controller('indexCaseController', ['$scope', 'connectCaseFactory', '$state', '$modal', function ($scope, connectCaseFactory, $state, $modal) {
+angular.module('adminModule').controller('indexCaseController', ['$scope', 'connectCaseFactory', '$state', '$modal', 'registerUserConfigFactory', function ($scope, connectCaseFactory, $state, $modal, registerUserConfigFactory) {
+	$scope.user = registerUserConfigFactory.getUser();
+	if($scope.user === false) $state.go('signin');
+
 	connectCaseFactory.query({}, function(response){
 		$scope.cases = response;
 	});

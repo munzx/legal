@@ -14,7 +14,7 @@
 		</div>
 		<div ng-show="users.length" class="row add-space" ng-show="users">
 			<div class="col-md-12">
-				<table class="table">
+				<table class="table table-condensed table-hover table-striped">
 					<thead>
 						<tr>
 							<th class="text-center">إلغاء</th>
@@ -27,7 +27,7 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="user in users" class="no-animate">
-							<td class="text-center">
+							<td class="text-center text-muted">
 								<span ng-click="removeUserInfo($index, user._id)" class="glyphicon glyphicon-remove cursor"></span>
 							</td>
 							<td class="text-center">{{user.role | localize:'ar'}}</td>

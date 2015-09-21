@@ -5,7 +5,7 @@
 				<li role="presentation" ng-click="previous()" class="{{activePrevious}}"><a href="#">السابقة</a></li>
 				<li role="presentation" ng-click="upcoming()" class="{{activeUpcoming}}"><a href="#">القادمة</a></li>
 			</ul>
-			<button ng-disabled="activePrevious" class="btn btn-info btn-md" ng-click="sechedule()">
+			<button ng-disabled="activePrevious" ng-show='isAdmin' class="btn btn-info btn-md" ng-click="sechedule()">
 				المهام
 				<span class="glyphicon glyphicon-list"></span>
 			</button>

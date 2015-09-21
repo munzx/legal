@@ -17,7 +17,7 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="employee in employees" class="no-animate">
-						<td class="text-center">
+						<td class="text-center text-muted">
 							<span class="glyphicon glyphicon-remove cursor" ng-click="removeEmployee($index, employee._id)"></span>
 						</td>
 						<td class="text-center">{{employee.created | date: 'Z yyyy-MM-dd HH:mm:ss'}}</td>

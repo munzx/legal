@@ -1,5 +1,5 @@
 <div data-ui-view>
-	<div class="row">
+	<div class="row add-space">
 		<div class="col-md-12" ng-hide="clients.length">
 			<h4 class='alert alert-danger'>لايوجد موكلين</h4>
 		</div>
@@ -17,7 +17,7 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="client in clients" class="no-animate">
-						<td class="text-center">
+						<td class="text-center text-muted">
 							<span class="glyphicon glyphicon-remove cursor" ng-click="removeClient($index, client._id)"></span>
 						</td>
 						<td class="text-center">{{client.created | date: 'Z yyyy-MM-dd HH:mm:ss'}}</td>

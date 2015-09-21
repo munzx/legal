@@ -141,8 +141,8 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 		})
 		.state('employee.sessions', {
 			url: '/sessions',
-			templateUrl: 'public/modules/employee/view/sessions.employee.view.html',
-			controller: 'sessionsEmployeeController',
+			templateUrl: 'public/modules/case/view/sessions.case.view.html',
+			controller: 'sessionsCaseController',
 			cache: false
 		})
 		.state('employee.cases', {
@@ -177,8 +177,8 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 		})
 		.state('consultant.sessions', {
 			url: '/sessions',
-			templateUrl: 'public/modules/consultant/view/sessions.consultant.view.html',
-			controller: 'sessionsConsultantController',
+			templateUrl: 'public/modules/case/view/sessions.case.view.html',
+			controller: 'sessionsCaseController',
 			cache: false
 		})
 		.state('consultant.cases', {

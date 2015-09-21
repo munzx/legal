@@ -1,6 +1,10 @@
 'use strict';
 
-angular.module('caseModule').controller('sessionsCaseController', ['$scope', 'connectCaseFactory', '$modal', function($scope, connectCaseFactory, $modal) {
+angular.module('caseModule').controller('sessionsCaseController', ['$scope', 'connectCaseFactory', '$modal', 'registerUserConfigFactory', function($scope, connectCaseFactory, $modal, registerUserConfigFactory) {
+	$scope.user = registerUserConfigFactory.getUser();
+	if($scope.user === false) $state.go('signin');
+	$scope.isAdmin = ($scope.user.role === 'admin')? true: false;
+
 	$scope.upcoming = function(){
 		connectCaseFactory.query({'action': 'sessions', 'subaction': 'upcoming'}, function(response){
 			$scope.activePrevious = '';
