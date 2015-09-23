@@ -94,19 +94,24 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			controller: 'sessionsCaseController',
 			cache: false
 		})
-		.state('admin.courts', {
+		.state('admin.settings', {
+			url: '/settings',
+			templateUrl: 'public/modules/admin/view/settings.admin.view.html',
+			controller: 'settingsAdminController'
+		})
+		.state('admin.settings.courts', {
 			url: '/courts',
 			templateUrl: 'public/modules/admin/view/courts.admin.view.html',
 			controller: 'courtsAdminController',
 			cache: false
 		})
-		.state('admin.caseRole', {
+		.state('admin.settings.caseRole', {
 			url: '/caserole',
 			templateUrl: 'public/modules/admin/view/caserole.admin.view.html',
 			controller: 'caseRoleAdminController',
 			cache: false
 		})
-		.state('admin.updatetypes', {
+		.state('admin.settings.updatetypes', {
 			url: '/updatetypes',
 			templateUrl: 'public/modules/admin/view/update.admin.view.html',
 			controller: 'updateTypesAdminController',
