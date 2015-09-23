@@ -76,22 +76,6 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			controller: 'usersAdminController',
 			cache: false
 		})
-		.state('admin.consultants', {
-			url: '/consultants',
-			templateUrl: 'public/modules/admin/view/consultants.admin.view.html',
-			controller: 'consultantsAdminController'
-		})
-		.state('admin.employees', {
-			url: '/employees',
-			templateUrl: 'public/modules/admin/view/employees.admin.view.html',
-			controller: 'employeesAdminController'
-		})
-		.state('admin.clients', {
-			url: '/clients',
-			templateUrl: 'public/modules/admin/view/clients.admin.view.html',
-			controller: 'clientsAdminController',
-			cache: false
-		})
 		.state('admin.defendants', {
 			url: '/defendant',
 			templateUrl: 'public/modules/admin/view/defendant.admin.vew.html',

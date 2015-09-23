@@ -7,9 +7,25 @@
 		</div>
 		<div class="row add-space">
 			<div class="col-md-12">
-				<button class="btn btn-md btn-info icon-right" ng-click="showNewUserForm()">
-					إضافة مستخدم جديد <span class="glyphicon glyphicon-plus"></span>
-				</button>
+				<ul class="nav nav-pills" style="float: right;margin-right:0 !important;padding-right:0 !important;">
+					<li role="presentation" ng-click="getClients()" class="{{activeLinkArray['client']}}">
+						<a href="#">الموكليين</a>
+					</li>
+					<li role="presentation" ng-click="getEmployees()" class="{{activeLinkArray['employee']}}">
+						<a href="#">الموظفين</a>
+					</li>
+					<li role="presentation" ng-click="getConsultants()" class="{{activeLinkArray['consultant']}}">
+						<a href="#">المستشاريين</a>
+					</li>
+					<li role="presentation" ng-click="getAll()" class="{{activeLinkArray['all']}}">
+						<a href="#">الكل</a>
+					</li>
+					<li role="presentation">
+						<button class="btn btn-md btn-info icon-right" ng-click="showNewUserForm()">
+							إضافة مستخدم جديد <span class="glyphicon glyphicon-plus"></span>
+						</button>
+					</li>
+				</ul>
 			</div>
 		</div>
 		<div ng-show="users.length" class="row add-space" ng-show="users">

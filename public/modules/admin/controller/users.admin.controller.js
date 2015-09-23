@@ -1,11 +1,48 @@
 'use strict';
 
-angular.module('adminModule').controller('usersAdminController', ['$scope', '$state', 'connectUserFactory', '$modal', function ($scope, $state, connectUserFactory, $modal) {
-	connectUserFactory.query({}, function(response){
-		$scope.users = response;
-	}, function(error){
-		$scope.error = error.data.message;
-	});
+angular.module('adminModule').controller('usersAdminController', ['$scope', '$state', 'connectUserFactory', '$modal', 'connectAdminFactory', function ($scope, $state, connectUserFactory, $modal, connectAdminFactory) {
+
+	function activeSubNav(link){
+		$scope.activeLinkArray = [];
+		$scope.activeLinkArray['client'] = '';
+		$scope.activeLinkArray['employee'] = '';
+		$scope.activeLinkArray['consultant'] = '';
+		$scope.activeLinkArray['all'] = '';
+		$scope.activeLinkArray[link] = 'active';
+	}
+
+	$scope.getAll = function(){
+		activeSubNav('all');
+		connectUserFactory.query({}, function(response){
+			$scope.users = response;
+		}, function(error){
+			$scope.error = error.data.message;
+		});
+	}
+
+	$scope.getClients = function(){
+		activeSubNav('client');
+		connectAdminFactory.query({page: 'client'}, function(response){
+			$scope.users = response;
+		});
+	}
+
+	$scope.getConsultants = function(){
+		activeSubNav('consultant');
+		connectAdminFactory.query({page: 'consultant'}, function(response){
+			$scope.users = response;
+		});
+	}
+
+	$scope.getEmployees = function(){
+		activeSubNav('employee');
+		connectAdminFactory.query({page: 'employee'}, function(response){
+			$scope.users = response;
+		});
+	}
+
+	//init getAll
+	$scope.getAll();
 
 	$scope.removeUserInfo = function(index, userId){
 		connectUserFactory.delete({'id': userId}, function(response){

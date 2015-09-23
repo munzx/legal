@@ -8,8 +8,6 @@ angular.module('caseModule').controller('createCaseController', ['$scope', 'case
 	//init selected defendants
 	$scope.selectedDefendants = [];
 
-	console.log('Bism Allah');
-
 	//show selected "step"
 	$scope.step = function(num){
 		switch(num){
