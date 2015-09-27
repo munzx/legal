@@ -220,3 +220,18 @@ module.exports.remove = function(req, res){
 		res.status(500).jsonp({message: 'يرجى إضافة رقم المعرف الخاص بالموظف'});
 	}
 }
+
+module.exports.search = function(req, res){
+	if(req.params.phrase){
+		var re = new RegExp(req.params.phrase, "i");
+		users.find().or([ {'firstName': {$regex: re}}, {'lastName': {$regex: re}}, {'mobilePhone': {$regex: re}}, {'address': {$regex: re}}, {'name': {$regex: re}}, {'email': {$regex: re}} ]).exec(function(err, result){
+			if(err){
+				res.status(500).jsonp(err);
+			} else {
+				res.status(200).jsonp(result);
+			}
+		});
+	} else {
+		res.status(500).jsonp('search phrase not provided');
+	}
+}

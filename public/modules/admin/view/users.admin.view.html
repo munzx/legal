@@ -8,6 +8,26 @@
 		<div class="row add-space">
 			<div class="col-md-12">
 				<ul class="nav nav-pills" style="float: right;margin-right:0 !important;padding-right:0 !important;">
+					<li role="presentation" ng-show="activeLinkArray['all']">
+						 <input type="text" class="form-control pull-right" placeholder="بحث"
+							 ng-model="searchPhrase"
+							 ng-change="updateSearch()"
+							 typeahead-loading="Loadingusers"
+							 typeahead-no-results="noResults"
+							 typeahead-on-select="onSelect($item, $model, $label); searchPhrase = ''; "
+							 typeahead="item.firstName 
+							 + ' - ' 
+							 + item.lastName
+							 + ' - '
+							 + item.name
+							 + ' - '
+							 + item.email
+							 + ' - '
+							 + item.mobilePhone
+							 + ' - '
+							 + item.address
+							 for item in searchResult($viewValue)">
+					</li>
 					<li role="presentation" ng-click="getClients()" class="{{activeLinkArray['client']}}">
 						<a href="#">الموكليين</a>
 					</li>

@@ -1,14 +1,34 @@
 'use strict';
 
-angular.module('adminModule').controller('usersAdminController', ['$scope', '$state', 'connectUserFactory', '$modal', 'connectAdminFactory', function ($scope, $state, connectUserFactory, $modal, connectAdminFactory) {
+angular.module('adminModule').controller('usersAdminController', ['$scope', '$state', 'connectUserFactory', '$modal', 'connectAdminFactory', '$http', 'limitToFilter', function ($scope, $state, connectUserFactory, $modal, connectAdminFactory, $http, limitToFilter) {
 
+	//make the clicked link active
 	function activeSubNav(link){
+		//first make all links unactive
 		$scope.activeLinkArray = [];
 		$scope.activeLinkArray['client'] = '';
 		$scope.activeLinkArray['employee'] = '';
 		$scope.activeLinkArray['consultant'] = '';
 		$scope.activeLinkArray['all'] = '';
+		//then active the clicked link
 		$scope.activeLinkArray[link] = 'active';
+	}
+
+	$scope.searchResult = function(val){
+	    return $http.get('/api/v1/user/search/' + val).then(function(response){
+	    	return limitToFilter(response.data, 15);
+	    });	
+	}
+
+	$scope.updateSearch = function(){
+		if($scope.searchPhrase){
+			searchResult();
+		}
+	}
+
+	//when selecting a row in search results
+	$scope.onSelect = function ($item, $model, $label) {
+		$scope.users = [$item];
 	}
 
 	$scope.getAll = function(){

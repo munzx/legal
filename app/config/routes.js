@@ -204,6 +204,7 @@ module.exports = function (app, express) {
 		.put('/user/password', ensureAuthenticated, isUser, users.changePassword) //update the user password
 		.delete('/user/:id', ensureAuthenticated, isAdmin, users.remove) //delete user
 		.get('/user/:name', ensureAuthenticated, isUser, users.getByName) //get a user by name
+		.get('/user/search/:phrase', ensureAuthenticated, isUser, users.search)
 		//calendar
 		.get('/calendar', ensureAuthenticated, isUser, calendar.index)
 		.post('/calendar', ensureAuthenticated, isUser, calendar.create)
