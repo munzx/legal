@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('adminModule').controller('defendantAdminController', ['$scope', 'connectDefendantFactory', function ($scope, connectDefendantFactory) {
+angular.module('adminModule').controller('defendantAdminController', ['$scope', 'connectDefendantFactory', '$http', 'limitToFilter', function ($scope, connectDefendantFactory, $http, limitToFilter) {
 	connectDefendantFactory.query({}, function(response){
 		$scope.defendants = response;
 	}, function(error){

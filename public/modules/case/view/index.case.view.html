@@ -1,15 +1,61 @@
 <div data-ui-view>
-	<div class="row add-space">
-		<div class="col-md-12">
-			<button class="btn btn-md btn-info icon-right" ng-click="showNewCaseForm()">
-				إضافة قضية جديدة <span class="glyphicon glyphicon-plus"></span>
-			</button>
-		</div>
-	</div>
 	<div class="row">
 		<div class="col-md-12" ng-hide="cases.length">
 			<h4 class='alert alert-danger'>لاتوجد قضايا</h4>
 		</div>
+	</div>
+	<div class="row add-space">
+		<div class="col-md-12">
+			<form class="form-inline">
+				<div class="form-group">
+					<div class="input-group">
+						<button class="btn btn-md btn-info icon-right" ng-click="showNewCaseForm()" style="margin-top:-2px;">
+							إضافة قضية جديدة <span class="glyphicon glyphicon-plus"></span>
+						</button>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="input-group">
+						<span class="glyphicon glyphicon-option-vertical text-muted"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="input-group">
+						<label class="input-group-addon">تاريخ الدعوى من</label>
+						<input type="date" ng-model="searchDates.searchDateFrom" name="searchDateFrom" class="form-control"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="input-group">
+						<label class="input-group-addon">إلى</label>
+						<input type="date" ng-model="searchDates.searchDateTo" name="searchDateTo" class="form-control" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+						<!-- <input ng-model="searchKey" placeholder="بحث" class="form-control"> -->
+						<input type="text" class="form-control pull-right" placeholder="بحث"
+						ng-model="searchPhrase"
+						ng-change="updateSearch()"
+						typeahead-loading="Loadingusers"
+						typeahead-no-results="noResults"
+						typeahead-on-select="onSelect($item, $model, $label); searchPhrase = ''; "
+						typeahead="item.reportNumber 
+						+ ' - ' 
+						+ item.caseNumber
+						+ ' - '
+						+ item.subject
+						for item in searchResult($viewValue)" />
+						<div class="input-group-addon btn btn-info">بحث</div>
+						<div class="input-group-addon btn btn-warning"  ng-click="clearSearchPhrase()">مسح</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<p>&nbsp;</p>
+	<div class="row add-space">
 		<div ng-show="cases.length" class="col-md-12">
 			<table class="table table-condensed table-hover table-striped">
 				<thead>
@@ -23,8 +69,13 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="case in cases" ng-click="showCaseDetails($index)" class="no-animate cursor">
-						<td class="text-center">{{case.created | date: 'Z yyyy-MM-dd HH:mm:ss'}}</td>
+				<!--
+					 | dateRangeConfigFilter:'caseDate':searchDates.searchDateFrom: searchDates.searchDateTo | filter:searchKey
+				-->
+					<tr ng-repeat="case in cases"
+						ng-click="showCaseDetails($index)"
+						class="no-animate cursor">
+						<td class="text-center">{{case.created | date: 'yyyy-MM-dd'}}</td>
 						<td class="text-center">{{case.caseDate | date: 'yyyy-MM-dd'}}</td>
 						<td class="text-center">{{case.status | localize:'ar'}}</td>
 						<td class="text-center">{{case.subject}}</td>

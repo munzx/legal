@@ -22,7 +22,7 @@ angular.module('adminModule').controller('usersAdminController', ['$scope', '$st
 
 	$scope.updateSearch = function(){
 		if($scope.searchPhrase){
-			searchResult();
+			$scope.searchResult();
 		}
 	}
 
