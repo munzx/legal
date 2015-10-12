@@ -12,7 +12,7 @@ defendants = require('../models/defendant');
 
 
 module.exports.index = function (req, res) {
-	cases.find({}).sort('-created').populate('court').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
+	cases.find({}).sort('-created').populate('court').populate('consultant').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
@@ -321,10 +321,10 @@ module.exports.memosPending = function(req, res){
 				}
 			});
 
-			var sort = _.sortBy(upcomingupdates, 'sessionDate');
-			res.status(200).jsonp(sort);
-		}
-	});
+var sort = _.sortBy(upcomingupdates, 'sessionDate');
+res.status(200).jsonp(sort);
+}
+});
 }
 
 module.exports.memosClosed = function(req, res){
@@ -367,10 +367,10 @@ module.exports.memosClosed = function(req, res){
 				}
 			});
 
-			var sort = _.sortBy(upcomingupdates, 'sessionDate');
-			res.status(200).jsonp(sort);
-		}
-	});
+var sort = _.sortBy(upcomingupdates, 'sessionDate');
+res.status(200).jsonp(sort);
+}
+});
 }
 
 module.exports.consultantMemos = function(req, res){
@@ -413,13 +413,13 @@ module.exports.consultantMemos = function(req, res){
 							}
 						}			
 					});
-				}
-			});
-			
-			var sort = _.sortBy(allUpdates, 'sessionDate');
-			res.status(200).jsonp(sort);
-		}
-	});
+}
+});
+
+var sort = _.sortBy(allUpdates, 'sessionDate');
+res.status(200).jsonp(sort);
+}
+});
 }
 
 module.exports.insertMemoConsultant = function(req, res){
@@ -475,7 +475,7 @@ module.exports.insertClient = function(req, res){
 							refId: result.client[result.client.length - 1]._id,
 							user: req.user._id
 						});
-			
+
 						caseInfo.save(function(err, result){
 							if(err){
 								res.status(500).jsonp({message: err});
@@ -552,10 +552,10 @@ module.exports.insertNewClient = function(req, res){
 					});
 				}
 			});
-		} else {
-			res.status(500).jsonp({message: 'Case not found'});
-		}
-	});
+} else {
+	res.status(500).jsonp({message: 'Case not found'});
+}
+});
 }
 
 
@@ -669,10 +669,10 @@ module.exports.insertNewDefendant = function(req, res){
 					});
 				}
 			});
-		} else {
-			res.status(500).jsonp({message: 'Case not found'});
-		}
-	});
+} else {
+	res.status(500).jsonp({message: 'Case not found'});
+}
+});
 }
 
 
@@ -682,9 +682,9 @@ module.exports.clientSilentRemove = function(req, res){
 			res.status(500).jsonp({message: err});
 		} else if(caseInfo) {
 			var clientInfo = caseInfo.client.id(req.params.clientId),
-				getUpdateIndex = _.findIndex(caseInfo.updates, function(info){
-					return clientInfo._id.equals(info.refId);
-				});
+			getUpdateIndex = _.findIndex(caseInfo.updates, function(info){
+				return clientInfo._id.equals(info.refId);
+			});
 
 			if(clientInfo.removed == false){
 				clientInfo.removed = true;
@@ -720,9 +720,9 @@ module.exports.defendantSilentRemove = function(req, res){
 			res.status(500).jsonp({message: err});
 		} else if(caseInfo) {
 			var defendantInfo = caseInfo.defendant.id(req.params.defendantId),
-				getUpdateIndex = _.findIndex(caseInfo.updates, function(info){
-					return defendantInfo._id.equals(info.refId);
-				});
+			getUpdateIndex = _.findIndex(caseInfo.updates, function(info){
+				return defendantInfo._id.equals(info.refId);
+			});
 
 			if(defendantInfo.removed == false){
 				defendantInfo.removed = true;
@@ -750,4 +750,32 @@ module.exports.defendantSilentRemove = function(req, res){
 			res.status(500).jsonp({message: 'case not found'});
 		}
 	});
+}
+
+
+module.exports.search = function(req, res){	
+	//to avoid "not defined" error in case of the user has passed empty object
+	var search = req.body.search = req.body.search || {};
+	
+	var searchPhrase = search.phrase || '';
+	var re = new RegExp(searchPhrase, "i");
+	var dataDates = {};
+
+	//create the dates using the recieved dates info
+	dataDates.from = moment(new Date(search.dateFrom));
+	dataDates.to = moment(new Date(search.dateTo));
+
+	//check if the dates are valid
+	//if not then assign new values that ranges between 20 past years and 20 coming years
+	dataDates.from = (dataDates.from.isValid())? dataDates.from.format(): moment().subtract(20, 'year').format();
+	dataDates.to = (dataDates.to.isValid())? dataDates.to.format(): moment().add(20, 'year').format();
+
+	cases.find().where({"caseDate": {"$gte": dataDates.from, "$lte": dataDates.to}}).and([{ $or:[{'caseNumber': {$regex: re}}, {'reportNumber': {$regex: re}}, {'subject': {$regex: re}}] }]).exec(function(err, result){
+		if(err){
+			res.status(500).jsonp(err);
+		} else {
+			res.status(200).jsonp(result);
+		}
+	});
+
 }

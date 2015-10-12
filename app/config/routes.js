@@ -185,6 +185,7 @@ module.exports = function (app, express) {
 		.delete('/case/:caseId/defendant/:defendantId', ensureAuthenticated, isUser, courtCase.defendantSilentRemove)
 		.post('/case/defendant', ensureAuthenticated, isUser, courtCase.insertDefendant)
 		.post('/case/defendant/new', ensureAuthenticated, isUser, courtCase.insertNewDefendant)
+		.post('/case/search', ensureAuthenticated, isUser, courtCase.search)
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)
 		.post('/caseRole', ensureAuthenticated, isAdmin, caseRole.create)
@@ -197,6 +198,7 @@ module.exports = function (app, express) {
 		.get('/defendant', ensureAuthenticated, isUser, defendant.index)
 		.post('/defendant', ensureAuthenticated, isAdmin, defendant.create)
 		.delete('/defendant/:id', ensureAuthenticated, isAdmin, defendant.remove)
+		.get('/defendant/search/:phrase', ensureAuthenticated, isUser, defendant.search)
 		//Users
 		.get('/user', users.index) //get all users
 		.post('/user', ensureAuthenticated, isUser, users.create) //create a new user

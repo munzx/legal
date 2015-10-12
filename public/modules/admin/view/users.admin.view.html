@@ -5,8 +5,11 @@
 				<h4 class="alert alert-danger">لم يتم إضافة أي مستخدم</h4>
 			</div>
 		</div>
-		<div class="row add-space">
-			<div class="col-md-12">
+		<div class="row add-space" style="background: #EEEEEE;margin:3px;">
+			<div class="col-md-12" style="padding:0;">
+				<button class="btn btn-md btn-info icon-right" style="margin-top:1px;" ng-click="showNewUserForm()">
+					إضافة مستخدم جديد <span class="glyphicon glyphicon-plus"></span>
+				</button>
 				<ul class="nav nav-pills" style="float: right;margin-right:0 !important;padding-right:0 !important;">
 					<li role="presentation" ng-show="activeLinkArray['all']">
 						 <input type="text" class="form-control pull-right" placeholder="بحث"
@@ -39,11 +42,6 @@
 					</li>
 					<li role="presentation" ng-click="getAll()" class="{{activeLinkArray['all']}}">
 						<a href="#">الكل</a>
-					</li>
-					<li role="presentation">
-						<button class="btn btn-md btn-info icon-right" ng-click="showNewUserForm()">
-							إضافة مستخدم جديد <span class="glyphicon glyphicon-plus"></span>
-						</button>
 					</li>
 				</ul>
 			</div>

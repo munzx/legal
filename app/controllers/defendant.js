@@ -46,3 +46,18 @@ module.exports.remove = function(req, res){
 		}
 	});
 }
+
+module.exports.search = function(req, res){
+	if(req.params.phrase){
+		var re = new RegExp(req.params.phrase, "i");
+		defendants.find().or([ {'firstName': {$regex: re}}, {'lastName': {$regex: re}}, {'mobilePhone': {$regex: re}}, {'address': {$regex: re}} ]).exec(function(err, result){
+			if(err){
+				res.status(500).jsonp(err);
+			} else {
+				res.status(200).jsonp(result);
+			}
+		});
+	} else {
+		res.status(500).jsonp('search phrase not provided');
+	}
+}

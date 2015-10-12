@@ -1,32 +1,66 @@
 <section>
 	<div class="row add-space">
 		<div class="col-md-12">
-			<button class="btn btn-md btn-info icon-right" ng-click="showNewTaskForm()">
-				إضافة مهمة <span class="glyphicon glyphicon-plus"></span>
-			</button>
+			<div class="row add-space" style="padding:0px;">
+				<div class="col-md-12">
+					<form class="form-inline" style="background: #EEEEEE;">
+						<div class="form-group">
+							<div class="input-group">
+								<button class="btn btn-md btn-info icon-right" ng-click="showNewTaskForm()">
+									إضافة مهمة <span class="glyphicon glyphicon-plus"></span>
+								</button>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<ul class="nav nav-pills icon-right" style="padding:0;">
+									<li role="presentation" ng-click="memosClosed()" class="{{activeClosed}}"><a href="#">مغلقة</a></li>
+									<li role="presentation" ng-click="memosPending()" class="{{activePending}}"><a href="#">معلقة</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<label class="input-group-addon">تاريخ المهمة من</label>
+								<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
+							</div>
+							<div class="input-group">
+								<label class="input-group-addon">إلى</label>
+								<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<input ng-model="searchKey" placeholder="بحث" class="form-control">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			&nbsp;
 		</div>
 	</div>
 	<div class="row" ng-hide="tasks.length">
 		<div class="col-md-12">
 			<h5 class="alert alert-danger">لاتوجد مهام</h4>
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12" ng-show="tasks.length">
-			<table class="table table-condensed table-hover">
-				<thead>
-					<tr>
-						<th class="text-center">الحاالة</th>
-						<th class="text-center">التاريخ</th>
-						<th class="text-center">آخر موعد للتسليم</th>
-						<th class="text-center">مسؤولية</th>
-						<th class="text-center">المدخل</th>
-						<th class="text-center">الوصف</th>
-						<th class="text-center">المهمة</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="info in tasks"
+		<div class="row">
+			<div class="col-md-12" ng-show="tasks.length">
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th class="text-center">الحاالة</th>
+							<th class="text-center">التاريخ</th>
+							<th class="text-center">آخر موعد للتسليم</th>
+							<th class="text-center">مسؤولية</th>
+							<th class="text-center">المدخل</th>
+							<th class="text-center">الوصف</th>
+							<th class="text-center">المهمة</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="info in tasks | dateRangeConfigFilter:'created':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey"
 						class="no-animate cursor" 
 						ng-class="{'success': info.status == 'close', 'warning': info.status == 'pending'}"
 						ng-click="showTaskActions($index)"
@@ -38,8 +72,8 @@
 						<td class="text-center">{{info.user.firstName}} {{info.user.lastName}}</td>
 						<td class="text-center">{{info.description}}</td>
 						<td class="text-center">{{info.task}}
-						 <label class="label label-danger" ng-show="info.removed">محذوفة </label>
-						  <label class="label label-info" ng-show="info.rejected">مرفوضة </label>
+							<label class="label label-danger" ng-show="info.removed">محذوفة </label>
+							<label class="label label-info" ng-show="info.rejected">مرفوضة </label>
 						</td>
 					</tr>
 				</tbody>
