@@ -6,25 +6,16 @@
 	</div>
 	<div class="row add-space">
 		<div class="col-md-12">
-<<<<<<< HEAD
 			<form class="form-inline" style="background: #EEEEEE;">
 				<div class="form-group">
 					<div class="input-group">
 						<button class="btn btn-md btn-info icon-right" ng-click="showNewCaseForm()" style="margin-top:-2px;">
 							<span class="glyphicon glyphicon-plus"></span> إضافة قضية جديدة
-=======
-			<form class="form-inline">
-				<div class="form-group">
-					<div class="input-group">
-						<button class="btn btn-md btn-info icon-right" ng-click="showNewCaseForm()" style="margin-top:-2px;">
-							إضافة قضية جديدة <span class="glyphicon glyphicon-plus"></span>
->>>>>>> origin/master
 						</button>
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="input-group">
-<<<<<<< HEAD
 						<label class="input-group-addon">تاريخ الدعوى من</label>
 						<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
 					</div>
@@ -47,28 +38,6 @@
 					<div class="input-group">
 						<input ng-model="searchKey" placeholder="بحث" class="form-control">
 <!-- 						<input type="text" class="form-control pull-right" placeholder="كلمات مفتاحية"
-=======
-						<span class="glyphicon glyphicon-option-vertical text-muted"></span>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="input-group">
-						<label class="input-group-addon">تاريخ الدعوى من</label>
-						<input type="date" ng-model="searchDates.searchDateFrom" name="searchDateFrom" class="form-control"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="input-group">
-						<label class="input-group-addon">إلى</label>
-						<input type="date" ng-model="searchDates.searchDateTo" name="searchDateTo" class="form-control" />
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="input-group">
-						<div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
-						<!-- <input ng-model="searchKey" placeholder="بحث" class="form-control"> -->
-						<input type="text" class="form-control pull-right" placeholder="بحث"
->>>>>>> origin/master
 						ng-model="searchPhrase"
 						ng-change="updateSearch()"
 						typeahead-loading="Loadingusers"
@@ -79,14 +48,8 @@
 						+ item.caseNumber
 						+ ' - '
 						+ item.subject
-<<<<<<< HEAD
 						for item in searchResult($viewValue)" /> -->
 						<!-- <div class="input-group-addon btn btn-warning"  ng-click="clearSearchPhrase()">مسح</div> -->
-=======
-						for item in searchResult($viewValue)" />
-						<div class="input-group-addon btn btn-info">بحث</div>
-						<div class="input-group-addon btn btn-warning"  ng-click="clearSearchPhrase()">مسح</div>
->>>>>>> origin/master
 					</div>
 				</div>
 			</form>
@@ -107,14 +70,7 @@
 					</tr>
 				</thead>
 				<tbody>
-<<<<<<< HEAD
 					<tr ng-repeat="case in cases | dateRangeConfigFilter:'caseDate':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey"
-=======
-				<!--
-					 | dateRangeConfigFilter:'caseDate':searchDates.searchDateFrom: searchDates.searchDateTo | filter:searchKey
-				-->
-					<tr ng-repeat="case in cases"
->>>>>>> origin/master
 						ng-click="showCaseDetails($index)"
 						class="no-animate cursor">
 						<td class="text-center">{{case.created | date: 'yyyy-MM-dd'}}</td>
