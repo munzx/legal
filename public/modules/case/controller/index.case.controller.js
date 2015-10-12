@@ -5,12 +5,17 @@ angular.module('adminModule').controller('indexCaseController', ['$scope', 'conn
 	if($scope.user === false) $state.go('signin');
 
 	//scope dates
+<<<<<<< HEAD
 	$scope.searchInfo = {};
+=======
+	$scope.searchDates = {};
+>>>>>>> origin/master
 
 	connectCaseFactory.query({}, function(response){
 		$scope.cases = response;
 	});
 
+<<<<<<< HEAD
 	$scope.searchInOptions = ['client', 'defendant', 'consultant', 'case', 'update', 'session'];
 
 	$scope.searchResult = function(val){
@@ -22,6 +27,11 @@ angular.module('adminModule').controller('indexCaseController', ['$scope', 'conn
 		search.searchIn = $scope.searchInfo.searchIn || undefined;
 
 	    return $http.post('/api/v1/case/search/', {"search": search}).then(function(response){
+=======
+	$scope.searchResult = function(val){
+		console.log($scope.searchDates.searchDateFrom);
+	    return $http.get('/api/v1/case/search/' + val + '/' + $scope.searchDates.searchDateFrom + '/' + $scope.searchDates.searchDateTo).then(function(response){
+>>>>>>> origin/master
 	    	return limitToFilter(response.data, 15);
 	    });	
 	}
@@ -38,8 +48,13 @@ angular.module('adminModule').controller('indexCaseController', ['$scope', 'conn
 	}
 
 	$scope.clearSearchPhrase = function(){
+<<<<<<< HEAD
 		$scope.searchInfo.searchDateFrom = undefined;
 		$scope.searchInfo.searchDateTo = undefined;
+=======
+		$scope.searchDates.searchDateFrom = undefined;
+		$scope.searchDates.searchDateTo = undefined;
+>>>>>>> origin/master
 	}
 
 	$scope.showNewCaseForm = function(){
