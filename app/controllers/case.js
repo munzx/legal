@@ -753,27 +753,16 @@ module.exports.defendantSilentRemove = function(req, res){
 }
 
 
-<<<<<<< HEAD
 module.exports.search = function(req, res){	
 	//to avoid "not defined" error in case of the user has passed empty object
 	var search = req.body.search = req.body.search || {};
-	
 	var searchPhrase = search.phrase || '';
-=======
-module.exports.search = function(req, res){
-	var searchPhrase = req.params.phrase || '';
->>>>>>> origin/master
 	var re = new RegExp(searchPhrase, "i");
 	var dataDates = {};
 
 	//create the dates using the recieved dates info
-<<<<<<< HEAD
 	dataDates.from = moment(new Date(search.dateFrom));
 	dataDates.to = moment(new Date(search.dateTo));
-=======
-	dataDates.from = moment(new Date(req.params.dateFrom));
-	dataDates.to = moment(new Date(req.params.dateTo));
->>>>>>> origin/master
 
 	//check if the dates are valid
 	//if not then assign new values that ranges between 20 past years and 20 coming years
@@ -782,10 +771,7 @@ module.exports.search = function(req, res){
 
 	cases.find().where({"caseDate": {"$gte": dataDates.from, "$lte": dataDates.to}}).and([{ $or:[{'caseNumber': {$regex: re}}, {'reportNumber': {$regex: re}}, {'subject': {$regex: re}}] }]).exec(function(err, result){
 		if(err){
-<<<<<<< HEAD
-=======
 			console.log(err);
->>>>>>> origin/master
 			res.status(500).jsonp(err);
 		} else {
 			res.status(200).jsonp(result);
