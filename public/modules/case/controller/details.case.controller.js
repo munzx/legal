@@ -142,5 +142,18 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 		});
 	}
 
+	$scope.showUploads = function(){
+		$modal.open({
+			controller: 'indexUploadController',
+			templateUrl: 'public/modules/uploads/view/index.upload.view.html',
+			backdrop: 'static',
+			resolve: {
+				selectedCase: function(){
+					return $scope.selectedCase;
+				}
+			}
+		});
+	}
+
 
 }]);

@@ -1,6 +1,7 @@
 'use strict';
 
-var mongoose = require('mongoose'),
+var fs = require('fs'),
+mongoose = require('mongoose'),
 cases = require('../models/case'),
 errorHandler = require('./error'),
 court = require('../models/court'),
@@ -778,4 +779,100 @@ module.exports.search = function(req, res){
 		}
 	});
 
+}
+
+module.exports.docs = function(req, res){
+	if(req.params.caseID){
+		cases.findById(req.params.caseID).populate('docs.user').exec(function(err, result){
+			if(err){
+				res.status(500).jsonp({message: err});
+			} else {
+				res.status(200).jsonp(result.docs);
+			}
+		});
+	} else {
+		res.status(500).jsonp({message: 'Case id is required'});
+	}
+}
+
+module.exports.uploadDoc = function(req, res){
+	console.log(req.body.description);
+	if(req.file){
+		if(req.params.caseID){
+			cases.findById(req.params.caseID, function(err, caseInfo){
+				if(err){
+					fs.unlink(req.file.path);
+					res.status(500).jsonp({message: err});
+				} else {
+					var info = {
+						'description': req.body.description,
+						'name': req.body.name,
+						'path': req.file.path,
+						'user': req.user._id
+					}
+
+					caseInfo.docs.push(info);
+					caseInfo.save(function(err, result){
+						if(err){
+							fs.unlink(req.file.path);
+							console.log(err);
+							res.status(500).jsonp({message: err});
+						} else {
+							res.status(200).jsonp(result.docs[result.docs.length -1]);
+						}
+					});
+				}
+			});
+		} else {
+			fs.unlink(req.file.path);
+			res.status(500).jsonp('No file has been uploaded');
+		}
+	} else {
+		res.status(500).jsonp('No file has been uploaded');
+	}
+}
+
+module.exports.downloadDoc = function(req, res){
+	console.log('Downloading...')
+	if(req.params.caseID && req.params.docID){
+		console.log('we are here ');
+		cases.findById(req.params.caseID, function(err, result){
+			if(err){
+				console.log(err);
+				res.status(500).jsonp({message: err});
+			} else {
+				var doc = result.docs.id(req.params.docID);
+				res.status(200).download(doc.path);
+			}
+		});
+	} else {
+		res.status(500).jsonp({message: 'Case id and Document id are required'});
+	}
+}
+
+module.exports.removeDoc = function(req, res){
+	if(req.params.caseID && req.params.docID){
+		cases.findById(req.params.caseID, function(err, result){
+			if(err){
+				res.status(500).jsonp({message: err});
+			} else {
+				var doc = result.docs.id(req.params.docID);
+				if(doc){
+					fs.unlink(doc.path);
+					doc.remove();
+					result.save(function(err, result){
+						if(err){
+							res.status(500).jsonp({message: err});
+						} else {
+							res.status(200).jsonp(result);
+						}
+					});
+				} else {
+					res.status(500).jsonp({message: 'Document not found'});
+				}
+			}
+		});
+	} else {
+		res.status(500).jsonp({message: 'Case id and doc id are required'});
+	}
 }

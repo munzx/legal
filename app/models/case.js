@@ -202,6 +202,35 @@ var caseSchema = mongoose.Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'user'
 	},
+	docs:  [{
+		description: {
+			type: String,
+			required: 'file description is required',
+			default: '',
+			trim: true,
+			lowercase: true
+		},
+		name: {
+			type: String,
+			required: 'file name is required',
+			default: '',
+			trim: true,
+			lowercase: true
+		},
+		path: {
+			type: String,
+			required: 'file name is required',
+			default: '',
+			trim: true,
+			lowercase: true
+		},
+		created: {type: Date, default: Date.now},
+		user: {
+			type: Schema.Types.ObjectId,
+			required: 'معرف المستخدم مطلوب',
+			ref: 'user'
+		}
+	}],
 	created: {type: Date, default: Date.now}
 });
 

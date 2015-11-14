@@ -1,7 +1,16 @@
 'use strict';
 
 //Dependencies
-var cms = require('../controllers/cms'),
+var multer = require('multer'),
+	storage = multer.diskStorage({
+		destination: 'uploads/',
+		filename: function(req, file, cb){
+			console.log(file);
+			cb(null, Date.now() + '-' + file.originalname);
+		}
+	}),
+	upload = multer({ storage: storage}),
+	cms = require('../controllers/cms'),
 	users = require('../controllers/user'),
 	admin = require('../controllers/admin'),
 	test = require('../controllers/test'),
@@ -186,6 +195,10 @@ module.exports = function (app, express) {
 		.post('/case/defendant', ensureAuthenticated, isUser, courtCase.insertDefendant)
 		.post('/case/defendant/new', ensureAuthenticated, isUser, courtCase.insertNewDefendant)
 		.post('/case/search', ensureAuthenticated, isUser, courtCase.search)
+		.get('/case/:caseID/docs', courtCase.docs)
+		.get('/case/:caseID/download/:docID', courtCase.downloadDoc)
+		.post('/case/:caseID/upload', upload.single('doc') , courtCase.uploadDoc)
+		.delete('/case/:caseID/upload/:docID', courtCase.removeDoc)
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)
 		.post('/caseRole', ensureAuthenticated, isAdmin, caseRole.create)

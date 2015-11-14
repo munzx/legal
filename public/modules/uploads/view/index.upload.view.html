@@ -1,0 +1,51 @@
+<section>
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" ng-click="closeModal()" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<h4 class="modal-title text-center">المستندات</h4>
+		</div>
+		<div class="modal-body">
+			<div class="row add-space">
+				<div class="col-md-12">
+					<h4 ng-show="error" class="alert alert-danger">{{error}}</h4>
+				</div>
+			</div>
+			<div class="row add-space">
+				<div class="col-md-12">
+					<button class="btn btn-sm btn-info icon-right" ng-click="addDoc()">
+						إضافة مستند <i class="glyphicon glyphicon-plus"></i>
+					</button>			
+				</div>
+			</div>
+			<div class="row add-space">
+				<div class="col-md-12">
+					<h4 ng-hide="docs.length" class="alert alert-warning">لاتوجد مستندات</h4>	
+				</div>
+			</div>
+			<div class="row add-space">
+				<div class="col-md-12">
+					<table class="table table-bordered table-hover">
+						<thead>
+							<tr>
+								<td class="text-center">التاريخ</td>
+								<td class="text-center">المدخل</td>
+								<td class="text-center">الوصف</td>
+								<td class="text-center">العنوان</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="doc in docs" class="no-animate">
+								<td class="text-center">{{doc.created | date: 'dd-MM-yyyy'}}</td>
+								<td class="text-center">{{doc.user.firsName}} {{doc.user.lastName}}</td>
+								<td class="text-center">{{doc.description}}</td>
+								<td class="text-center"><a target="_blank" href="{{downloadDoc(doc._id)}}">{{doc.name}}</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
