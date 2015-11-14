@@ -24,27 +24,29 @@
 					<div class="row">
 						<div class="col-md-12" ng-show="radioModel == 'byCase' ">
 							<form class="form">
-								<table class="table table-striped">
-									<thead>
-										<th class="text-center">الدعوى</th>
-										<th class="text-center">التاريخ</th>
-										<th class="text-center">مسؤولية</th>
-									</thead>
-									<tbody>
-										<tr ng-repeat="case in cases">
-											<td class="text-center">{{case.caseNumber}}</td>
-											<td class="text-center">{{case.created | date: 'yyyy-MM-dd'}}</td>
-											<td class="text-center">
-												<select class="form-control" ng-model="caseSelectedEmployeeIndex" ng-change="updateTaskbyCase(case._id, caseSelectedEmployeeIndex)">
-													<option value="">-- المحامي --</option>
-													<option ng-repeat="employee in employees" value="{{$index}}">
-														{{employee.firstName}} {{employee.lastName}}
-													</option>
-												</select>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<div class="table-responsive">
+									<table class="table table-striped">
+										<thead>
+											<th class="text-center">الدعوى</th>
+											<th class="text-center">التاريخ</th>
+											<th class="text-center">مسؤولية</th>
+										</thead>
+										<tbody>
+											<tr ng-repeat="case in cases">
+												<td class="text-center">{{case.caseNumber}}</td>
+												<td class="text-center">{{case.created | date: 'yyyy-MM-dd'}}</td>
+												<td class="text-center">
+													<select class="form-control" ng-model="caseSelectedEmployeeIndex" ng-change="updateTaskbyCase(case._id, caseSelectedEmployeeIndex)">
+														<option value="">-- المحامي --</option>
+														<option ng-repeat="employee in employees" value="{{$index}}">
+															{{employee.firstName}} {{employee.lastName}}
+														</option>
+													</select>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</form>
 						</div>
 						<!-- byDate -->
@@ -70,25 +72,27 @@
 						        </div>
 							</div>
 							<form class="form">
-								<table class="table table-striped">
-									<thead>
-										<th class="text-center">المحكمة</th>
-										<th class="text-center">مسؤولية</th>
-									</thead>
-									<tbody>
-										<tr ng-repeat='court in courts' class="no-animate">
-											<td class="text-center">{{court.name}}</td>
-											<td class="text-center">
-												<select class="form-control" ng-model="selectedEmployeeIndex" ng-change="updateTaskBydate(court._id, selectedEmployeeIndex)">
-													<option value="">-- المحامي --</option>
-													<option ng-repeat="employee in employees" value="{{$index}}">
-														{{employee.firstName}} {{employee.lastName}}
-													</option>
-												</select>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<div class="table-responsive">
+									<table class="table table-striped">
+										<thead>
+											<th class="text-center">المحكمة</th>
+											<th class="text-center">مسؤولية</th>
+										</thead>
+										<tbody>
+											<tr ng-repeat='court in courts' class="no-animate">
+												<td class="text-center">{{court.name}}</td>
+												<td class="text-center">
+													<select class="form-control" ng-model="selectedEmployeeIndex" ng-change="updateTaskBydate(court._id, selectedEmployeeIndex)">
+														<option value="">-- المحامي --</option>
+														<option ng-repeat="employee in employees" value="{{$index}}">
+															{{employee.firstName}} {{employee.lastName}}
+														</option>
+													</select>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 							</form>
 						</div>
 					</div>

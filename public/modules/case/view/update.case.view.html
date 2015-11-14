@@ -29,40 +29,42 @@
 					</div>
 				</div>
 				<div ng-show="requireRoleUpdate" class="form-group">
-					<table class="table">
-						<tbody>
-							<tr>
-								<td colspan="3">
-									<h4 class="alert alert-success text-center">تحديث صفات الموكل</h4>
-								</td>
-							</tr>
-							<tr ng-repeat="client in selectedCase.client">
-								<td>{{client.user.firstName}} {{client.user.lastName}}</td>
-								<td>{{client.role[client.role.length - 1]}}</td>
-								<td>
-									<select ng-model="clientNewRole" ng-change="updateclientNewRole($index, clientNewRole)" class="form-control">
-										<option value="">-- الصفة --</option>
-										<option ng-repeat="role in caseRoles" value="{{role.name}}">{{role.name}}</option>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td colspan="3">
-									<h4 class="alert alert-danger text-center">تحديث صفات الخصم</h4>
-								</td>
-							</tr>
-							<tr ng-repeat="defendant in selectedCase.defendant">
-								<td>{{defendant.user.firstName}} {{defendant.user.lastName}}</td>
-								<td>{{defendant.role[defendant.role.length - 1]}}</td>
-								<td>
-									<select ng-model="defendantNewRole" ng-change="updateDefendantNewRole($index, defendantNewRole)" class="form-control">
-										<option value="">-- الصفة --</option>
-										<option ng-repeat="role in caseRoles" value="{{role.name}}">{{role.name}}</option>
-									</select>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					<div class="table-responsive">
+						<table class="table">
+							<tbody>
+								<tr>
+									<td colspan="3">
+										<h4 class="alert alert-success text-center">تحديث صفات الموكل</h4>
+									</td>
+								</tr>
+								<tr ng-repeat="client in selectedCase.client">
+									<td>{{client.user.firstName}} {{client.user.lastName}}</td>
+									<td>{{client.role[client.role.length - 1]}}</td>
+									<td>
+										<select ng-model="clientNewRole" ng-change="updateclientNewRole($index, clientNewRole)" class="form-control">
+											<option value="">-- الصفة --</option>
+											<option ng-repeat="role in caseRoles" value="{{role.name}}">{{role.name}}</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3">
+										<h4 class="alert alert-danger text-center">تحديث صفات الخصم</h4>
+									</td>
+								</tr>
+								<tr ng-repeat="defendant in selectedCase.defendant">
+									<td>{{defendant.user.firstName}} {{defendant.user.lastName}}</td>
+									<td>{{defendant.role[defendant.role.length - 1]}}</td>
+									<td>
+										<select ng-model="defendantNewRole" ng-change="updateDefendantNewRole($index, defendantNewRole)" class="form-control">
+											<option value="">-- الصفة --</option>
+											<option ng-repeat="role in caseRoles" value="{{role.name}}">{{role.name}}</option>
+										</select>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div class="form-group">
 					<textarea ng-model="newUpdate.info" rows="8" class="form-control" placeholder="الملاحظات"></textarea>

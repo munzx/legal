@@ -52,36 +52,38 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<table class="table">
-							<thead>
-								<tr ng-show="selectedClients.length">
-									<th class="text-center">الإسم</th>
-									<th class="text-center">الصفة</th>
-									<th class="text-center">رقم الهاتف</th>
-									<th class="text-center">إلغاء</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-hide="selectedClients.length">
-									<td colspan="3">
-										<h4 class="alert alert-danger">لم يتم إضافة موكلين</h4>
-									</td>
-								</tr>
-								<tr ng-show="selectedClients.length" ng-repeat="client in selectedClients" class="no-animate">
-									<td class="text-center">{{client.firstName}} {{client.lastName}}</td>
-									<td class="text-center">
-										<select class="form-control" ng-model='client.caseRole'>
-											<option value="">-- الصفة --</option>
-											<option ng-repeat='role in caseRoles' value="{{role.name}}">{{role.name}}</option>
-										</select>
-									</td>
-									<td class="text-center">{{client.mobilePhone}}</td>
-									<td class="text-center">
-										<span ng-click="removeSelectedClient($index)" class="glyphicon glyphicon-remove cursor"></span>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr ng-show="selectedClients.length">
+										<th class="text-center">الإسم</th>
+										<th class="text-center">الصفة</th>
+										<th class="text-center">رقم الهاتف</th>
+										<th class="text-center">إلغاء</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-hide="selectedClients.length">
+										<td colspan="3">
+											<h4 class="alert alert-danger">لم يتم إضافة موكلين</h4>
+										</td>
+									</tr>
+									<tr ng-show="selectedClients.length" ng-repeat="client in selectedClients" class="no-animate">
+										<td class="text-center">{{client.firstName}} {{client.lastName}}</td>
+										<td class="text-center">
+											<select class="form-control" ng-model='client.caseRole'>
+												<option value="">-- الصفة --</option>
+												<option ng-repeat='role in caseRoles' value="{{role.name}}">{{role.name}}</option>
+											</select>
+										</td>
+										<td class="text-center">{{client.mobilePhone}}</td>
+										<td class="text-center">
+											<span ng-click="removeSelectedClient($index)" class="glyphicon glyphicon-remove cursor"></span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</div>
 					<div class="form-group">
 						<button class="btn btn-lg btn-warning" ng-click="step(1)"> السابق</button>
