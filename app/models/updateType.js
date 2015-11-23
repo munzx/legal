@@ -30,6 +30,14 @@ var updateTypesSchema = new Schema({
 		type: String,
 		default: ''
 	},
+	requireNextSession: {
+		type: Boolean,
+		default: false
+	},
+	requireRemarks: {
+		type: Boolean,
+		default: false	
+	},
 	user: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 	created: {type: Date, default: Date.now}
 });

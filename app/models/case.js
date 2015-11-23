@@ -113,8 +113,7 @@ var caseSchema = mongoose.Schema({
 		},
 		updateInfo: {
 			type: String,
-			default: '',
-			required: 'الملاحظات مطلوبة'
+			default: ''
 		},
 		memoRequired: {
 			type: Boolean,
@@ -160,7 +159,7 @@ var caseSchema = mongoose.Schema({
 		newTime: {
 			type: String,
 			default: '',
-			required: 'التوقسق مطلوب'
+			required: 'التوقيت مطلوب'
 		},
 		user: {
 			type: Schema.Types.ObjectId,

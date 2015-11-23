@@ -72,10 +72,11 @@ module.exports.insertCaseUpdate = function(req, res){
 					user: req.user._id
 				}
 
+
 				var updateSession = {
-					newDate: req.body.update.session.newDate,
-					newTime: req.body.update.session.newTime,
-					user: req.user._id
+					newDate: req.body.update.session.newDate || false,
+					newTime: req.body.update.session.newTime || false,
+					user: req.user._id || false
 				}
 
 				var updateClientsInfo = req.body.update.clientInfo || [];
@@ -97,7 +98,10 @@ module.exports.insertCaseUpdate = function(req, res){
 					});
 				}
 
-				caseInfo.sessions.push(updateSession);
+				if(updateSession.newDate && updateSession.newTime && updateSession.user){
+					caseInfo.sessions.push(updateSession);
+				}
+
 				caseInfo.updates.push(updateInfo);
 
 				caseInfo.save(function(error, updatedResult){

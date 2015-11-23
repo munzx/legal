@@ -45,6 +45,24 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" ng-model="updateType.requireRemarks">
+							&nbsp; &nbsp; &nbsp;
+							طلب إضافة ملاحظة
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" ng-model="updateType.requireNextSession">
+							&nbsp; &nbsp; &nbsp;
+							طلب تحديد جلسة
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
 					<button ng-click="createUpdateType()" class="btn btn-lg btn-block btn-success"> أضف صفة جديدة </button>
 				</div>
 			</form>

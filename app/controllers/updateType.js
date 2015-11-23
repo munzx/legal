@@ -17,6 +17,7 @@ module.exports.index = function (req, res) {
 }
 
 module.exports.create = function (req, res) {
+	console.log(req.body.updatetypesInfo);
 	var updatetype = new updateTypes,
 		updatetypesInfo = _.extend(updatetype, req.body.updatetypesInfo);
 

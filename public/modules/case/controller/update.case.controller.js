@@ -35,14 +35,6 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		$scope.udatedDefendantInfo[index].role[selectedCase.defendant[index].role.length] = newRole;
 	}
 
-	$scope.checkIfIdRequired = function(){
-		$scope.showRequireId = $scope.caseUpdates[$scope.newUpdate.name].requiredId || '';
-		$scope.requireRoleUpdate = $scope.caseUpdates[$scope.newUpdate.name].requireRoleUpdate || '';
-		$scope.showRequireIdTitle = $scope.caseUpdates[$scope.newUpdate.name].requiredIdTitle || '';
-		//if the 'requireId' is empty then make it empty instead of false to avoid error
-		$scope.newUpdate.session.updateId = ($scope.showRequireId === false)? $scope.newUpdate.session.updateId: '';
-	}
-
 	$scope.addNewCaseUpdate = function(){
 		//the name in the 'caseUpdates' variable is the index!!! so we use
 		//the following to get the real name through the array index
@@ -67,12 +59,57 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		});
 	}
 
+	$scope.updateOptions = function () {
+		if(!$scope.caseUpdates[$scope.newUpdate.name]){ return {}; };
+		return {
+			'requiredId': $scope.caseUpdates[$scope.newUpdate.name].requiredId,
+			'requireRoleUpdate': $scope.caseUpdates[$scope.newUpdate.name].requireRoleUpdate,
+			'requiredIdTitle': $scope.caseUpdates[$scope.newUpdate.name].requiredIdTitle,
+			'requireNextSession':$scope.caseUpdates[$scope.newUpdate.name].requireNextSession,
+			'requireRemarks': $scope.caseUpdates[$scope.newUpdate.name].requireRemarks
+		}
+	}
+
+	$scope.checkIfIdRequired = function(){
+		var options = $scope.updateOptions();
+		$scope.showRequireId =  options.requiredId || '';
+		$scope.requireRoleUpdate =  options.requireRoleUpdate || '';
+		$scope.showRequireIdTitle =  options.requiredIdTitle || '';
+		$scope.showNextSessionBox =  options.requireNextSession || '';
+		$scope.showRemarks =  options.requireRemarks || '';
+		//if the 'requireId' is empty then make it empty instead of false to avoid error
+		//after the update , not sure if the following line is needed
+		$scope.newUpdate.session.updateId = ($scope.showRequireId === false)? $scope.newUpdate.session.updateId: '';
+	}
+
 	$scope.isValid = function(){
 		if($scope.newUpdate){
-			if(!$scope.newUpdate.name || !$scope.newUpdate.info || !$scope.newUpdate.session.newDate || !$scope.newUpdate.session.newTime) return false;
-			return true;
+			if(!$scope.newUpdate.name){ return false; };
+			var valid = true;
+			var options = $scope.updateOptions();
+
+			if(!options){ return false; };
+
+			if(options.requiredId){
+				if(!$scope.newUpdate.session.updateId){ valid = false; };
+			}
+
+			if(options.requireRoleUpdate){}
+
+			if(options.requiredIdTitle){}
+
+			if(options.requireNextSession){
+				if(!$scope.newUpdate.session.newDate || !$scope.newUpdate.session.newTime){ valid = false; };
+			}
+
+			if(options.requireRemarks){
+				if(!$scope.newUpdate.info){ valid = false; };
+			}
+
+			return valid;
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	$scope.closeModal = function(){
