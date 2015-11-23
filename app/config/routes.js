@@ -174,6 +174,7 @@ module.exports = function (app, express) {
 		.get('/admin/consultant', ensureAuthenticated, isUser, consultant.index)
 		//employees
 		.get('/admin/employee', ensureAuthenticated, isUser, employee.index)
+		.get('/admin/employee/nonlegal', ensureAuthenticated, isUser, employee.nonlegal) //no consultants or admins
 		//case
 		.get('/case', ensureAuthenticated, isUser, courtCase.index)
 		.post('/case', ensureAuthenticated, isUser, courtCase.create)

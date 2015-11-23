@@ -56,7 +56,7 @@ angular.module('adminModule').controller('usersAdminController', ['$scope', '$st
 
 	$scope.getEmployees = function(){
 		activeSubNav('employee');
-		connectAdminFactory.query({page: 'employee'}, function(response){
+		connectAdminFactory.query({page: 'employee', action: 'nonlegal'}, function(response){
 			$scope.users = response;
 		});
 	}
