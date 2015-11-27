@@ -47,9 +47,8 @@ angular.module('caseModule').controller('memosCaseController', ['$scope', 'conne
 		});
 	}
 
-	$scope.showmemoDetails = function(index){
+	$scope.showMemoDetails = function(index){
 
 	}
-
 
 }]);

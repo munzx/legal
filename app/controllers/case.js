@@ -63,20 +63,41 @@ module.exports.insertCaseUpdate = function(req, res){
 			if(err){
 				res.status(500).jsonp({message: err});
 			} else if(caseInfo) {
+				var isValid = true;
 				var updateInfo = {
 					updateType: req.body.update.name,
 					updateId: req.body.update.session.updateId,
 					updateInfo: req.body.update.info,
 					memoRequired: req.body.update.memoRequired,
-					memoRequiredDate: req.body.update.memoRequiredDate,
 					user: req.user._id
 				}
 
+				//if the memo is required then make sure "memoRequiredDate" is defined
+				if(updateInfo.memoRequired){
+					updateInfo.memoId = req.body.update.memoId || caseInfo.caseNumber;
+					updateInfo.memoType = req.body.update.memoType || caseInfo.caseType;
+					updateInfo.memoRequiredDate = req.body.update.memoRequiredDate;
+
+					console.log(updateInfo);
+
+					if(!updateInfo.memoRequiredDate || !updateInfo.memoId || !updateInfo.memoType){
+						isValid = false;
+					}
+				}
 
 				var updateSession = {
 					newDate: req.body.update.session.newDate || false,
 					newTime: req.body.update.session.newTime || false,
+					refType: req.body.update.session.refType || caseInfo.caseType,
+					refNumber: req.body.update.session.refNumber || caseInfo.caseNumber,
 					user: req.user._id || false
+				}
+
+				if(updateInfo.sessionRequired){
+					//Check if "new session info" are there , if so then insert new session info
+					if(updateSession.newDate && updateSession.newTime && updateSession.user){
+						caseInfo.sessions.push(updateSession);
+					}
 				}
 
 				var updateClientsInfo = req.body.update.clientInfo || [];
@@ -98,34 +119,34 @@ module.exports.insertCaseUpdate = function(req, res){
 					});
 				}
 
-				if(updateSession.newDate && updateSession.newTime && updateSession.user){
-					caseInfo.sessions.push(updateSession);
+				if(isValid){
+					caseInfo.updates.push(updateInfo);
+
+					caseInfo.save(function(error, updatedResult){
+						if(error){
+							res.status(500).jsonp(error);
+						} else if(updatedResult) {
+							cases.populate(updatedResult, [{path: 'updates.user'}, {path: 'client.user'}, {path: 'defendant.user'}], function(err, caseAllInfo){
+								if(err){
+									res.status(500).jsonp(err);
+								} else {
+									res.status(200).jsonp(caseAllInfo);
+								}
+							});
+						} else {
+							res.status(500).jsonp({message: 'لم يتم تسجيل البيانات'});		
+						}
+					});
+				} else {
+					res.status(500).jsonp({message: 'لم يتم توفير البانات الازمة'});
 				}
-
-				caseInfo.updates.push(updateInfo);
-
-				caseInfo.save(function(error, updatedResult){
-					if(error){
-						res.status(500).jsonp(error);
-					} else if(updatedResult) {
-						cases.populate(updatedResult, [{path: 'updates.user'}, {path: 'client.user'}, {path: 'defendant.user'}], function(err, caseAllInfo){
-							if(err){
-								res.status(500).jsonp(err);
-							} else {
-								res.status(200).jsonp(caseAllInfo);
-							}
-						});
-					} else {
-						res.status(500).jsonp({message: 'لم يتم تسجيل البيانات'});		
-					}
-				});
 			} else {
 				res.status(500).jsonp({message: 'لم يتم العثور على الدعوى'});
 			}
 		});
-} else {
-	res.status(500).jsonp({message: 'لم يتم توفير رقم المعرف'})
-}
+	} else {
+		res.status(500).jsonp({message: 'لم يتم توفير رقم المعرف'})
+	}
 }
 
 module.exports.sessionDates = function(req, res){
@@ -159,7 +180,8 @@ module.exports.upcomingSessions = function(req, res){
 							sessionInfo.caseId = caseInfo._id;
 							sessionInfo.defendant = caseInfo.defendant;
 							sessionInfo.client = caseInfo.client;
-							sessionInfo.caseNumber = caseInfo.caseNumber;
+							sessionInfo.refNumber = session.refNumber;
+							sessionInfo.refType = session.refType;
 							sessionInfo.lawyer = session.lawyer;
 							sessionInfo.sessionStatus = caseInfo.status;
 							sessionInfo.sessionDate = session.newDate;
@@ -169,17 +191,17 @@ module.exports.upcomingSessions = function(req, res){
 							sessionInfo.sessionUser = session.user;
 							//get last session info and case info
 							upcomingSessions.push(sessionInfo);
-							//cleart sessionInfo
+							//clear sessionInfo
 							sessionInfo = {};		
 						}
 					});
 				}
 			});
 
-var sort = _.sortBy(upcomingSessions, 'sessionDate');
-res.status(200).jsonp(sort);
-}
-});
+			var sort = _.sortBy(upcomingSessions, 'sessionDate');
+			res.status(200).jsonp(sort);
+		}
+	});
 }
 
 module.exports.previousSessions = function(req, res){
@@ -203,7 +225,8 @@ module.exports.previousSessions = function(req, res){
 							sessionInfo.caseId = caseInfo._id;
 							sessionInfo.defendant = caseInfo.defendant;
 							sessionInfo.client = caseInfo.client;
-							sessionInfo.caseNumber = caseInfo.caseNumber;
+							sessionInfo.refNumber = session.refNumber;
+							sessionInfo.refType = session.refType;
 							sessionInfo.sessionStatus = caseInfo.status;
 							sessionInfo.sessionDate = session.newDate;
 							sessionInfo.sessionTime = session.newTime;
@@ -212,7 +235,7 @@ module.exports.previousSessions = function(req, res){
 							sessionInfo.sessionUser = session.user;
 							//get last session info and case info
 							upcomingSessions.push(sessionInfo);
-							//cleart sessionInfo
+							//clear sessionInfo
 							sessionInfo = {};		
 						}
 					});
@@ -307,7 +330,8 @@ module.exports.memosPending = function(req, res){
 							updateInfo.caseId = caseInfo._id;
 							updateInfo.defendant = caseInfo.defendant;
 							updateInfo.client = caseInfo.client;
-							updateInfo.caseNumber = caseInfo.caseNumber;
+							updateInfo.memoId = update.memoId;
+							updateInfo.memoType = update.memoType;
 							updateInfo.memoConsultant = update.memoConsultant;
 							updateInfo.memoRequired = update.memoRequired;
 							updateInfo.memoRequiredDate = update.memoRequiredDate;
@@ -319,17 +343,17 @@ module.exports.memosPending = function(req, res){
 							updateInfo.updateUser = update.user;
 							//get last update info and case info
 							upcomingupdates.push(updateInfo);
-							//cleart updateInfo
+							//clear updateInfo
 							updateInfo = {};
 						}			
 					});
 				}
 			});
 
-var sort = _.sortBy(upcomingupdates, 'sessionDate');
-res.status(200).jsonp(sort);
-}
-});
+			var sort = _.sortBy(upcomingupdates, 'sessionDate');
+			res.status(200).jsonp(sort);
+		}
+	});
 }
 
 module.exports.memosClosed = function(req, res){
@@ -353,7 +377,8 @@ module.exports.memosClosed = function(req, res){
 							updateInfo.caseId = caseInfo._id;
 							updateInfo.defendant = caseInfo.defendant;
 							updateInfo.client = caseInfo.client;
-							updateInfo.caseNumber = caseInfo.caseNumber;
+							updateInfo.memoId = update.memoId;
+							updateInfo.memoType = update.memoType;
 							updateInfo.memoConsultant = update.memoConsultant;
 							updateInfo.memoRequired = update.memoRequired;
 							updateInfo.memoRequiredDate = update.memoRequiredDate;
@@ -365,7 +390,7 @@ module.exports.memosClosed = function(req, res){
 							updateInfo.updateUser = update.user;
 							//get last update info and case info
 							upcomingupdates.push(updateInfo);
-							//cleart updateInfo
+							//clear updateInfo
 							updateInfo = {};
 						}			
 					});
@@ -413,18 +438,18 @@ module.exports.consultantMemos = function(req, res){
 								updateInfo.updateUser = update.user;
 								//get last update info and case info
 								allUpdates.push(updateInfo);
-								//cleart updateInfo
+								//clear updateInfo
 								updateInfo = {};
 							}
 						}			
 					});
-}
-});
+				}
+			});
 
-var sort = _.sortBy(allUpdates, 'sessionDate');
-res.status(200).jsonp(sort);
-}
-});
+			var sort = _.sortBy(allUpdates, 'sessionDate');
+			res.status(200).jsonp(sort);
+		}
+	});
 }
 
 module.exports.insertMemoConsultant = function(req, res){
@@ -557,10 +582,10 @@ module.exports.insertNewClient = function(req, res){
 					});
 				}
 			});
-} else {
-	res.status(500).jsonp({message: 'Case not found'});
-}
-});
+		} else {
+			res.status(500).jsonp({message: 'Case not found'});
+		}
+	});
 }
 
 
@@ -622,10 +647,8 @@ module.exports.insertDefendant = function(req, res){
 
 //create a new defendant and insert its information to an existing case
 module.exports.insertNewDefendant = function(req, res){
-	console.log('Bism Allah');
 	cases.findById(req.body.caseId).populate('updates.user').exec(function(err, caseInfo){
 		if(err){
-			console.log(err);
 			res.status(500).jsonp({message: err});
 		} else if(caseInfo) {
 			//create new defendant
@@ -674,10 +697,10 @@ module.exports.insertNewDefendant = function(req, res){
 					});
 				}
 			});
-} else {
-	res.status(500).jsonp({message: 'Case not found'});
-}
-});
+		} else {
+			res.status(500).jsonp({message: 'Case not found'});
+		}
+	});
 }
 
 
@@ -713,7 +736,6 @@ module.exports.clientSilentRemove = function(req, res){
 				res.status(500).jsonp({message: 'Already deleted'});
 			}
 		} else {
-			console.log('not found');
 			res.status(500).jsonp({message: 'case not found'});
 		}
 	});
@@ -751,7 +773,6 @@ module.exports.defendantSilentRemove = function(req, res){
 				res.status(500).jsonp({message: 'Already deleted'});
 			}
 		} else {
-			console.log('not found');
 			res.status(500).jsonp({message: 'case not found'});
 		}
 	});
@@ -776,13 +797,11 @@ module.exports.search = function(req, res){
 
 	cases.find().where({"caseDate": {"$gte": dataDates.from, "$lte": dataDates.to}}).and([{ $or:[{'caseNumber': {$regex: re}}, {'reportNumber': {$regex: re}}, {'subject': {$regex: re}}] }]).exec(function(err, result){
 		if(err){
-			console.log(err);
 			res.status(500).jsonp(err);
 		} else {
 			res.status(200).jsonp(result);
 		}
 	});
-
 }
 
 module.exports.docs = function(req, res){
@@ -800,7 +819,6 @@ module.exports.docs = function(req, res){
 }
 
 module.exports.uploadDoc = function(req, res){
-	console.log(req.body.description);
 	if(req.file){
 		if(req.params.caseID){
 			cases.findById(req.params.caseID, function(err, caseInfo){
@@ -819,7 +837,6 @@ module.exports.uploadDoc = function(req, res){
 					caseInfo.save(function(err, result){
 						if(err){
 							fs.unlink(req.file.path);
-							console.log(err);
 							res.status(500).jsonp({message: err});
 						} else {
 							res.status(200).jsonp(result.docs[result.docs.length -1]);
@@ -837,12 +854,9 @@ module.exports.uploadDoc = function(req, res){
 }
 
 module.exports.downloadDoc = function(req, res){
-	console.log('Downloading...')
 	if(req.params.caseID && req.params.docID){
-		console.log('we are here ');
 		cases.findById(req.params.caseID, function(err, result){
 			if(err){
-				console.log(err);
 				res.status(500).jsonp({message: err});
 			} else {
 				var doc = result.docs.id(req.params.docID);
@@ -878,5 +892,27 @@ module.exports.removeDoc = function(req, res){
 		});
 	} else {
 		res.status(500).jsonp({message: 'Case id and doc id are required'});
+	}
+}
+
+module.exports.updates = function (req, res) {
+	if(req.params.id){
+		cases.findById(req.params.id).exec(function (err, result) {
+			if(err){
+				res.status(500).jsonp({message: err});
+			} else {
+				var info = result.updates,
+					serve = [];
+
+				info.forEach(function (item) {
+					if(item.updateId){
+						serve.push(item);
+					}
+				});
+				res.status(200).jsonp(serve);
+			}
+		});
+	} else {
+		res.status(500).jsonp({message: 'Case id is required'});
 	}
 }

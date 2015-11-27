@@ -13,11 +13,17 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		$scope.error = error.data.message;
 	});
 
+	connectCaseFactory.query({action: 'updates', actionId: $scope.selectedCase._id }, function (response) {
+		$scope.caseUpdatesWithUpdateId = response;
+	}, function(error){
+		$scope.error = error.data.message;
+	});
+
 	connectCaseRoleFactory.query({}, function(response){
 		$scope.caseRoles = response;
 	});
 
-	//save the client and the defendants current info
+	//save the clients and the defendants current info
 	$scope.udatedClientInfo = angular.copy(selectedCase.client);
 	$scope.udatedDefendantInfo = angular.copy(selectedCase.defendant);
 
@@ -35,21 +41,49 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		$scope.udatedDefendantInfo[index].role[selectedCase.defendant[index].role.length] = newRole;
 	}
 
+	$scope.updateOptions = function () {
+		if(!$scope.caseUpdates[$scope.newUpdate.name]){ return {}; };
+		return {
+			'requiredId': $scope.caseUpdates[$scope.newUpdate.name].requiredId,
+			'requireRoleUpdate': $scope.caseUpdates[$scope.newUpdate.name].requireRoleUpdate,
+			'requiredIdTitle': $scope.caseUpdates[$scope.newUpdate.name].requiredIdTitle,
+			'requireNextSession':$scope.caseUpdates[$scope.newUpdate.name].requireNextSession,
+			'requireRemarks': $scope.caseUpdates[$scope.newUpdate.name].requireRemarks,
+			'requestMemo': $scope.caseUpdates[$scope.newUpdate.name].requestMemo
+		}
+	}
+
 	$scope.addNewCaseUpdate = function(){
 		//the name in the 'caseUpdates' variable is the index!!! so we use
 		//the following to get the real name through the array index
 		//if a memo is required 'memoRequired' then make it true
 		$scope.newUpdate.memoRequired = $scope.caseUpdates[$scope.newUpdate.name].requestMemo? true: false;
+		$scope.newUpdate.sessionRequired = $scope.caseUpdates[$scope.newUpdate.name].requireNextSession? true: false;
 		$scope.newUpdate.name = $scope.caseUpdates[$scope.newUpdate.name].name;
-		$scope.newUpdate.memoRequiredDate = $scope.newUpdate.session.newDate
 		//add the roles updates to the case update info
 		$scope.newUpdate.clientInfo = $scope.udatedClientInfo;
 		$scope.newUpdate.defendantInfo = $scope.udatedDefendantInfo;
 
+		//if session is required
+		if($scope.newUpdate.sessionRequired){
+			if($scope.caseUpdatesWithUpdateId[$scope.sessionUpdateIndex]){
+				$scope.newUpdate.session.refType = $scope.caseUpdatesWithUpdateId[$scope.sessionUpdateIndex].updateType;
+				$scope.newUpdate.session.refNumber = $scope.caseUpdatesWithUpdateId[$scope.sessionUpdateIndex].updateId;		
+			}
+		}
+
+		//if memo is required
+		//the memo date is passed through UI "memoRequiredDate"
+		if($scope.newUpdate.memoRequired){
+			if($scope.caseUpdatesWithUpdateId[$scope.newUpdate.memoUpdateIndex]){
+				$scope.newUpdate.memoId = $scope.caseUpdatesWithUpdateId[$scope.newUpdate.memoUpdateIndex].updateId;
+				$scope.newUpdate.memoType = $scope.caseUpdatesWithUpdateId[$scope.newUpdate.memoUpdateIndex].updateType;
+			}
+		}
+
 		connectCaseFactory.save({'action': 'caseupdate', 'id': selectedCase._id}, {'update': $scope.newUpdate}, function(response){
 			selectedCase.updates = response.updates;
 			selectedCase.sessions = response.sessions;
-			$scope.newUpdate.memoRequired = false;
 			//update the case clients and defendants info
 			selectedCase.client = response.client;
 			selectedCase.defendant = response.defendant;
@@ -59,17 +93,6 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		});
 	}
 
-	$scope.updateOptions = function () {
-		if(!$scope.caseUpdates[$scope.newUpdate.name]){ return {}; };
-		return {
-			'requiredId': $scope.caseUpdates[$scope.newUpdate.name].requiredId,
-			'requireRoleUpdate': $scope.caseUpdates[$scope.newUpdate.name].requireRoleUpdate,
-			'requiredIdTitle': $scope.caseUpdates[$scope.newUpdate.name].requiredIdTitle,
-			'requireNextSession':$scope.caseUpdates[$scope.newUpdate.name].requireNextSession,
-			'requireRemarks': $scope.caseUpdates[$scope.newUpdate.name].requireRemarks
-		}
-	}
-
 	$scope.checkIfIdRequired = function(){
 		var options = $scope.updateOptions();
 		$scope.showRequireId =  options.requiredId || '';
@@ -77,6 +100,7 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		$scope.showRequireIdTitle =  options.requiredIdTitle || '';
 		$scope.showNextSessionBox =  options.requireNextSession || '';
 		$scope.showRemarks =  options.requireRemarks || '';
+		$scope.showMemoBox = options.requestMemo || '';
 		//if the 'requireId' is empty then make it empty instead of false to avoid error
 		//after the update , not sure if the following line is needed
 		$scope.newUpdate.session.updateId = ($scope.showRequireId === false)? $scope.newUpdate.session.updateId: '';
@@ -93,6 +117,8 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 			if(options.requiredId){
 				if(!$scope.newUpdate.session.updateId){ valid = false; };
 			}
+
+			if(options.requestMemo){}
 
 			if(options.requireRoleUpdate){}
 

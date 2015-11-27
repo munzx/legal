@@ -60,6 +60,11 @@ var caseSchema = mongoose.Schema({
 			ref: 'user'
 		}
 	}],
+	caseType: {
+		type: String, 
+		default: "",
+		required: 'نوع الدعوى مطلوب'
+	},
 	caseDate: {
 		type: Date, 
 		default: "",
@@ -123,6 +128,14 @@ var caseSchema = mongoose.Schema({
 			type: Date,
 			default: ''
 		},
+		memoId: {
+			type: String,
+			default: ''
+		},
+		memoType: {
+			type: String,
+			default: ''
+		},
 		memoStatus: {
 			type: String,
 			default: 'pending',
@@ -170,6 +183,16 @@ var caseSchema = mongoose.Schema({
 			type: Schema.Types.ObjectId,
 			ref: 'user'
 		}],
+		refType: { //the reference type i.e the update
+			type: String,
+			default: '',
+			required: 'نوع الجلسة مطلوب'
+		},
+		refNumber: {
+			type: String,
+			default: '',
+			required: 'رقم الجلسة مطلوب'
+		},
 		created: {
 			type: Date,
 			default: Date.now

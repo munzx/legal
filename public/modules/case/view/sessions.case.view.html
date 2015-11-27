@@ -1,109 +1,116 @@
 <section>
-	<div class="row add-space">
-		<div class="col-md-12" style="padding:0;">
-			<form class="form-inline" style="background: #EEEEEE;">
-				<div class="form-group">
-					<div class="input-group">
-						<button ng-disabled="activePrevious" ng-show='isAdmin' class="btn btn-info btn-md" ng-click="sechedule()">
-							المهام <span class="glyphicon glyphicon-list"></span>
-						</button>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="input-group">
-						<ul class="nav nav-pills" style="float: right;margin-right:0 !important;padding-right:0 !important;">
-							<li role="presentation" ng-click="previous()" class="{{activePrevious}}"><a href="#">السابقة</a></li>
-							<li role="presentation" ng-click="upcoming()" class="{{activeUpcoming}}"><a href="#">القادمة</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="input-group">
-						<label class="input-group-addon">تاريخ الجلسة من</label>
-						<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
-					</div>
-					<div class="input-group">
-						<label class="input-group-addon">إلى</label>
-						<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="input-group">
-						<input ng-model="searchKey" placeholder="بحث" class="form-control">
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="input-group">
-						<button print-btn print-landscape class="btn btn-warning btn-md">
-							طباعة
-							<span class="glyphicon glyphicon-print"></span>
-						</button>
-					</div>
-				</div>
-			</form>
+	<div class="row">
+		<div class="col-md-12" ng-hide="sessions.length">
+			<h4 class='alert alert-danger'>لاتوجد جلسات</h4>
 		</div>
 	</div>
-	&nbsp;
-	<div class="row">
-		<div class="col-md-12">
-			<div class="visible-md visible-lg visible-print">
-				<div class="table-responsive">
-					<table class="table table-striped table-hover table-bordered table-condensed" print-table="sessions">
+	<div ng-show="sessions.length">
+		<div class="row add-space">
+			<div class="col-md-12" style="padding:0;">
+				<form class="form-inline" style="background: #EEEEEE;">
+					<div class="form-group">
+						<div class="input-group">
+							<button ng-disabled="activePrevious" ng-show='isAdmin' class="btn btn-info btn-md" ng-click="sechedule()">
+								المهام <span class="glyphicon glyphicon-list"></span>
+							</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group">
+							<ul class="nav nav-pills" style="float: right;margin-right:0 !important;padding-right:0 !important;">
+								<li role="presentation" ng-click="previous()" class="{{activePrevious}}"><a href="#">السابقة</a></li>
+								<li role="presentation" ng-click="upcoming()" class="{{activeUpcoming}}"><a href="#">القادمة</a></li>
+							</ul>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group">
+							<label class="input-group-addon">تاريخ الجلسة من</label>
+							<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
+						</div>
+						<div class="input-group">
+							<label class="input-group-addon">إلى</label>
+							<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group">
+							<input ng-model="searchKey" placeholder="بحث" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="input-group">
+							<button print-btn print-landscape class="btn btn-warning btn-md">
+								طباعة
+								<span class="glyphicon glyphicon-print"></span>
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		&nbsp;
+		<div class="row">
+			<div class="col-md-12">
+				<div class="visible-md visible-lg visible-print">
+					<div class="table-responsive">
+						<table class="table table-striped table-hover table-bordered table-condensed" print-table="sessions">
+							<thead>
+								<tr>
+									<th class="text-center" >تاريخ الجلسة</th>
+									<th class="text-center">المحامي</th>
+									<th class="text-center">المحكمة</th>
+									<th class="text-center">الخصم و صفته</th>
+									<th class="text-center">الموكل و صفته</th>
+									<th class="text-center">نوعها</th>
+									<th class="text-center">رقم الدعوى</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="session in sessions | dateRangeConfigFilter:'sessionDate':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey" class="no-animate">
+									<td class="text-center">{{session.sessionDate | date: 'yyyy-MM-dd'}}</td>
+									<td class="text-center">
+										{{session.lawyer[session.lawyer.length - 1].firstName || '-----------'}}
+										{{session.lawyer[session.lawyer.length - 1].lastName || '-----------'}}
+									</td>
+									<td class="text-center">{{session.court[0].name}}</td>
+									<td class="text-center">
+										<p ng-repeat="defendant in session.defendant">
+											{{defendant.user.firstName}} {{defendant.user.lastName}} - {{defendant.role[defendant.role.length - 1]}}
+										</p>
+									</td>
+									<td class="text-center">
+										<p ng-repeat="client in session.client">
+											{{client.user.firstName}} {{client.user.lastName}} - {{client.role[client.role.length - 1]}}
+										</p>
+									</td>
+									<td class="text-center">{{session.refType}}</td>
+									<td class="text-center">{{session.refNumber}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="table-responsive hidden-md hidden-lg">
+					<table class="table table-striped table-hover table-condensed">
 						<thead>
 							<tr>
-								<th class="text-center" >تاريخ الجلسة</th>
-								<th class="text-center">المحامي</th>
-								<th class="text-center">المحكمة</th>
-								<th class="text-center">الخصم و صفته</th>
-								<th class="text-center">الموكل و صفته</th>
-								<th class="text-center">نوعها</th>
+								<th class="text-center">تاريخ الإنشاء</th>
+								<th class="text-center">المستخدم</th>
+								<th class="text-center">تاريخ و وقت الجلسة</th>
 								<th class="text-center">رقم الدعوى</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="session in sessions | dateRangeConfigFilter:'sessionDate':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey" class="no-animate">
-								<td class="text-center">{{session.sessionDate | date: 'yyyy-MM-dd'}}</td>
-								<td class="text-center">
-									{{session.lawyer[session.lawyer.length - 1].firstName || '-----------'}}
-									{{session.lawyer[session.lawyer.length - 1].lastName || '-----------'}}
-								</td>
-								<td class="text-center">{{session.court[0].name}}</td>
-								<td class="text-center">
-									<p ng-repeat="defendant in session.defendant">
-										{{defendant.user.firstName}} {{defendant.user.lastName}} - {{defendant.role[defendant.role.length - 1]}}
-									</p>
-								</td>
-								<td class="text-center">
-									<p ng-repeat="client in session.client">
-										{{client.user.firstName}} {{client.user.lastName}} - {{client.role[client.role.length - 1]}}
-									</p>
-								</td>
-								<td class="text-center">إختبارية</td>
-								<td class="text-center">{{session.caseNumber}}</td>
+							<tr ng-repeat="session in sessions" class="cursor no-animate" ng-click="showSessionDetails($index)">
+								<td class="text-center">{{session.sessionCreated | date: 'yyyy-MM-dd'}}</td>
+								<td class="text-center">{{session.sessionUser.firstName}} {{session.sessionUser.lastName}}</td>
+								<td class="text-center">{{session.sessionDate | date: 'yyyy-MM-dd'}} - {{session.sessionTime | date: 'HH:mm'}} </td>
+								<td class="text-center">{{session.refNumber}}</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
-			</div>
-			<div class="table-responsive hidden-md hidden-lg">
-				<table class="table table-striped table-hover table-condensed">
-					<thead>
-						<tr>
-							<th class="text-center">تاريخ الإنشاء</th>
-							<th class="text-center">المستخدم</th>
-							<th class="text-center">تاريخ و وقت الجلسة</th>
-							<th class="text-center">رقم الدعوى</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="session in sessions" class="cursor no-animate" ng-click="showSessionDetails($index)">
-							<td class="text-center">{{session.sessionCreated | date: 'yyyy-MM-dd'}}</td>
-							<td class="text-center">{{session.sessionUser.firstName}} {{session.sessionUser.lastName}}</td>
-							<td class="text-center">{{session.sessionDate | date: 'yyyy-MM-dd'}} - {{session.sessionTime | date: 'HH:mm'}} </td>
-							<td class="text-center">{{session.caseNumber}}</td>
-						</tr>
-					</tbody>
-				</table>
 			</div>
 		</div>
 	</div>

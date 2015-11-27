@@ -10,7 +10,7 @@
 			<div class="row add-space">
 				<div class="col-md-6">
 					<div style="float: left;">
-						<h4 ng-show="nextSessionDate()"><span class="label label-default">موعد الجلسة القادمة {{nextSessionDate() | date: 'yyyy-MM-dd' }} الساعة {{nextSessionTime() | date: 'HH-mm Z'}}</span></h4>
+						<h4 ng-show="nextSessionDate()"><span class="label label-default">موعد الجلسة القادمة {{nextSessionDate() | date: 'yyyy-MM-dd' }} الساعة {{nextSessionTime() | date: 'HH:mm'}}</span></h4>
 						<h4 ng-hide="nextSessionDate()"><span class="label label-default"> لم يتم تحديد موعد الجلسة القادمة</span></h4>
 					</div>
 				</div>
@@ -36,18 +36,20 @@
 				<table class="table table-striped">
 					<thead>
 						<tr class="info">
-							<th colspan="2" class="text-center">تاريخ الإنشاء</th>
+							<th class="text-center">تاريخ الإنشاء</th>
 							<th class="text-center">المحكمة</th>
 							<th class="text-center">رقم الدعوى</th>
 							<th class="text-center">رقم البلاغ</th>
+							<th class="text-center">نوع القضية</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td colspan="2" class="text-center">{{selectedCase.caseDate | date: 'Z yyyy-MM-dd HH:mm:ss'}}</td>
+							<td class="text-center">{{selectedCase.caseDate | date: 'yyyy-MM-dd HH:mm'}}</td>
 							<td class="text-center">{{selectedCase.court[0].name}}</td>
 							<td class="text-center">{{selectedCase.caseNumber}}</td>
 							<td class="text-center">{{selectedCase.reportNumber}}</td>
+							<td class="text-center">{{selectedCase.caseType}}</td>
 						</tr>
 						<tr class="success">
 							<td class="text-center" colspan="5"><h4>الموكلين</h4></td>

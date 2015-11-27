@@ -20,6 +20,7 @@ var multer = require('multer'),
 	client = require('../controllers/client'),
 	defendant = require('../controllers/defendant'),
 	caseRole = require('../controllers/caseRole'),
+	caseType = require('../controllers/casetype'),
 	updateType = require('../controllers/updateType'), 
 	account = require('../controllers/account'),
 	courtCase = require('../controllers/case'),
@@ -179,7 +180,9 @@ module.exports = function (app, express) {
 		.get('/case', ensureAuthenticated, isUser, courtCase.index)
 		.post('/case', ensureAuthenticated, isUser, courtCase.create)
 		.delete('/case/:id', ensureAuthenticated, isUser, courtCase.remove)
-		.get('/case/sessions', isUser, ensureAuthenticated, courtCase.sessionDates)
+		.get('/case/updates/:id', ensureAuthenticated, isUser, courtCase.updates)
+		//.get('/case/updates/withids', ensureAuthenticated, isUser, courtCase.updatesWithId)
+		.get('/case/sessions', ensureAuthenticated, isUser, courtCase.sessionDates)
 		.get('/case/sessions/upcoming', ensureAuthenticated, isUser, courtCase.upcomingSessions)
 		.get('/case/sessions/previous', ensureAuthenticated, isUser, courtCase.previousSessions)
 		.post('/case/caseupdate/:id', ensureAuthenticated, isUser, courtCase.insertCaseUpdate)
@@ -200,6 +203,10 @@ module.exports = function (app, express) {
 		.get('/case/:caseID/download/:docID', courtCase.downloadDoc)
 		.post('/case/:caseID/upload', upload.single('doc') , courtCase.uploadDoc)
 		.delete('/case/:caseID/upload/:docID', courtCase.removeDoc)
+		//caseType
+		.get('/casetype', ensureAuthenticated, isUser, caseType.index)
+		.post('/casetype', ensureAuthenticated, isAdmin, caseType.create)
+		.delete('/casetype/:id', ensureAuthenticated, isAdmin, caseType.remove)		
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)
 		.post('/caseRole', ensureAuthenticated, isAdmin, caseRole.create)

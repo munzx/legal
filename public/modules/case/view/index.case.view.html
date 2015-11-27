@@ -1,10 +1,5 @@
 <div data-ui-view>
-	<div class="row">
-		<div class="col-md-12" ng-hide="cases.length">
-			<h4 class='alert alert-danger'>لاتوجد قضايا</h4>
-		</div>
-	</div>
-	<div class="row add-space">
+	<div class="row add-space" >
 		<div class="col-md-12">
 			<form class="form-inline" style="background: #EEEEEE;">
 				<div class="form-group">
@@ -24,38 +19,20 @@
 						<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
 					</div>
 				</div>
-
-<!-- 				<div class="form-group">
-					<div class="input-group">
-						<div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
-						<select ng-model="searchInfo.searchIn" class="form-control">
-							<option value="">-- بحث في --</option>
-							<option ng-repeat="item in searchInOptions" value="{{item}}">{{item | localize:'ar'}}</option>
-						</select>
-					</div>
-				</div> -->
 				<div class="form-group">
 					<div class="input-group">
 						<input ng-model="searchKey" placeholder="بحث" class="form-control">
-<!-- 						<input type="text" class="form-control pull-right" placeholder="كلمات مفتاحية"
-						ng-model="searchPhrase"
-						ng-change="updateSearch()"
-						typeahead-loading="Loadingusers"
-						typeahead-no-results="noResults"
-						typeahead-on-select="onSelect($item, $model, $label); searchPhrase = ''; "
-						typeahead="item.reportNumber 
-						+ ' - ' 
-						+ item.caseNumber
-						+ ' - '
-						+ item.subject
-						for item in searchResult($viewValue)" /> -->
-						<!-- <div class="input-group-addon btn btn-warning"  ng-click="clearSearchPhrase()">مسح</div> -->
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
 	<p>&nbsp;</p>
+	<div class="row">
+		<div class="col-md-12" ng-hide="cases.length">
+			<h4 class='alert alert-danger'>لاتوجد قضايا</h4>
+		</div>
+	</div>
 	<div class="row add-space">
 		<div ng-show="cases.length" class="col-md-12">
 			<div class="table-responsive">

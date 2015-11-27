@@ -1,0 +1,28 @@
+<section>
+	<div class="row add-space">
+		<div class="col-md-12">
+			<button ng-click="showNewCaseTypeForm()" class="btn btn-info btn-md icon-right">  إضافة نوع قضية <span class="glyphicon glyphicon-plus"></span></button>
+		</div>
+	</div>
+	<div class="row">
+		<div ng-hide="caseTypes.length" class="col-md-12">
+			<h4 class="alert alert-danger">لم يتم إضافة أي نوع</h4>
+		</div>
+		<table ng-show="caseTypes.length" class="table table-condensed table-hover table-striped">
+			<thead>
+				<tr>
+					<th class="text-center">إلغاء</th>
+					<th class="text-center">الصفة</th>
+				</tr>
+			</thead>
+			<tbody>
+			<tr ng-repeat="type in caseTypes" class="no-animate">
+					<td ng-click="removeCaseType($index, type._id)" class="text-center text-muted">
+						<span class="glyphicon glyphicon-remove cursor"></span>
+					</td>
+					<td class="text-center">{{type.name}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</section>

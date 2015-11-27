@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('caseModule').controller('createCaseController', ['$scope', 'cases', 'connectAdminFactory', '$modal', '$modalInstance', 'connectDefendantFactory', 'connectCaseRoleFactory', 'connectCaseFactory', function ($scope, cases, connectAdminFactory, $modal, $modalInstance, connectDefendantFactory, connectCaseRoleFactory, connectCaseFactory) {
+angular.module('caseModule').controller('createCaseController', ['$scope', 'cases', 'connectAdminFactory', '$modal', '$modalInstance', 'connectDefendantFactory', 'connectCaseRoleFactory', 'connectCaseFactory', 'connectCaseTypeFactory', function ($scope, cases, connectAdminFactory, $modal, $modalInstance, connectDefendantFactory, connectCaseRoleFactory, connectCaseFactory, connectCaseTypeFactory) {
 	//init newCase
 	$scope.newCase = {};
 	//init selected clients
@@ -46,7 +46,7 @@ angular.module('caseModule').controller('createCaseController', ['$scope', 'case
 	$scope.step(1);
 
 	$scope.compeleteToProceedStep1 = function(){
-		if(!$scope.newCase.caseDate || !$scope.newCase.caseNumber || !$scope.newCase.court) return true;
+		if(!$scope.newCase.caseType || !$scope.newCase.caseDate || !$scope.newCase.caseNumber || !$scope.newCase.court) return true;
 		return false;
 	}
 
@@ -64,6 +64,10 @@ angular.module('caseModule').controller('createCaseController', ['$scope', 'case
 		if(!$scope.newCase.consultant || !$scope.newCase.subject || !$scope.newCase.facts) return true;
 		return false;
 	}
+
+	connectCaseTypeFactory.query({}, function(response){
+		$scope.caseTypes = response;
+	});
 
 	connectAdminFactory.query({page: 'court'}, function(response){
 		$scope.courts = response;
@@ -180,6 +184,7 @@ angular.module('caseModule').controller('createCaseController', ['$scope', 'case
 		console.log($scope.courts);
 		$scope.error = false;
 		var caseInfo = {
+			caseType: $scope.newCase.caseType,
 			defendant: getIdsAndRoles($scope.selectedDefendants),
 			client: getIdsAndRoles($scope.selectedClients),
 			caseDate: $scope.newCase.caseDate,
