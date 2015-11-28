@@ -7,19 +7,13 @@ angular.module('uploadModule').controller('indexUploadController', ['$scope', '$
 		$modalInstance.dismiss('cancel');
 	}
 
-
 	$http.get('/api/v1/case/' + $scope.selectedCase._id + '/docs')
 	.success(function(data, success){
-		console.log(data);
 		$scope.docs = data;
 	})
 	.error(function(data, error){
 		$scope.error = error.data;
 	});
-
-
-	
-	console.log($scope.docs);
 
 	$scope.addDoc = function(){
 		$modal.open({
@@ -37,6 +31,4 @@ angular.module('uploadModule').controller('indexUploadController', ['$scope', '$
 	$scope.downloadDoc = function(docId){
 		return '/api/v1/case/' + $scope.selectedCase._id +'/download/' + docId;
 	}
-
-	
 }]);
