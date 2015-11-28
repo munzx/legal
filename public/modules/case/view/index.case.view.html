@@ -39,6 +39,7 @@
 				<table class="table table-condensed table-hover table-striped">
 					<thead>
 						<tr>
+							<th class="text-center"><i class="glyphicon glyphicon-remove text-muted"></i></th>
 							<th class="text-center">تاريخ الإدخال</th>
 							<th class="text-center">تاريخ الدعوى</th>
 							<th class="text-center">الحالة</th>
@@ -51,6 +52,7 @@
 						<tr ng-repeat="case in cases | dateRangeConfigFilter:'caseDate':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey"
 							ng-click="showCaseDetails($index)"
 							class="no-animate cursor">
+							<th class="text-center"><i class="glyphicon glyphicon-remove text-muted"></i></th>
 							<td class="text-center">{{case.created | date: 'yyyy-MM-dd'}}</td>
 							<td class="text-center">{{case.caseDate | date: 'yyyy-MM-dd'}}</td>
 							<td class="text-center">{{case.status | localize:'ar'}}</td>

@@ -155,5 +155,13 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 		});
 	}
 
-
+	$scope.softRemoveUpdate = function (index) {
+		if(!index){ return; };
+		var updateInfo = selectedCase.updates[index];
+		connectCaseFactory.remove({'action': 'caseupdate', 'actionId': selectedCase._id, 'id': updateInfo._id}, function(response){
+			selectedCase.updates = response.updates;
+		}, function(error){
+			$scope.error = error;
+		});
+	}
 }]);

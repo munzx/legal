@@ -186,6 +186,7 @@ module.exports = function (app, express) {
 		.get('/case/sessions/upcoming', ensureAuthenticated, isUser, courtCase.upcomingSessions)
 		.get('/case/sessions/previous', ensureAuthenticated, isUser, courtCase.previousSessions)
 		.post('/case/caseupdate/:id', ensureAuthenticated, isUser, courtCase.insertCaseUpdate)
+		.delete('/case/caseupdate/:id/:updateId', courtCase.silentRemoveCaseUpdate)
 		.post('/case/tasks/updatebydate', ensureAuthenticated, isUser, courtCase.byDate)
 		.post('/case/tasks/updatebycase', ensureAuthenticated, isUser, courtCase.byCase)
 		.get('/case/memos/pending', ensureAuthenticated, isUser, courtCase.memosPending)

@@ -78,8 +78,6 @@ module.exports.insertCaseUpdate = function(req, res){
 					updateInfo.memoType = req.body.update.memoType || caseInfo.caseType;
 					updateInfo.memoRequiredDate = req.body.update.memoRequiredDate;
 
-					console.log(updateInfo);
-
 					if(!updateInfo.memoRequiredDate || !updateInfo.memoId || !updateInfo.memoType){
 						isValid = false;
 					}
@@ -145,7 +143,39 @@ module.exports.insertCaseUpdate = function(req, res){
 			}
 		});
 	} else {
-		res.status(500).jsonp({message: 'لم يتم توفير رقم المعرف'})
+		res.status(500).jsonp({message: 'لم يتم توفير رقم المعرف'});
+	}
+}
+
+module.exports.silentRemoveCaseUpdate = function (req, res) {
+	if(req.params.id && req.params.updateId){
+		cases.findById(req.params.id).exec(function (err, result) {
+			if(err){
+				res.status(500).jsonp({message: err});
+			} else {
+				var updateInfo = result.updates.id(req.params.updateId);
+				if(updateInfo){
+					if(updateInfo.removed){
+						res.status(500).jsonp({message: 'التحديث محذوف مسبقا'});
+					} else {
+						updateInfo.removed = true;
+						updateInfo.removeUser = req.user._id;
+						result.save(function (err, info) {
+							if(err){
+								res.status(500).jsonp({message: err});
+							} else {
+								res.status(200).jsonp(info);
+							}
+						});
+					}
+				} else {
+					res.status(500).jsonp({message: 'لم يتم العثور على التحديث المطلوب'});
+				}
+				
+			}
+		});
+	} else {
+		res.status(500).jsonp({message: 'لم يتم توفير رقم التحديث'});
 	}
 }
 
