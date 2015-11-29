@@ -149,7 +149,7 @@ module.exports.insertCaseUpdate = function(req, res){
 
 module.exports.silentRemoveCaseUpdate = function (req, res) {
 	if(req.params.id && req.params.updateId){
-		cases.findById(req.params.id).exec(function (err, result) {
+		cases.findById(req.params.id).sort('-created').populate('court').populate('consultant').populate('client.user').populate('defendant.user').populate('updates.user').exec(function (err, result) {
 			if(err){
 				res.status(500).jsonp({message: err});
 			} else {

@@ -157,11 +157,41 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 
 	$scope.softRemoveUpdate = function (index) {
 		if(!index){ return; };
-		var updateInfo = selectedCase.updates[index];
-		connectCaseFactory.remove({'action': 'caseupdate', 'actionId': selectedCase._id, 'id': updateInfo._id}, function(response){
-			selectedCase.updates = response.updates;
-		}, function(error){
-			$scope.error = error;
+		var modalInstance = $modal.open({
+			templateUrl: 'public/modules/config/view/message/confirm.message.config.view.html',
+			backdrop: 'static',
+			controller: ['$scope', '$modalInstance','selectedCase', '$filter', function($scope, $modalInstance, selectedCase, $filter){
+				var updateDate = $filter('date')(selectedCase.updates[index].created, "dd/MM/yyyy");
+				var updateIdNumber = (selectedCase.updates[index].updateId)? ' رقم ' + selectedCase.updates[index].updateId + ' ': '';
+				$scope.message = {};
+				$scope.message.title = 'حذف تحديث';
+				$scope.message.text = 'هل ترغب بحذف : ' + selectedCase.updates[index].updateType + updateIdNumber + ' بتاريخ ' +  updateDate + ' ?';
+				$scope.message.confirm = 'نعم';
+				$scope.message.cancel = 'لا';
+
+				$scope.confirm = function(){
+					var updateInfo = selectedCase.updates[index];
+					connectCaseFactory.remove({'action': 'caseupdate', 'actionId': selectedCase._id, 'id': updateInfo._id}, function(response){
+						selectedCase.updates = response.updates;
+						$modalInstance.dismiss('cancel');
+					}, function(error){
+						$scope.error = error;
+					});
+				}
+
+				$scope.cancel = function(){
+					$modalInstance.dismiss('cancel');
+				}
+
+				$scope.closeModal = function(){
+					$modalInstance.dismiss('cancel');
+				}
+			}],
+			resolve: {
+				selectedCase: function(){
+					return $scope.selectedCase;
+				}
+			}
 		});
 	}
 }]);
