@@ -1,10 +1,5 @@
 <div data-ui-view>
 	<div class="row">
-		<div class="row add-space" ng-hide="users.length">
-			<div class="col-md-12">
-				<h4 class="alert alert-danger">لم يتم إضافة أي مستخدم</h4>
-			</div>
-		</div>
 		<div class="row add-space" style="background: #EEEEEE;margin:3px;">
 			<div class="col-md-12" style="padding:0;">
 				<button class="btn btn-md btn-info icon-right" style="margin-top:1px;" ng-click="showNewUserForm()">
@@ -44,6 +39,11 @@
 						<a href="#">الكل</a>
 					</li>
 				</ul>
+			</div>
+		</div>
+		<div class="row add-space" ng-hide="users.length">
+			<div class="col-md-12">
+				<h4 class="alert alert-danger">لم يتم إضافة أي مستخدم</h4>
 			</div>
 		</div>
 		<div ng-show="users.length" class="row add-space" ng-show="users">
