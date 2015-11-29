@@ -47,39 +47,41 @@
 		</div>
 		<div class="row">
 			<div class="col-md-12" ng-show="tasks.length">
-				<table class="table table-condensed table-hover">
-					<thead>
-						<tr>
-							<th class="text-center">الحاالة</th>
-							<th class="text-center">التاريخ</th>
-							<th class="text-center">آخر موعد للتسليم</th>
-							<th class="text-center">ملاحظات</th>
-							<th class="text-center">مسؤولية</th>
-							<th class="text-center">المدخل</th>
-							<th class="text-center">الوصف</th>
-							<th class="text-center">المهمة</th>
+				<div class="table-responsive">
+					<table class="table table-condensed table-hover">
+						<thead>
+							<tr>
+								<th class="text-center">الحاالة</th>
+								<th class="text-center">التاريخ</th>
+								<th class="text-center">آخر موعد للتسليم</th>
+								<th class="text-center">ملاحظات</th>
+								<th class="text-center">مسؤولية</th>
+								<th class="text-center">المدخل</th>
+								<th class="text-center">الوصف</th>
+								<th class="text-center">المهمة</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="info in tasks | dateRangeConfigFilter:'created':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey"
+							class="no-animate cursor" 
+							ng-class="{'success': info.status == 'close', 'warning': info.status == 'pending'}"
+							ng-click="showTaskActions($index)"
+							>
+							<td class="text-center">{{info.status | localize: 'ar'}}</td>
+							<td class="text-center">{{info.created | date: "dd-MM-yyyy"}}</td>
+							<td class="text-center">{{info.deadLine | date: "dd-MM-yyyy"}}</td>
+							<td class="text-center">{{info.remarks}}</td>
+							<td class="text-center">{{info.responsibility.firstName}} {{info.responsibility.lastName}}</td>
+							<td class="text-center">{{info.user.firstName}} {{info.user.lastName}}</td>
+							<td class="text-center">{{info.description}}</td>
+							<td class="text-center">{{info.task}}
+								<label class="label label-danger" ng-show="info.removed">محذوفة </label>
+								<label class="label label-info" ng-show="info.rejected">مرفوضة </label>
+							</td>
 						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="info in tasks | dateRangeConfigFilter:'created':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey"
-						class="no-animate cursor" 
-						ng-class="{'success': info.status == 'close', 'warning': info.status == 'pending'}"
-						ng-click="showTaskActions($index)"
-						>
-						<td class="text-center">{{info.status | localize: 'ar'}}</td>
-						<td class="text-center">{{info.created | date: "dd-MM-yyyy"}}</td>
-						<td class="text-center">{{info.deadLine | date: "dd-MM-yyyy"}}</td>
-						<td class="text-center">{{info.remarks}}</td>
-						<td class="text-center">{{info.responsibility.firstName}} {{info.responsibility.lastName}}</td>
-						<td class="text-center">{{info.user.firstName}} {{info.user.lastName}}</td>
-						<td class="text-center">{{info.description}}</td>
-						<td class="text-center">{{info.task}}
-							<label class="label label-danger" ng-show="info.removed">محذوفة </label>
-							<label class="label label-info" ng-show="info.rejected">مرفوضة </label>
-						</td>
-					</tr>
-				</tbody>
-			</table>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </section>

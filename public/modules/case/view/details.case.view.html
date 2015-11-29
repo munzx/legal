@@ -105,44 +105,46 @@
 						</tr>
 					</tbody>
 				</table>
-				<table  class="table table-striped">
-					<tbody>
-						<tr class="primary">
-							<td class="text-center" colspan="6"><h4>التحديثات</h4></td>
-						</tr>
-						<tr>
-							<td colspan="5" ng-hide="selectedCase.updates.length">
-								<h4 class="alert alert-danger">لايوجد تحديثات</h4>
-							</td>
-						</tr>
-						<tr ng-show="selectedCase.updates.length">
-							<th class="text-center"><i class="glyphicon glyphicon-remove text-muted"></i></th>
-							<th class="text-center">تاريخ الإدخال</th>
-							<th class="text-center">المستخدم</th>
-							<th class="text-center">الملاحظات</th>
-							<th class="text-center">الرقم</th>
-							<th class="text-center">التحديث</th>
-						</tr>					
-						<tr ng-show="selectedCase.updates.length"
-							ng-repeat="updateInfo in selectedCase.updates"
-							class="no-animate" ng-mouseenter="show = true"
-							ng-mouseleave="show = false">
-							<td class=" text-center">
-								<i ng-show="show && updateInfo.removed == false"
-									class="glyphicon glyphicon-remove text-muted cursor"
-									ng-click="softRemoveUpdate($index)"></i>
-							</td>
-							<td class="text-center">{{updateInfo.created | date: 'yyyy-MM-dd HH:mm'}}</td>
-							<td class="text-center">{{updateInfo.user.firstName}} {{updateInfo.user.lastName}}</td>
-							<td>{{updateInfo.updateInfo}}</td>
-							<td class="text-center">{{updateInfo.updateId || '-------'}}</td>
-							<td class="text-center" colspan="2">
-								{{updateInfo.updateType}}
-								<label class="label label-danger" ng-show="updateInfo.removed">حذف</label>
-							</td>
-						</tr>
-					</tbody>
-				</table>
+				<div class="table-responsive">
+					<table  class="table table-striped">
+						<tbody>
+							<tr class="primary">
+								<td class="text-center" colspan="6"><h4>التحديثات</h4></td>
+							</tr>
+							<tr>
+								<td colspan="5" ng-hide="selectedCase.updates.length">
+									<h4 class="alert alert-danger">لايوجد تحديثات</h4>
+								</td>
+							</tr>
+							<tr ng-show="selectedCase.updates.length">
+								<th class="text-center"><i class="glyphicon glyphicon-remove text-muted"></i></th>
+								<th class="text-center">تاريخ الإدخال</th>
+								<th class="text-center">المستخدم</th>
+								<th class="text-center">الملاحظات</th>
+								<th class="text-center">الرقم</th>
+								<th class="text-center">التحديث</th>
+							</tr>					
+							<tr ng-show="selectedCase.updates.length"
+								ng-repeat="updateInfo in selectedCase.updates"
+								class="no-animate" ng-mouseenter="show = true"
+								ng-mouseleave="show = false">
+								<td class=" text-center">
+									<i ng-show="show && updateInfo.removed == false"
+										class="glyphicon glyphicon-remove text-muted cursor"
+										ng-click="softRemoveUpdate($index)"></i>
+								</td>
+								<td class="text-center">{{updateInfo.created | date: 'yyyy-MM-dd HH:mm'}}</td>
+								<td class="text-center">{{updateInfo.user.firstName}} {{updateInfo.user.lastName}}</td>
+								<td>{{updateInfo.updateInfo}}</td>
+								<td class="text-center">{{updateInfo.updateId || '-------'}}</td>
+								<td class="text-center" colspan="2">
+									{{updateInfo.updateType}}
+									<label class="label label-danger" ng-show="updateInfo.removed">حذف</label>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
