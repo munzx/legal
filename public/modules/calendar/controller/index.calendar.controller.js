@@ -7,7 +7,6 @@ angular.module('calendarModule').controller('indexCalendarController', ['$scope'
 
 	$scope.user = registerUserConfigFactory.getUser();
 
-
 	$scope.showNewTaskForm = function(){
 		$modal.open({
 			templateUrl: 'public/modules/calendar/view/create.task.calendar.view.html',
@@ -16,6 +15,9 @@ angular.module('calendarModule').controller('indexCalendarController', ['$scope'
 			resolve: {
 				tasks: function(){
 					return $scope.tasks;
+				},
+				user: function () {
+					return $scope.user;
 				}
 			}
 		});
@@ -34,6 +36,9 @@ angular.module('calendarModule').controller('indexCalendarController', ['$scope'
 					},
 					user: function(){
 						return $scope.user;
+					},
+					remarks: function () {
+						return $scope.remarks;
 					}
 				}
 			});

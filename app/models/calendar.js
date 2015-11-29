@@ -23,6 +23,11 @@ var calenderSchema = new Schema({
 		lowercase: true,
 		default: 'pending'
 	},
+	remarks: {
+		type: String,
+		default: '',
+		trim: true
+	},
 	removed: {
 		type: Boolean,
 		default: false

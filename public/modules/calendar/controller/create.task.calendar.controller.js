@@ -1,12 +1,19 @@
 'use strict';
 
-angular.module('calendarModule').controller('createTaskCalendarController', ['$scope', '$modalInstance', 'connectCalendarFactory', 'connectUserFactory', 'tasks', function ($scope, $modalInstance, connectCalendarFactory, connectUserFactory, tasks) {
+angular.module('calendarModule').controller('createTaskCalendarController', ['$scope', '$modalInstance', 'connectCalendarFactory', 'connectUserFactory', 'tasks', 'user', function ($scope, $modalInstance, connectCalendarFactory, connectUserFactory, tasks, user) {
 	$scope.closeModal = function(){
 		$modalInstance.dismiss('cancel');
 	}
 
 	connectUserFactory.query({}, function(response){
-		$scope.users = response;
+		//only the admin can assign tasks to other users and him/her self
+		//other users can only assign tasks to themselves
+		if(user.role !== 'admin'){
+			$scope.users = [user];
+		} else {
+			$scope.users = response;
+			$scope.users.push(user);
+		}
 	});
 
 	$scope.createNewTask = function(){
@@ -19,6 +26,4 @@ angular.module('calendarModule').controller('createTaskCalendarController', ['$s
 			console.log(error);
 		});
 	}
-
-
 }]);

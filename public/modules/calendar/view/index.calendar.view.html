@@ -53,6 +53,7 @@
 							<th class="text-center">الحاالة</th>
 							<th class="text-center">التاريخ</th>
 							<th class="text-center">آخر موعد للتسليم</th>
+							<th class="text-center">ملاحظات</th>
 							<th class="text-center">مسؤولية</th>
 							<th class="text-center">المدخل</th>
 							<th class="text-center">الوصف</th>
@@ -68,6 +69,7 @@
 						<td class="text-center">{{info.status | localize: 'ar'}}</td>
 						<td class="text-center">{{info.created | date: "dd-MM-yyyy"}}</td>
 						<td class="text-center">{{info.deadLine | date: "dd-MM-yyyy"}}</td>
+						<td class="text-center">{{info.remarks}}</td>
 						<td class="text-center">{{info.responsibility.firstName}} {{info.responsibility.lastName}}</td>
 						<td class="text-center">{{info.user.firstName}} {{info.user.lastName}}</td>
 						<td class="text-center">{{info.description}}</td>

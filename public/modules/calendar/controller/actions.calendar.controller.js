@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('calendarModule').controller('actionsCalendarController', ['$scope', '$modalInstance', 'user', 'task', '$modal', function ($scope, $modalInstance, user, task, $modal) {
+angular.module('calendarModule').controller('actionsCalendarController', ['$scope', '$modalInstance', 'user', 'task', '$modal', 'remarks', function ($scope, $modalInstance, user, task, $modal, remarks) {
 	$scope.closeModal = function(){
 		$modalInstance.dismiss('cancel');
 	}
@@ -25,16 +25,17 @@ angular.module('calendarModule').controller('actionsCalendarController', ['$scop
 
 
 	$scope.markDoneConfirm = function(){
-		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending')){
+		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending') && ($scope.remarks)){
 			$modal.open({
 				template: inlineConfirmMsg,
-				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance){
+				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', 'remarks', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance, remarks){
 					$scope.isWarning = false;
 					$scope.msg = 'هل ترغب بتأكيد الإنتهاء من المهمة';
 
 					$scope.confrimYes = function(){
-						connectCalendarFactory.get({'id': task._id, 'subaction': 'done'}, function(response){
+						connectCalendarFactory.save({'id': task._id, 'subaction': 'done'}, {'remarks': remarks}, function(response){
 							task.status = 'close';
+							task.remarks = response.remarks;
 							$modalInstance.dismiss('cancel');
 							parentModalInstance.dismiss('cancel');
 						}, function(error){
@@ -54,6 +55,9 @@ angular.module('calendarModule').controller('actionsCalendarController', ['$scop
 					},
 					parentModalInstance: function(){
 						return $modalInstance;
+					},
+					remarks: function () {
+						return $scope.remarks;
 					}
 				}
 			});
@@ -61,16 +65,17 @@ angular.module('calendarModule').controller('actionsCalendarController', ['$scop
 	}
 
 	$scope.softRemoveConfirm = function(){
-		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending')){
+		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending') && ($scope.remarks)){
 			$modal.open({
 				template: inlineConfirmMsg,
-				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance){
+				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', 'remarks', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance, remarks){
 					$scope.isWarning = true;
 					$scope.msg = 'هل ترغب بحذف المهمة';
 
 					$scope.confrimYes = function(){
-						connectCalendarFactory.remove({'id': task._id, 'subaction': 'softRemove'}, function(response){
+						connectCalendarFactory.save({'id': task._id, 'subaction': 'softRemove'}, {'remarks': remarks}, function(response){
 							task.removed = true;
+							task.remarks = response.remarks;
 							$modalInstance.dismiss('cancel');
 							parentModalInstance.dismiss('cancel');
 						}, function(error){
@@ -90,24 +95,27 @@ angular.module('calendarModule').controller('actionsCalendarController', ['$scop
 					},
 					parentModalInstance: function(){
 						return $modalInstance;
+					},
+					remarks: function () {
+						return $scope.remarks;
 					}
 				}
 			});
 		}
 	}
 
-
 	$scope.markRejectedConfirm = function(){
-		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending')){
+		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending') && ($scope.remarks)){
 			$modal.open({
 				template: inlineConfirmMsg,
-				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance){
+				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', 'remarks', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance, remarks){
 					$scope.isWarning = true;
 					$scope.msg = 'هل ترغب بتأكيد رفض المهمة';
 
 					$scope.confrimYes = function(){
-						connectCalendarFactory.get({'id': task._id, 'subaction': 'reject'}, function(response){
+						connectCalendarFactory.save({'id': task._id, 'subaction': 'reject'}, {'remarks': remarks}, function(response){
 							task.rejected = true;
+							task.remarks = response.remarks;
 							$modalInstance.dismiss('cancel');
 							parentModalInstance.dismiss('cancel');
 						}, function(error){
@@ -127,6 +135,9 @@ angular.module('calendarModule').controller('actionsCalendarController', ['$scop
 					},
 					parentModalInstance: function(){
 						return $modalInstance;
+					},
+					remarks: function () {
+						return $scope.remarks;
 					}
 				}
 			});

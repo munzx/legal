@@ -36,19 +36,24 @@
 					<h4 ng-show="error" class="alert alert-danger">{{error}}</h4>
 				</div>
 			</div>
-			<div class="row add-space" ng-show="isResponsibility">
+			<div class="row">
 				<div class="col-md-12">
-					<button class="btn btn-md btn-block btn-danger" ng-click="markRejectedConfirm()">رفض المهمة</button>
+					<textarea class="form-control" ng-model="remarks" placeholder="الملاحظات"></textarea>
 				</div>
 			</div>
 			<div class="row add-space" ng-show="isResponsibility">
 				<div class="col-md-12">
-					<button class="btn btn-md btn-block btn-success" ng-click="markDoneConfirm()">تم إنهاء المهمة</button>
+					<button class="btn btn-md btn-block btn-warning" ng-disabled="!remarks" ng-click="markRejectedConfirm()">رفض المهمة</button>
+				</div>
+			</div>
+			<div class="row add-space" ng-show="isResponsibility">
+				<div class="col-md-12">
+					<button class="btn btn-md btn-block btn-success" ng-disabled="!remarks" ng-click="markDoneConfirm()">تم إنهاء المهمة</button>
 				</div>
 			</div>
 			<div class="row add-space" ng-show="isAuthor">
 				<div class="col-md-12">
-					<button class="btn btn-md btn-block btn-danger" ng-click="softRemoveConfirm()">إلغاء المهمة</button>
+					<button class="btn btn-md btn-block btn-danger" ng-disabled="!remarks" ng-click="softRemoveConfirm()">إلغاء المهمة</button>
 				</div>
 			</div>
 		</div>

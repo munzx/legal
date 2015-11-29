@@ -232,9 +232,9 @@ module.exports = function (app, express) {
 		//calendar
 		.get('/calendar', ensureAuthenticated, isUser, calendar.index)
 		.post('/calendar', ensureAuthenticated, isUser, calendar.create)
-		.get('/calendar/:id/done', ensureAuthenticated, isUser, calendar.markDone)
-		.get('/calendar/:id/reject', ensureAuthenticated, isUser, calendar.rejectTask)
-		.delete('/calendar/:id/softRemove', ensureAuthenticated, isUser, calendar.softRemove)
+		.post('/calendar/:id/done', ensureAuthenticated, isUser, calendar.markDone)
+		.post('/calendar/:id/reject', ensureAuthenticated, isUser, calendar.rejectTask)
+		.post('/calendar/:id/softRemove', ensureAuthenticated, isUser, calendar.softRemove)
 	);
 
 	//404 Route/Page has not been found

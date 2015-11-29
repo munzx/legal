@@ -24,35 +24,40 @@ module.exports.create = function(req, res){
 	var newCalender = new calenders,
 		info = _.extend(newCalender, req.body.info);
 
-	info.user = req.user._id;
-	newCalender.save(function(err, result){
-		if(err){
-			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-		} else {
-			calenders.populate(result, [{path: 'user'}, {path: 'responsibility'}], function(err, info){
-				if(err){
-					res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-				} else {
-					res.status(200).jsonp(info);
-				}
-			});
-		}
-	});
+	if((info.responsibility !== req.user._id) && (req.user.role !== 'admin')){
+		res.status(500).jsonp('لايمكن إيكال مهام لموظف آخر');
+	} else {
+		info.user = req.user._id;
+		newCalender.save(function(err, result){
+			if(err){
+				res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+			} else {
+				calenders.populate(result, [{path: 'user'}, {path: 'responsibility'}], function(err, info){
+					if(err){
+						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+					} else {
+						res.status(200).jsonp(info);
+					}
+				});
+			}
+		});
+	}
 }
 
 module.exports.markDone = function(req, res){
-	if(req.params.id){
+	if(req.params.id && req.body.remarks){
 		calenders.findById(req.params.id).populate('user').populate('responsibility').sort('-created').exec(function(err, result){
 			if(err){
 				res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 			} else {
 				if((result.responsibility._id.toString() == req.user._id.toString()) && (result.status == 'pending') && (result.rejected === false) && (result.status == 'pending')){
 					result.status = 'close';
+					result.remarks = req.body.remarks;
 					result.save(function(err, done){
 						if(err){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
-							res.status(200).jsonp('marked done successfully');
+							res.status(200).jsonp(done);
 						}
 					});
 				} else {
@@ -66,7 +71,7 @@ module.exports.markDone = function(req, res){
 }
 
 module.exports.softRemove = function(req, res){
-	if(req.params.id){
+	if(req.params.id && req.body.remarks){
 		calenders.findById(req.params.id).populate('user').populate('responsibility').sort('-created').exec(function(err, result){
 			if(err){
 				res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
@@ -74,11 +79,12 @@ module.exports.softRemove = function(req, res){
 				//if the remove request came from the task author
 				if((result.user._id.toString() == req.user._id.toString()) && (result.status == 'pending') && (result.rejected === false) && (result.status == 'pending')){
 					result.removed = true;
+					result.remarks = req.body.remarks;
 					result.save(function(err, done){
 						if(err){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
-							res.status(200).jsonp('marked removed successfully');
+							res.status(200).jsonp(done);
 						}
 					});
 				} else {
@@ -92,18 +98,19 @@ module.exports.softRemove = function(req, res){
 }
 
 module.exports.rejectTask = function(req, res){
-	if(req.params.id){
+	if(req.params.id && req.body.remarks){
 		calenders.findById(req.params.id).populate('user').populate('responsibility').sort('-created').exec(function(err, result){
 			if(err){
 				res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 			} else {
 				if((result.responsibility._id.toString() == req.user._id.toString()) && (result.status == 'pending') && (result.rejected === false) && (result.status == 'pending')){
 					result.rejected = true;
+					result.remarks = req.body.remarks;
 					result.save(function(err, done){
 						if(err){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
-							res.status(200).jsonp('marked rejected successfully');
+							res.status(200).jsonp(done);
 						}
 					});
 				} else {
