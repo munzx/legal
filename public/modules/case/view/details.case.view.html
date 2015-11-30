@@ -5,6 +5,7 @@
 				<span aria-hidden="true">&times;</span>
 			</button>
 			<h4 class="modal-title text-center">تفاصيل الدعوى - {{selectedCase.status | localize:'ar'}}</h4>
+			<label class="label label-danger" ng-show="selectedCase.removed">حذفت</label>
 		</div>
 		<div class="modal-body">
 			<div class="row add-space">
@@ -16,16 +17,20 @@
 				</div>
 				<div class="col-md-6">
 					<div class="icon-right">
-						<button ng-click="showUploads()" class="btn btn-sm btn-default">
+						<button ng-click="showUploads()"
+								class="btn btn-sm btn-default col-lg-3 col-md-3 col-sm-3 col-xs-12">
 							المستندات <span class="glyphicon glyphicon-folder-close"></span>
 						</button>
-						<button ng-click="showAddDefendantSwitch()" class="btn btn-sm btn-danger">
+						<button ng-click="showAddDefendantSwitch()"
+								class="btn btn-sm btn-danger col-lg-3 col-md-3 col-sm-3 col-xs-12">
 							إضافة خصم <span class="glyphicon glyphicon-plus"></span>
 						</button>
-						<button ng-click="showAddClientSwitch()" class="btn btn-sm btn-success">
+						<button ng-click="showAddClientSwitch()" 
+								class="btn btn-sm btn-success col-lg-3 col-md-3 col-sm-3 col-xs-12">
 							إضافة موكل <span class="glyphicon glyphicon-plus"></span>
 						</button>
-						<button ng-click="showUpdateCase()" class="btn btn-sm btn-info">
+						<button ng-click="showUpdateCase()"
+								class="btn btn-sm btn-info col-lg-3 col-md-3 col-sm-3 col-xs-12">
 							إضافة تحديث <span class="glyphicon glyphicon-plus"></span>
 						</button>
 					</div>

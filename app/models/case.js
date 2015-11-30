@@ -216,10 +216,7 @@ var caseSchema = mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
-	removeDate: {
-		type: Date,
-		default: ''
-	},
+	removeDate: {type: Date, default: Date.now},
 	removeUser: {
 		type: Schema.Types.ObjectId,
 		ref: 'user'

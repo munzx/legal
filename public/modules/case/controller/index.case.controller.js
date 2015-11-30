@@ -14,7 +14,6 @@ angular.module('adminModule').controller('indexCaseController', ['$scope', 'conn
 	$scope.searchInOptions = ['client', 'defendant', 'consultant', 'case', 'update', 'session'];
 
 	$scope.searchResult = function(val){
-		console.log($scope.searchInfo.searchDateFrom);
 		var search = {};
 		search.phrase = val;
 		search.dateTo = $scope.searchInfo.searchDateFrom;
@@ -67,6 +66,12 @@ angular.module('adminModule').controller('indexCaseController', ['$scope', 'conn
 					return $scope.cases[index];
 				}
 			}
+		});
+	}
+
+	$scope.removeCase = function (index, id) {
+		connectCaseFactory.remove({caseId: id}, function(response){
+			$scope.cases[index] = response;
 		});
 	}
 

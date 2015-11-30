@@ -41,18 +41,24 @@ module.exports.create = function(req, res){
 	});
 }
 
-module.exports.remove = function(req, res){
+module.exports.softRemove = function(req, res){
 	cases.findById(req.params.id, function(err, caseInfo){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
-			caseInfo.remove(function(error){
-				if(err){
-					res.status(500).jsonp({message: error});
-				} else {
-					res.status(200).jsonp('تم محو بيانات الدعوى بنجاح');
-				}
-			})
+			caseInfo.removed = 'true';
+			caseInfo.removeUser = req.user._id;
+			if(caseInfo.removed && caseInfo.removeUser){
+				caseInfo.save(function(error, info){
+					if(err){
+						res.status(500).jsonp({message: error});
+					} else {
+						res.status(200).jsonp(info);
+					}
+				});
+			} else {
+				res.status(500).jsonp({message: 'لم يتم توفير المعلاموات الازمة لحذف القضية'});
+			}
 		}
 	});
 }

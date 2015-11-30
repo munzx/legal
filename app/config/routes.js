@@ -180,7 +180,7 @@ module.exports = function (app, express) {
 		//case
 		.get('/case', ensureAuthenticated, isUser, courtCase.index)
 		.post('/case', ensureAuthenticated, isUser, courtCase.create)
-		.delete('/case/:id', ensureAuthenticated, isUser, courtCase.remove)
+		.delete('/case/:id', ensureAuthenticated, isUser, courtCase.softRemove)
 		.get('/case/updates/:id', ensureAuthenticated, isUser, courtCase.updates)
 		//.get('/case/updates/withids', ensureAuthenticated, isUser, courtCase.updatesWithId)
 		.get('/case/sessions', ensureAuthenticated, isUser, courtCase.sessionDates)
