@@ -23,6 +23,10 @@ var courtSchema = new Schema({
 		default: '',
 		trim: true
 	},
+	removed: {
+		type: Boolean,
+		default: 'false'
+	},
 	user: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 	created: {type: Date, default: Date.now}
 });

@@ -12,20 +12,23 @@
 			<table ng-show="courts.length" class="table table-condensed table-hover table-striped">
 				<thead>
 					<tr>
-						<th class="text-center">إلغاء</th>
-						<th class="text-center">إسم المحكمة</th>
+						<th class="text-center"><i class="glyphicon glyphicon-remove text-muted"></i></th>
 						<th class="text-center">المدينة</th>
 						<th class="text-center">العنوان</th>
+						<th class="text-center">إسم المحكمة</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="court in courts" class="no-animate">
-						<td class="text-center cursor">
-							<span class="glyphicon glyphicon-remove" ng-click="removeCourtInfo($index, court._id)"></span>
+						<td class="text-center">
+							<span ng-hide="court.removed" class="glyphicon glyphicon-remove cursor text-muted" ng-click="removeCourtInfo($index, court._id)"></span>
 						</td>
-						<td class="text-center">{{court.name}}</td>
 						<td class="text-center">{{court.city}}</td>
 						<td class="text-center">{{court.address}}</td>
+						<td class="text-center">
+							{{court.name}}
+							<label class="label label-danger" ng-show="court.removed">حذفت</label>
+						</td>
 					</tr>
 				</tbody>
 			</table>

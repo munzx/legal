@@ -69,7 +69,7 @@ angular.module('caseModule').controller('createCaseController', ['$scope', 'case
 		$scope.caseTypes = response;
 	});
 
-	connectAdminFactory.query({page: 'court'}, function(response){
+	connectAdminFactory.query({page: 'court', action: 'available'}, function(response){
 		$scope.courts = response;
 	});
 

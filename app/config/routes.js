@@ -167,8 +167,9 @@ module.exports = function (app, express) {
 		.get('/admin/first', admin.createFirst)
 		//courts
 		.get('/admin/court', court.index)
+		.get('/admin/court/available', court.available)
 		.post('/admin/court', ensureAuthenticated, isUser, court.create)
-		.delete('/admin/court/:id', ensureAuthenticated, isEmployee, court.remove)
+		.delete('/admin/court/:id', ensureAuthenticated, isEmployee, court.silentRemove)
 		//clients
 		.get('/admin/client', ensureAuthenticated, isUser, client.index)
 		//consultants

@@ -9,7 +9,16 @@ var mongoose = require('mongoose'),
 module.exports.index = function (req, res) {
 	courts.find({}, function(err, result){
 		if(err){
-			console.log(err);
+			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+		} else {
+			res.status(200).jsonp(result);
+		}
+	});
+}
+
+module.exports.available = function (req, res) {
+	courts.find({removed: 'false'}).exec(function(err, result){
+		if(err){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {
 			res.status(200).jsonp(result);
@@ -30,13 +39,14 @@ module.exports.create = function(req, res){
 	});
 }
 
-module.exports.remove = function(req, res){
+module.exports.silentRemove = function(req, res){
 	if(req.params.id){
 		courts.findById(req.params.id, function(err, court){
 			if(err){
 				res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 			} else {
-				court.remove(function(err){
+				court.removed = 'true';
+				court.save(function (err, result) {
 					if(err){
 						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 					} else {
