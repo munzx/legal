@@ -14,14 +14,21 @@
 						<div class="form-group">
 							<div class="input-group">
 								<ul class="nav nav-pills icon-right" style="padding:0;">
-									<li role="presentation" ng-click="memosClosed()" class="{{activeClosed}}"><a href="#">مغلقة</a></li>
-									<li role="presentation" ng-click="memosPending()" class="{{activePending}}"><a href="#">معلقة</a></li>
+									<li role="presentation" ng-click="memosClosed()" class="{{activeClosed}}">
+										<a href="#">مغلقة</a>
+									</li>
+									<li role="presentation" ng-click="memosPending()" class="{{activePending}}">
+										<a href="#">معلقة</a>
+									</li>
+									<li role="presentation" ng-click="memosAll()" class="{{activeAll}}">
+										<a href="#">الكل</a>
+									</li>
 								</ul>
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
-								<label class="input-group-addon">تاريخ المهمة من</label>
+								<label class="input-group-addon">تاريخ المراجعة من</label>
 								<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
 							</div>
 							<div class="input-group">
@@ -53,7 +60,7 @@
 							<tr>
 								<th class="text-center">الحاالة</th>
 								<th class="text-center">التاريخ</th>
-								<th class="text-center">آخر موعد للتسليم</th>
+								<th class="text-center">آخر موعد للمراجعة</th>
 								<th class="text-center">ملاحظات</th>
 								<th class="text-center">مسؤولية</th>
 								<th class="text-center">المدخل</th>
@@ -62,7 +69,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="info in tasks | dateRangeConfigFilter:'created':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey"
+							<tr ng-repeat="info in filterdTasks | dateRangeConfigFilter:'deadLine':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey"
 							class="no-animate cursor" 
 							ng-class="{'success': info.status == 'close', 'warning': info.status == 'pending'}"
 							ng-click="showTaskActions($index)"

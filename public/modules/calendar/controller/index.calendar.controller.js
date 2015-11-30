@@ -1,11 +1,50 @@
 'use strict';
 
-angular.module('calendarModule').controller('indexCalendarController', ['$scope', 'connectCalendarFactory', '$modal', 'registerUserConfigFactory', function ($scope, connectCalendarFactory, $modal, registerUserConfigFactory) {
+angular.module('calendarModule').controller('indexCalendarController', ['$scope', 'connectCalendarFactory', '$modal', 'registerUserConfigFactory', '$filter', function ($scope, connectCalendarFactory, $modal, registerUserConfigFactory, $filter) {
 	connectCalendarFactory.query({}, function(response){
 		$scope.tasks = response;
+		$scope.filterdTasks = response;
 	});
 
 	$scope.user = registerUserConfigFactory.getUser();
+
+	$scope.memosAll = function () {
+		$scope.filterdTasks = $scope.tasks;
+		activeStatus('all');
+	}
+
+	$scope.memosClosed = function () {
+		$scope.filterdTasks = $filter('filter')($scope.tasks, 'close');
+		activeStatus('close');
+	}
+
+	$scope.memosPending = function () {
+		$scope.filterdTasks = $filter('filter')($scope.tasks, 'pending');
+		activeStatus('pending');
+	}
+
+	var activeStatus = function (value) {
+		switch(value){
+			case 'close':
+				$scope.activeClosed = 'active';
+				$scope.activePending = '';
+				$scope.activeAll = '';
+				break;
+			case 'pending':
+				$scope.activeClosed = '';
+				$scope.activePending = 'active';
+				$scope.activeAll = '';
+				break;
+			case 'all':
+			case 'default':
+				$scope.activeClosed = '';
+				$scope.activePending = '';
+				$scope.activeAll = 'active';
+		}
+	}
+
+	//init acive status
+	activeStatus('all');
 
 	$scope.showNewTaskForm = function(){
 		$modal.open({
@@ -44,6 +83,4 @@ angular.module('calendarModule').controller('indexCalendarController', ['$scope'
 			});
 		}
 	}
-
-
 }]);

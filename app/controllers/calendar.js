@@ -24,7 +24,7 @@ module.exports.create = function(req, res){
 	var newCalender = new calenders,
 		info = _.extend(newCalender, req.body.info);
 
-	if((info.responsibility !== req.user._id) && (req.user.role !== 'admin')){
+	if((info.responsibility.toString() !== req.user._id.toString()) && (req.user.role !== 'admin')){
 		res.status(500).jsonp('لايمكن إيكال مهام لموظف آخر');
 	} else {
 		info.user = req.user._id;
