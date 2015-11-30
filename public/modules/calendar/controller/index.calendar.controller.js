@@ -63,7 +63,7 @@ angular.module('calendarModule').controller('indexCalendarController', ['$scope'
 	}
 
 	$scope.showTaskActions = function(index){
-		if(($scope.tasks[index].removed === false) && ($scope.tasks[index].rejected === false) && ($scope.tasks[index].status == 'pending') && (($scope.tasks[index].responsibility._id == $scope.user._id) ||  ($scope.tasks[index].user._id == $scope.user._id))){
+		if(($scope.filterdTasks[index].removed === false) && ($scope.filterdTasks[index].rejected === false) && ($scope.filterdTasks[index].status == 'pending') && (($scope.filterdTasks[index].responsibility._id == $scope.user._id) ||  ($scope.filterdTasks[index].user._id == $scope.user._id))){
 			$modal.open({
 				templateUrl: 'public/modules/calendar/view/actions.calander.view.html',
 				controller: 'actionsCalendarController',
@@ -71,7 +71,7 @@ angular.module('calendarModule').controller('indexCalendarController', ['$scope'
 				size: 'sm',
 				resolve: {
 					task: function(){
-						return $scope.tasks[index];
+						return $scope.filterdTasks[index];
 					},
 					user: function(){
 						return $scope.user;
