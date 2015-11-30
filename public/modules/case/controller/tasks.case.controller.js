@@ -5,7 +5,7 @@ angular.module('caseModule').controller('tasksCaseController', ['$scope', '$moda
 		$modalInstance.close('cancel');
 	}
 
-	var sysMsg = function(type, msg){
+	var sysMsg = function(type, msg, dismiss){
 		if(type == 'success'){
 			$scope.success = msg;
 			$scope.error = false;
@@ -18,7 +18,10 @@ angular.module('caseModule').controller('tasksCaseController', ['$scope', '$moda
 			$scope.success = false;
 			$scope.error = false;
 			$timeout.cancel(timer);
-		}, 1000);
+			if(dismiss){
+				$modalInstance.close('cancel');
+			}
+		}, 1500);
 	}
 
 	$scope.radioModel = 'byDate';
@@ -56,7 +59,7 @@ angular.module('caseModule').controller('tasksCaseController', ['$scope', '$moda
 				//update the parent "sessions"
 				upcoming();
 			}, function(error){
-				sysMsg('error', error.data.message)
+				sysMsg('error', error.data.message, true);
 			});
 		}
 	}

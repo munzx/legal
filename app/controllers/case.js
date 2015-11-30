@@ -64,23 +64,14 @@ module.exports.insertCaseUpdate = function(req, res){
 				res.status(500).jsonp({message: err});
 			} else if(caseInfo) {
 				var isValid = true;
+
 				var updateInfo = {
 					updateType: req.body.update.name,
 					updateId: req.body.update.session.updateId,
 					updateInfo: req.body.update.info,
 					memoRequired: req.body.update.memoRequired,
+					sessionRequired: req.body.update.sessionRequired,
 					user: req.user._id
-				}
-
-				//if the memo is required then make sure "memoRequiredDate" is defined
-				if(updateInfo.memoRequired){
-					updateInfo.memoId = req.body.update.memoId || caseInfo.caseNumber;
-					updateInfo.memoType = req.body.update.memoType || caseInfo.caseType;
-					updateInfo.memoRequiredDate = req.body.update.memoRequiredDate;
-
-					if(!updateInfo.memoRequiredDate || !updateInfo.memoId || !updateInfo.memoType){
-						isValid = false;
-					}
 				}
 
 				var updateSession = {
@@ -89,13 +80,6 @@ module.exports.insertCaseUpdate = function(req, res){
 					refType: req.body.update.session.refType || caseInfo.caseType,
 					refNumber: req.body.update.session.refNumber || caseInfo.caseNumber,
 					user: req.user._id || false
-				}
-
-				if(updateInfo.sessionRequired){
-					//Check if "new session info" are there , if so then insert new session info
-					if(updateSession.newDate && updateSession.newTime && updateSession.user){
-						caseInfo.sessions.push(updateSession);
-					}
 				}
 
 				var updateClientsInfo = req.body.update.clientInfo || [];
@@ -115,6 +99,24 @@ module.exports.insertCaseUpdate = function(req, res){
 						info.user = info.user._id;
 						caseInfo.defendant.push(info);
 					});
+				}
+
+				//if the memo is required then make sure "memoRequiredDate" is defined
+				if(updateInfo.memoRequired){
+					updateInfo.memoId = req.body.update.memoId || caseInfo.caseNumber;
+					updateInfo.memoType = req.body.update.memoType || caseInfo.caseType;
+					updateInfo.memoRequiredDate = req.body.update.memoRequiredDate;
+
+					if(!updateInfo.memoRequiredDate || !updateInfo.memoId || !updateInfo.memoType){
+						isValid = false;
+					}
+				}
+
+				if(updateInfo.sessionRequired){
+					//Check if "new session info" are there , if so then insert new session info
+					if(updateSession.newDate && updateSession.newTime && updateSession.user){
+						caseInfo.sessions.push(updateSession);
+					}
 				}
 
 				if(isValid){
@@ -203,7 +205,7 @@ module.exports.upcomingSessions = function(req, res){
 				if(caseInfo.sessions.length > 0){
 					var sessions = caseInfo.sessions;
 					sessions.forEach(function(info){
-						if(moment(info.newDate).format() >= moment().format()){
+						if(moment(info.newDate).isBefore(moment()) ){
 							//get last session
 							session = info;
 							sessionInfo.court = caseInfo.court;
@@ -219,6 +221,7 @@ module.exports.upcomingSessions = function(req, res){
 							sessionInfo.sessionCreated = session.created;
 							sessionInfo.sessionUpdateId = session.updateId;
 							sessionInfo.sessionUser = session.user;
+							sessionInfo.sessionRemoved = session.removed;
 							//get last session info and case info
 							upcomingSessions.push(sessionInfo);
 							//clear sessionInfo
@@ -248,7 +251,7 @@ module.exports.previousSessions = function(req, res){
 				if(caseInfo.sessions.length > 0){
 					var sessions = caseInfo.sessions;
 					sessions.forEach(function(info){
-						if(moment(info.newDate).format() <= moment().format()){
+						if(moment(info.newDate).isAfter(moment())){
 							//get last session
 							session = info;
 							sessionInfo.court = caseInfo.court;
@@ -263,6 +266,7 @@ module.exports.previousSessions = function(req, res){
 							sessionInfo.sessionCreated = session.created;
 							sessionInfo.sessionUpdateId = session.updateId;
 							sessionInfo.sessionUser = session.user;
+							sessionInfo.sessionRemoved = session.removed;
 							//get last session info and case info
 							upcomingSessions.push(sessionInfo);
 							//clear sessionInfo

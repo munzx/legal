@@ -82,7 +82,10 @@
 											<tr ng-repeat='court in courts' class="no-animate">
 												<td class="text-center">{{court.name}}</td>
 												<td class="text-center">
-													<select class="form-control" ng-model="selectedEmployeeIndex" ng-change="updateTaskBydate(court._id, selectedEmployeeIndex)">
+													<select class="form-control" 
+														ng-disabled="!updateTaskByDateFrom || !updateTaskByDateTo"
+														ng-model="selectedEmployeeIndex"
+														ng-change="updateTaskBydate(court._id, selectedEmployeeIndex)">
 														<option value="">-- المحامي --</option>
 														<option ng-repeat="employee in employees" value="{{$index}}">
 															{{employee.firstName}} {{employee.lastName}}
