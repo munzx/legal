@@ -22,6 +22,17 @@ module.exports.index = function (req, res) {
 	});
 }
 
+module.exports.caseAvailable = function (req, res) {
+	cases.find({removed: 'false'}).sort('-created').populate('court').populate('consultant').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else {
+			res.status(200).jsonp(result);
+		}
+	});
+}
+
+
 module.exports.create = function(req, res){
 	var newCase = new cases,
 	caseInfo = _.extend(newCase, req.body.caseInfo);
@@ -952,7 +963,7 @@ module.exports.updates = function (req, res) {
 		cases.findById(req.params.id).exec(function (err, result) {
 			if(err){
 				res.status(500).jsonp({message: err});
-			} else {
+			} else if(result){
 				var info = result.updates,
 					serve = [];
 
@@ -962,6 +973,32 @@ module.exports.updates = function (req, res) {
 					}
 				});
 				res.status(200).jsonp(serve);
+			} else {
+				res.status(200).jsonp([]);
+			}
+		});
+	} else {
+		res.status(500).jsonp({message: 'Case id is required'});
+	}
+}
+
+module.exports.updatesAvailable = function (req, res) {
+	if(req.params.id){
+		cases.findById(req.params.id).exec(function (err, result) {
+			if(err){
+				res.status(500).jsonp({message: err});
+			} else if(result){
+				var info = result.updates,
+					serve = [];
+
+				info.forEach(function (item) {
+					if(item.updateId && item.removed === false){
+						serve.push(item);
+					}
+				});
+				res.status(200).jsonp(serve);
+			} else {
+				res.status(200).jsonp([]);
 			}
 		});
 	} else {

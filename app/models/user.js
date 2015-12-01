@@ -113,7 +113,15 @@ var usersSchema = Schema({
 	created: {
 		type: Date,
 		default: Date.now
-	}
+	},
+	removed: {
+		type: Boolean,
+		default: 'false'
+	},
+	removeUser: {
+		type: Schema.Types.ObjectId,
+		ref: 'user'
+	},
 }, {strict: true});
 
 

@@ -3,7 +3,7 @@
 angular.module('caseModule').controller('updateConsultantCaseController', ['$scope', '$modalInstance', 'connectAdminFactory', 'memoInfo', 'connectCaseFactory', function ($scope, $modalInstance, connectAdminFactory, memoInfo, connectCaseFactory) {
 	$scope.memoInfo = memoInfo;
 
-	connectAdminFactory.query({'page': 'consultant'}, function (response) {
+	connectAdminFactory.query({'page': 'consultant', 'action': 'available'}, function (response) {
 		$scope.consultants = response;
 	});
 

@@ -66,7 +66,7 @@ angular.module('adminModule').controller('usersAdminController', ['$scope', '$st
 
 	$scope.removeUserInfo = function(index, userId){
 		connectUserFactory.delete({'id': userId}, function(response){
-			$scope.users.splice(index, 1);
+			$scope.users[index] = response;
 			$scope.error = false;
 		}, function(error){
 			$scope.error = response.data.message;

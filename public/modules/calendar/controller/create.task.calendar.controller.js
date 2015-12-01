@@ -5,7 +5,7 @@ angular.module('calendarModule').controller('createTaskCalendarController', ['$s
 		$modalInstance.dismiss('cancel');
 	}
 
-	connectUserFactory.query({}, function(response){
+	connectUserFactory.query({'action': 'available'}, function(response){
 		//only the admin can assign tasks to other users and him/her self
 		//other users can only assign tasks to themselves
 		if(user.role !== 'admin'){

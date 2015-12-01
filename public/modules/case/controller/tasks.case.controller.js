@@ -26,15 +26,15 @@ angular.module('caseModule').controller('tasksCaseController', ['$scope', '$moda
 
 	$scope.radioModel = 'byDate';
 
-	connectAdminFactory.query({page: 'court'}, function(response){
+	connectAdminFactory.query({page: 'court', 'action': 'available'}, function(response){
 		$scope.courts = response;
 	});
 
-	connectAdminFactory.query({page: 'employee'}, function(response){
+	connectAdminFactory.query({page: 'employee', 'action': 'available'}, function(response){
 		$scope.employees = response;
 	});
 
-	connectCaseFactory.query({}, function(response){
+	connectCaseFactory.query({'action': 'available'}, function(response){
 		$scope.cases = response;
 	});
 

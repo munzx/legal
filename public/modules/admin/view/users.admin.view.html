@@ -60,13 +60,18 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="user in users" class="no-animate">
+						<tr ng-repeat="user in users" class="no-animate" ng-mouseenter="show = true" ng-mouseleave="show = false">
 							<td class="text-center text-muted">
-								<span ng-click="removeUserInfo($index, user._id)" class="glyphicon glyphicon-remove cursor"></span>
+								<span ng-show="show && !user.removed"
+									ng-click="removeUserInfo($index, user._id)"
+									class="glyphicon glyphicon-remove cursor"></span>
 							</td>
 							<td class="text-center">{{user.role | localize:'ar'}}</td>
 							<td class="text-center">{{user.email}}</td>
-							<td class="text-center">{{user.name}}</td>
+							<td class="text-center">
+								{{user.name}}
+								<label class="label label-danger" ng-show="user.removed">حذف</label>
+							</td>
 							<td class="text-center">{{user.lastName}}</td>
 							<td class="text-center">{{user.firstName}}</td>
 						</tr>

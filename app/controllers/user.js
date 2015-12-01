@@ -21,6 +21,16 @@ module.exports.index = function (req, res){
 	});
 }
 
+module.exports.available = function (req, res){
+	users.find({removed: 'false'}, {password: 0}).where('name').ne('admin').exec(function (err, user){
+		if(err){
+			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+		} else {
+			res.status(200).jsonp(user);
+		}
+	});
+} 
+
 // create a new user
 module.exports.create = function(req, res){
 	var user = new users(),
@@ -198,20 +208,26 @@ module.exports.changePassword = function(req, res){
 }
 
 //delete user by id
-module.exports.remove = function(req, res){
+module.exports.softRemove = function(req, res){
 	var dest = 'public/uploads/';
 	if(req.params.id){
 		users.findById(req.params.id, function(err, user){
 			if(err){
 				res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 			} else if(user){
-				user.remove(function (err) {
-					if(err){
-						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-					} else {
-						res.status(200).jsonp('تم محو بيانات المستخدم بنجاح')
-					}
-				});
+				user.removed = true;
+				user.removeUser = req.user._id;
+				if(user.removed && user.removeUser){
+					user.save(function (err, userInfo) {
+						if(err){
+							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+						} else {
+							res.status(200).jsonp(userInfo)
+						}
+					});
+				} else {
+					res.status(500).jsonp({message: 'لم يتم توفير البيانات اللازمة'});
+				}
 			} else {
 				res.status(500).jsonp({message: 'لم يتم العثور على المستخدم'});
 			}

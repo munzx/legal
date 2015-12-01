@@ -172,16 +172,22 @@ module.exports = function (app, express) {
 		.delete('/admin/court/:id', ensureAuthenticated, isEmployee, court.silentRemove)
 		//clients
 		.get('/admin/client', ensureAuthenticated, isUser, client.index)
+		.get('/admin/client/available', ensureAuthenticated, isUser, client.available)
 		//consultants
 		.get('/admin/consultant', ensureAuthenticated, isUser, consultant.index)
+		.get('/admin/consultant/available', ensureAuthenticated, isUser, consultant.available)
 		//employees
 		.get('/admin/employee', ensureAuthenticated, isUser, employee.index)
-		.get('/admin/employee/nonlegal', ensureAuthenticated, isUser, employee.nonlegal) //no consultants or admins
+		.get('/admin/employee/available', ensureAuthenticated, isUser, employee.available)
+		.get('/admin/employee/nonlegal/', ensureAuthenticated, isUser, employee.nonlegal) //no consultants or admins
+		.get('/admin/employee/nonlegal/available', ensureAuthenticated, isUser, employee.nonlegalAvailable) //no consultants or admins
 		//case
 		.get('/case', ensureAuthenticated, isUser, courtCase.index)
+		.get('/case/available', ensureAuthenticated, isUser, courtCase.caseAvailable)
 		.post('/case', ensureAuthenticated, isUser, courtCase.create)
 		.delete('/case/:id', ensureAuthenticated, isUser, courtCase.softRemove)
 		.get('/case/updates/:id', ensureAuthenticated, isUser, courtCase.updates)
+		.get('/case/updates/:id/available', ensureAuthenticated, isUser, courtCase.updatesAvailable)
 		//.get('/case/updates/withids', ensureAuthenticated, isUser, courtCase.updatesWithId)
 		.get('/case/sessions', ensureAuthenticated, isUser, courtCase.sessionDates)
 		.get('/case/sessions/upcoming', ensureAuthenticated, isUser, courtCase.upcomingSessions)
@@ -227,10 +233,11 @@ module.exports = function (app, express) {
 		.get('/defendant/search/:phrase', ensureAuthenticated, isUser, defendant.search)
 		//Users
 		.get('/user', users.index) //get all users
+		.get('/user/available', users.available)
 		.post('/user', ensureAuthenticated, isUser, users.create) //create a new user
 		.put('/user', ensureAuthenticated, isAdmin, users.update) //update user info
 		.put('/user/password', ensureAuthenticated, isUser, users.changePassword) //update the user password
-		.delete('/user/:id', ensureAuthenticated, isAdmin, users.remove) //delete user
+		.delete('/user/:id', ensureAuthenticated, isAdmin, users.softRemove) //delete user
 		.get('/user/:name', ensureAuthenticated, isUser, users.getByName) //get a user by name
 		.get('/user/search/:phrase', ensureAuthenticated, isUser, users.search)
 		//calendar

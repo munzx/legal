@@ -13,7 +13,7 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		$scope.error = error.data.message;
 	});
 
-	connectCaseFactory.query({action: 'updates', actionId: $scope.selectedCase._id }, function (response) {
+	connectCaseFactory.query({action: 'updates', actionId: $scope.selectedCase._id, subaction: 'available'}, function (response) {
 		$scope.caseUpdatesWithUpdateId = response;
 	}, function(error){
 		$scope.error = error.data.message;
