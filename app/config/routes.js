@@ -167,7 +167,7 @@ module.exports = function (app, express) {
 		.get('/admin/first', admin.createFirst)
 		//courts
 		.get('/admin/court', court.index)
-		.get('/admin/court/available', court.available)
+		.get('/admin/court/available', ensureAuthenticated, court.available)
 		.post('/admin/court', ensureAuthenticated, isUser, court.create)
 		.delete('/admin/court/:id', ensureAuthenticated, isEmployee, court.silentRemove)
 		//clients
@@ -199,7 +199,7 @@ module.exports = function (app, express) {
 		.get('/case/memos/pending', ensureAuthenticated, isUser, courtCase.memosPending)
 		.get('/case/memos/closed', ensureAuthenticated, isUser, courtCase.memosClosed)
 		.post('/case/memos/insertconsultant', ensureAuthenticated, isUser, courtCase.insertMemoConsultant)
-		.get('/case/consultant/:id/memos', courtCase.consultantMemos)
+		.get('/case/consultant/:id/memos', ensureAuthenticated, isUser, courtCase.consultantMemos)
 		.post('/case/client', ensureAuthenticated, isUser, courtCase.insertClient)
 		.post('/case/client/new', ensureAuthenticated, isUser, courtCase.insertNewClient)
 		.delete('/case/:caseId/client/:clientId', ensureAuthenticated, isUser, courtCase.clientSofttRemove)
@@ -207,9 +207,9 @@ module.exports = function (app, express) {
 		.post('/case/defendant', ensureAuthenticated, isUser, courtCase.insertDefendant)
 		.post('/case/defendant/new', ensureAuthenticated, isUser, courtCase.insertNewDefendant)
 		.post('/case/search', ensureAuthenticated, isUser, courtCase.search)
-		.get('/case/:caseID/docs', courtCase.docs)
+		.get('/case/:caseID/docs', ensureAuthenticated, isUser, courtCase.docs)
 		.get('/case/:caseID/download/:docID', courtCase.downloadDoc)
-		.post('/case/:caseID/upload', upload.single('doc') , courtCase.uploadDoc)
+		.post('/case/:caseID/upload', ensureAuthenticated, isUser, upload.single('doc') , courtCase.uploadDoc)
 		.delete('/case/:caseID/upload/:docID', courtCase.removeDoc)
 		//caseType
 		.get('/casetype', ensureAuthenticated, isUser, caseType.index)
@@ -233,7 +233,7 @@ module.exports = function (app, express) {
 		.get('/defendant/search/:phrase', ensureAuthenticated, isUser, defendant.search)
 		//Users
 		.get('/user', users.index) //get all users
-		.get('/user/available', users.available)
+		.get('/user/available', ensureAuthenticated, isUser, users.available)
 		.post('/user', ensureAuthenticated, isUser, users.create) //create a new user
 		.put('/user', ensureAuthenticated, isAdmin, users.update) //update user info
 		.put('/user/password', ensureAuthenticated, isUser, users.changePassword) //update the user password
