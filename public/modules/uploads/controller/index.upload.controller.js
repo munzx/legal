@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('uploadModule').controller('indexUploadController', ['$scope', '$modalInstance', 'selectedCase', '$modal', '$http', function ($scope, $modalInstance, selectedCase, $modal, $http) {
+angular.module('uploadModule').controller('indexUploadController', ['$scope', '$modalInstance', 'selectedCase', '$modal', '$http', 'connectCaseFactory', function ($scope, $modalInstance, selectedCase, $modal, $http, connectCaseFactory) {
 	$scope.selectedCase = selectedCase;
 
 	$scope.closeModal = function(){
@@ -23,6 +23,9 @@ angular.module('uploadModule').controller('indexUploadController', ['$scope', '$
 			resolve: {
 				selectedCase: function(){
 					return $scope.selectedCase;
+				},
+				docs: function () {
+					return $scope.docs;
 				}
 			}
 		});
@@ -31,4 +34,11 @@ angular.module('uploadModule').controller('indexUploadController', ['$scope', '$
 	$scope.downloadDoc = function(docId){
 		return '/api/v1/case/' + $scope.selectedCase._id +'/download/' + docId;
 	}
+
+	$scope.removeDoc = function (index, id) {
+		connectCaseFactory.delete({'caseId': selectedCase._id, 'action': 'upload', 'actionId': id}, function(response){
+			$scope.docs = response.docs;
+		});
+	}
+
 }]);

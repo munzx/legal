@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('uploadModule').controller('addUploadController', ['$scope', '$modalInstance', 'selectedCase', '$http', function ($scope, $modalInstance, selectedCase, $http) {
+angular.module('uploadModule').controller('addUploadController', ['$scope', '$modalInstance', 'selectedCase', '$http', 'docs', function ($scope, $modalInstance, selectedCase, $http, docs) {
 	$scope.selectedCase = selectedCase;
 
 	$scope.closeModal = function(){
@@ -18,13 +18,11 @@ angular.module('uploadModule').controller('addUploadController', ['$scope', '$mo
 			transformRequest: angular.identity,
 			headers: {'Content-Type': undefined}
 		}).success(function(data, success){
-			$scope.selectedCase.docs.push(data);
-			console.log(data);
+			docs.push(data);
 			$modalInstance.dismiss('cancel');
 		})
 		.error(function(data, error){
-			$scope.error = data.message;
-			console.log(data);
+			$scope.error = data;
 		});
 	}
 }]);

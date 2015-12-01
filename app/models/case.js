@@ -243,6 +243,14 @@ var caseSchema = mongoose.Schema({
 			trim: true,
 			lowercase: true
 		},
+		removed: {
+			type: Boolean,
+			default: 'false'
+		},
+		removeUser: {
+			type: Schema.Types.ObjectId,
+			ref: 'user'
+		},
 		created: {type: Date, default: Date.now},
 		user: {
 			type: Schema.Types.ObjectId,

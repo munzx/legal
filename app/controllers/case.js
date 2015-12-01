@@ -155,7 +155,7 @@ module.exports.insertCaseUpdate = function(req, res){
 	}
 }
 
-module.exports.silentRemoveCaseUpdate = function (req, res) {
+module.exports.softRemoveCaseUpdate = function (req, res) {
 	if(req.params.id && req.params.updateId){
 		cases.findById(req.params.id).sort('-created').populate('court').populate('consultant').populate('client.user').populate('defendant.user').populate('updates.user').exec(function (err, result) {
 			if(err){
@@ -744,7 +744,7 @@ module.exports.insertNewDefendant = function(req, res){
 }
 
 
-module.exports.clientSilentRemove = function(req, res){
+module.exports.clientSofttRemove = function(req, res){
 	cases.findById(req.params.caseId).exec(function(err, caseInfo){
 		if(err){
 			res.status(500).jsonp({message: err});
@@ -781,7 +781,7 @@ module.exports.clientSilentRemove = function(req, res){
 	});
 }
 
-module.exports.defendantSilentRemove = function(req, res){
+module.exports.defendantSoftRemove = function(req, res){
 	cases.findById(req.params.caseId).exec(function(err, caseInfo){
 		if(err){
 			res.status(500).jsonp({message: err});
@@ -861,7 +861,7 @@ module.exports.docs = function(req, res){
 module.exports.uploadDoc = function(req, res){
 	if(req.file){
 		if(req.params.caseID){
-			cases.findById(req.params.caseID, function(err, caseInfo){
+			cases.findById(req.params.caseID).populate('user').exec(function(err, caseInfo){
 				if(err){
 					fs.unlink(req.file.path);
 					res.status(500).jsonp({message: err});
@@ -879,7 +879,13 @@ module.exports.uploadDoc = function(req, res){
 							fs.unlink(req.file.path);
 							res.status(500).jsonp({message: err});
 						} else {
-							res.status(200).jsonp(result.docs[result.docs.length -1]);
+							cases.populate(result, [{path: 'docs.user'}], function (err, docInfo) {
+								if(err){
+									res.status(500).jsonp({message: err});
+								} else {
+									res.status(200).jsonp(docInfo.docs[docInfo.docs.length -1]);
+								}
+							});
 						}
 					});
 				}
@@ -916,13 +922,19 @@ module.exports.removeDoc = function(req, res){
 			} else {
 				var doc = result.docs.id(req.params.docID);
 				if(doc){
-					fs.unlink(doc.path);
-					doc.remove();
-					result.save(function(err, result){
+					doc.removed = true;
+					doc.removeUser = req.user._id;
+					result.save(function(err, info){
 						if(err){
 							res.status(500).jsonp({message: err});
 						} else {
-							res.status(200).jsonp(result);
+							cases.populate(info, [{path: 'docs.user'}], function (err, docInfo) {
+								if(err){
+									res.status(500).jsonp({message: err});
+								} else {
+									res.status(200).jsonp({'docs': docInfo.docs});
+								}
+							});
 						}
 					});
 				} else {

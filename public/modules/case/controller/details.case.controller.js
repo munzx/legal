@@ -147,6 +147,7 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 			controller: 'indexUploadController',
 			templateUrl: 'public/modules/uploads/view/index.upload.view.html',
 			backdrop: 'static',
+			size: 'md',
 			resolve: {
 				selectedCase: function(){
 					return $scope.selectedCase;

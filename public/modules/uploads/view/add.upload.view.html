@@ -9,7 +9,7 @@
 		<div class="modal-body">
 			<div class="row">
 				<div class="col-md-12">
-					<h4 ng-show="error" class="alert alert-danger">{{error}}</h4>
+					<h4 ng-show="error" class="alert alert-danger">{{error | localize:'ar'}}</h4>
 				</div>
 			</div>
 			<div class="row">
@@ -32,7 +32,9 @@
 						</div>
 						<div class="form-group">
 							<div class="form-input">
-						 		<button class="btn btn-md btn-block btn-info" ng-click="add()">إضافة</button>
+						 		<button class="btn btn-md btn-block btn-info"
+						 				ng-disabled="!docInfo.description || !docInfo.name"
+						 				ng-click="add()">إضافة</button>
 							</div>
 						</div>
 					</form>

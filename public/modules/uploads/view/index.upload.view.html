@@ -29,6 +29,7 @@
 					<table class="table table-bordered table-hover">
 						<thead>
 							<tr>
+								<td class="text-center"><i class="glyphicon glyphicon-remove text-muted cursor"></td>
 								<td class="text-center">التاريخ</td>
 								<td class="text-center">المدخل</td>
 								<td class="text-center">الوصف</td>
@@ -36,11 +37,19 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="doc in docs" class="no-animate">
+							<tr ng-repeat="doc in docs" class="no-animate" ng-mouseenter="show = true" ng-mouseleave="show = false">
+								<td class="text-center">
+									<i class="glyphicon glyphicon-remove text-muted cursor"
+										ng-show="show && !doc.removed"
+										ng-click="removeDoc($index, doc._id)"></i>
+								</td>
 								<td class="text-center">{{doc.created | date: 'dd-MM-yyyy'}}</td>
 								<td class="text-center">{{doc.user.firsName}} {{doc.user.lastName}}</td>
 								<td class="text-center">{{doc.description}}</td>
-								<td class="text-center"><a target="_blank" href="{{downloadDoc(doc._id)}}">{{doc.name}}</a></td>
+								<td class="text-center">
+									<a target="_blank" href="{{downloadDoc(doc._id)}}">{{doc.name}}</a>
+									<label class="label label-danger" ng-show="doc.removed">حذف</label>
+								</td>
 							</tr>
 						</tbody>
 					</table>
