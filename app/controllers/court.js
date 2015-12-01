@@ -46,13 +46,18 @@ module.exports.silentRemove = function(req, res){
 				res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 			} else {
 				court.removed = 'true';
-				court.save(function (err, result) {
-					if(err){
-						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-					} else {
-						res.status(200).jsonp('تم مسح بيانات المحكمة')
-					}
-				});
+				court.removeUser = req.user._id;
+				if(court.removed && court.removeUser){
+					court.save(function (err, result) {
+						if(err){
+							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+						} else {
+							res.status(200).jsonp(result)
+						}
+					});
+				} else {
+					res.status(200).jsonp('لم يتم توفير البيانات اللازمة لحذف بيانات المحكمة');
+				}
 			}
 		});
 	} else {

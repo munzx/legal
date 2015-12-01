@@ -22,7 +22,7 @@ angular.module('adminModule').controller('courtsAdminController', ['$scope', 'co
 	$scope.removeCourtInfo = function(index, id){
 		connectAdminFactory.delete({page: 'court', param: id}, function(response){
 			$scope.error = false;
-			$scope.courts[index].removed = true;
+			$scope.courts[index] = response;
 		}, function(error){
 			$scope.error = response.data.message;
 		});
