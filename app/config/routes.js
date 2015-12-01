@@ -207,8 +207,9 @@ module.exports = function (app, express) {
 		.delete('/case/:caseID/upload/:docID', courtCase.removeDoc)
 		//caseType
 		.get('/casetype', ensureAuthenticated, isUser, caseType.index)
+		.get('/casetype/available', ensureAuthenticated, isUser, caseType.available) 
 		.post('/casetype', ensureAuthenticated, isAdmin, caseType.create)
-		.delete('/casetype/:id', ensureAuthenticated, isAdmin, caseType.remove)		
+		.delete('/casetype/:id', ensureAuthenticated, isAdmin, caseType.softRemove)		
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)
 		.post('/caseRole', ensureAuthenticated, isAdmin, caseRole.create)

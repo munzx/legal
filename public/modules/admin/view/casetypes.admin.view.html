@@ -16,11 +16,16 @@
 				</tr>
 			</thead>
 			<tbody>
-			<tr ng-repeat="type in caseTypes" class="no-animate">
-					<td ng-click="removeCaseType($index, type._id)" class="text-center text-muted">
-						<span class="glyphicon glyphicon-remove cursor"></span>
+			<tr ng-repeat="type in caseTypes" class="no-animate" ng-mouseenter="show = true" ng-mouseleave="show = false">
+					<td class="text-center">
+						<span ng-show="show && !type.removed"
+							class="glyphicon glyphicon-remove cursor text-muted"
+							ng-click="removeCaseType($index, type._id)"></span>
 					</td>
-					<td class="text-center">{{type.name}}</td>
+					<td class="text-center">
+						{{type.name}}
+						<label class="label label-danger" ng-show="type.removed">حذفت</label>
+					</td>
 				</tr>
 			</tbody>
 		</table>

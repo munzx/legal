@@ -23,7 +23,8 @@ angular.module('adminModule').controller('caseTypeAdminController', ['$scope', '
 
 	$scope.removeCaseType = function(index, id){
 		connectCaseTypeFactory.delete({'id': id}, function(response){
-			$scope.caseTypes.splice(index, 1);
+			$scope.caseTypes[index] = response;
+			console.log(response);
 		}, function(error){
 			$scope.error = error.data.message;
 		});

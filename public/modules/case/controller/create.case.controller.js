@@ -65,7 +65,7 @@ angular.module('caseModule').controller('createCaseController', ['$scope', 'case
 		return false;
 	}
 
-	connectCaseTypeFactory.query({}, function(response){
+	connectCaseTypeFactory.query({'action': 'available'}, function(response){
 		$scope.caseTypes = response;
 	});
 
