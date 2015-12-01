@@ -157,7 +157,7 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 	}
 
 	$scope.softRemoveUpdate = function (index) {
-		if(!index){ return; };
+		if(!index && index !== 0){ return; };
 		var modalInstance = $modal.open({
 			templateUrl: 'public/modules/config/view/message/confirm.message.config.view.html',
 			backdrop: 'static',
