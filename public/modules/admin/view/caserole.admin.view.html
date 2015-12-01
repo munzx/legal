@@ -12,16 +12,21 @@
 			<table ng-show="caseRoles.length" class="table table-condensed table-hover table-striped">
 				<thead>
 					<tr>
-						<th class="text-center">إلغاء</th>
+						<th class="text-center"><span class="glyphicon glyphicon-remove cursor text-muted"></span></th>
 						<th class="text-center">الصفة</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="role in caseRoles" class="no-animate">
-						<td ng-click="removeCaseRole($index, role._id)" class="text-center text-muted">
-							<span class="glyphicon glyphicon-remove cursor"></span>
+					<tr ng-repeat="role in caseRoles" class="no-animate" ng-mouseenter="show = true" ng-mouseleave="show = false">
+						<td class="text-center">
+							<span ng-show="show && !role.removed"
+								ng-click="removeCaseRole($index, role._id)" 
+								class="glyphicon glyphicon-remove cursor text-muted"></span>
 						</td>
-						<td class="text-center">{{role.name}}</td>
+						<td class="text-center">
+							{{role.name}}
+							<label class="label label-danger" ng-show="role.removed">حذفت</label>
+						</td>
 					</tr>
 				</tbody>
 			</table>

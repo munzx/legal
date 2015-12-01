@@ -22,7 +22,7 @@ angular.module('adminModule').controller('caseRoleAdminController', ['$scope', '
 
 	$scope.removeCaseRole = function(index, id){
 		connectCaseRoleFactory.delete({'id': id}, function(response){
-			$scope.caseRoles.splice(index, 1);
+			$scope.caseRoles[index] = response;
 		}, function(error){
 			$scope.error = error.data.message;
 		});

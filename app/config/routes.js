@@ -212,8 +212,9 @@ module.exports = function (app, express) {
 		.delete('/casetype/:id', ensureAuthenticated, isAdmin, caseType.softRemove)		
 		//caseRoles
 		.get('/caserole', ensureAuthenticated, isUser, caseRole.index)
+		.get('/caserole/available', ensureAuthenticated, isUser, caseRole.available)
 		.post('/caseRole', ensureAuthenticated, isAdmin, caseRole.create)
-		.delete('/caserole/:id', ensureAuthenticated, isAdmin, caseRole.remove)
+		.delete('/caserole/:id', ensureAuthenticated, isAdmin, caseRole.softRemove)
 		//updateTypes
 		.get('/updatetype', ensureAuthenticated, isUser, updateType.index)
 		.get('/updatetype/available', ensureAuthenticated, isUser, updateType.available)

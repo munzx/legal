@@ -12,7 +12,7 @@
 			<table ng-show="updatetypes.length" class="table table-condensed table-hover table-striped">
 				<thead>
 					<tr>
-						<th class="text-center">إلغاء</th>
+						<th class="text-center"><span class="glyphicon glyphicon-remove cursor text-muted"></span></th>
 						<th class="text-center">تحديد جلسة</th>
 						<th class="text-center">إضافة ملاحظة</th>
 						<th class="text-center">عنوان الطلب</th>
@@ -20,7 +20,7 @@
 						<th class="text-center">طلب تحديث الصفة</th>
 						<th class="text-center">عنوان الطلب</th>
 						<th class="text-center">طلب رقم معرف</th>
-						<th class="text-center">الصفة</th>
+						<th class="text-center">النوع</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -43,7 +43,7 @@
 						<td class="text-center">{{update.requiredId | localize:'ar'}}</td>
 						<td class="text-center">
 							{{update.name}}
-							<label class="label label-danger" ng-show="update.removed">حذفت</label>
+							<label class="label label-danger" ng-show="update.removed">حذف</label>
 						</td>
 					</tr>
 				</tbody>

@@ -19,7 +19,7 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		$scope.error = error.data.message;
 	});
 
-	connectCaseRoleFactory.query({}, function(response){
+	connectCaseRoleFactory.query({action: 'available'}, function(response){
 		$scope.caseRoles = response;
 	});
 
