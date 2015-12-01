@@ -80,12 +80,6 @@ angular.module('uploadModule').controller('indexUploadController', ['$scope', '$
 				}
 			}
 		});
-
-
-
-
-
-
 	}
 
 }]);

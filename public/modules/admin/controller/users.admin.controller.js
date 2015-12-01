@@ -65,11 +65,44 @@ angular.module('adminModule').controller('usersAdminController', ['$scope', '$st
 	$scope.getAll();
 
 	$scope.removeUserInfo = function(index, userId){
-		connectUserFactory.delete({'id': userId}, function(response){
-			$scope.users[index] = response;
-			$scope.error = false;
-		}, function(error){
-			$scope.error = response.data.message;
+		var modalInstance = $modal.open({
+			templateUrl: 'public/modules/config/view/message/confirm.message.config.view.html',
+			backdrop: 'static',
+			controller: ['$scope', '$modalInstance', 'userId', 'users', 'index', function($scope, $modalInstance, userId, users, index){
+				$scope.message = {};
+				$scope.message.title = 'حذف مستخدم';
+				$scope.message.text = ' هل ترغب بحذف المستخدم ' + users[index].firstName  + ' ' + users[index].lastName  + ' ?';
+				$scope.message.confirm = 'نعم';
+				$scope.message.cancel = 'لا';
+
+				$scope.confirm = function(){
+					connectUserFactory.delete({'id': userId}, function(response){
+						users[index] = response;
+						$modalInstance.dismiss('cancel');
+					}, function(error){
+						$scope.error = response.data.message;
+					});
+				}
+
+				$scope.cancel = function(){
+					$modalInstance.dismiss('cancel');
+				}
+
+				$scope.closeModal = function(){
+					$modalInstance.dismiss('cancel');
+				}
+			}],
+			resolve: {
+				userId: function(){
+					return userId;
+				},
+				users: function () {
+					return $scope.users;
+				},
+				index: function(){
+					return index;
+				}
+			}
 		});
 	}
 

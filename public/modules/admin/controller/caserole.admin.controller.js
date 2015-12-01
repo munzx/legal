@@ -21,11 +21,48 @@ angular.module('adminModule').controller('caseRoleAdminController', ['$scope', '
 	}
 
 	$scope.removeCaseRole = function(index, id){
-		connectCaseRoleFactory.delete({'id': id}, function(response){
-			$scope.caseRoles[index] = response;
-		}, function(error){
-			$scope.error = error.data.message;
+		var modalInstance = $modal.open({
+			templateUrl: 'public/modules/config/view/message/confirm.message.config.view.html',
+			backdrop: 'static',
+			controller: ['$scope', '$modalInstance', 'id', 'caseRoles', 'index', function($scope, $modalInstance, id, caseRoles, index){
+				$scope.message = {};
+				$scope.message.title = 'حذف صفة';
+				$scope.message.text = ' هل ترغب بحذف الصفة ' + caseRoles[index].name  + ' ?';
+				$scope.message.confirm = 'نعم';
+				$scope.message.cancel = 'لا';
+
+				$scope.confirm = function(){
+					connectCaseRoleFactory.delete({'id': id}, function(response){
+						caseRoles[index] = response;
+						$modalInstance.dismiss('cancel');
+					}, function(error){
+						$scope.error = error.data.message;
+					});
+				}
+
+				$scope.cancel = function(){
+					$modalInstance.dismiss('cancel');
+				}
+
+				$scope.closeModal = function(){
+					$modalInstance.dismiss('cancel');
+				}
+			}],
+			resolve: {
+				id: function(){
+					return id;
+				},
+				caseRoles: function () {
+					return $scope.caseRoles;
+				},
+				index: function(){
+					return index;
+				}
+			}
 		});
+
+
+
 	}
 
 }]);
