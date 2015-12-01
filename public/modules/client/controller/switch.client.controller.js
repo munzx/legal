@@ -3,11 +3,11 @@
 angular.module('clientModule').controller('switchClientController', ['$scope', 'connectAdminFactory', '$modalInstance', '$modal', 'selectedCase', 'connectCaseRoleFactory', 'connectCaseFactory', function ($scope, connectAdminFactory, $modalInstance, $modal, selectedCase, connectCaseRoleFactory, connectCaseFactory) {
 	$scope.selectedCase = selectedCase;
 
-	connectAdminFactory.query({page: 'client'}, function(response){
+	connectAdminFactory.query({page: 'client', action: 'available'}, function(response){
 		$scope.clients = response;
 	});
 
-	connectCaseRoleFactory.query({}, function(response){
+	connectCaseRoleFactory.query({action: 'available'}, function(response){
 		$scope.caseRoles = response;
 	});
 

@@ -3,13 +3,13 @@
 angular.module('defendantModule').controller('switchDefendantController', ['$scope', '$modal', '$modalInstance', 'connectDefendantFactory', 'connectCaseRoleFactory', 'selectedCase', 'connectCaseFactory', function ($scope, $modal, $modalInstance, connectDefendantFactory, connectCaseRoleFactory, selectedCase, connectCaseFactory) {
 	$scope.selectedCase = selectedCase;
 
-	connectDefendantFactory.query({}, function(response){
+	connectDefendantFactory.query({'action': 'available'}, function(response){
 		$scope.defendants = response;
 	}, function(error){
 		$scope.error = error.data.message;
 	});
 
-	connectCaseRoleFactory.query({}, function(response){
+	connectCaseRoleFactory.query({action: 'available'}, function(response){
 		$scope.caseRoles = response;
 	});
 

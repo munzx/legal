@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('defendantModule').controller('addDefendantController', ['$scope', '$modalInstance', 'connectCaseRoleFactory', 'closeParentModal', 'selectedCase', 'connectCaseFactory', function ($scope, $modalInstance, connectCaseRoleFactory, closeParentModal, selectedCase, connectCaseFactory) {
-	connectCaseRoleFactory.query({}, function(response){
+	connectCaseRoleFactory.query({action: 'available'}, function(response){
 		$scope.caseRoles = response;
 	});
 

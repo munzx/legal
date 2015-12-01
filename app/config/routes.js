@@ -57,7 +57,7 @@ module.exports = function (app, express) {
 	//grant the admin an access to any of the user route/controller
 	function isUser(req, res, next){
 		if(req.user){
-			if(req.user.role === 'consultant' || req.user.role === 'employee'  || req.user.role === 'admin'){
+			if(req.user.role === 'consultant' || req.user.role === 'employee' || req.user.role === 'client' || req.user.role === 'admin'){
 				next();
 			} else {
 				res.status(403).json('Access Denied');
@@ -66,6 +66,18 @@ module.exports = function (app, express) {
 			res.status(403).json('Access Denied');
 		}
 	}
+
+	function isUserNotClient(req, res, next){
+		if(req.user){
+			if(req.user.role === 'consultant' || req.user.role === 'employee'  || req.user.role === 'admin'){
+				next();
+			} else {
+				res.status(403).json('Access Denied');
+			}
+		} else {
+			res.status(403).json('Access Denied');
+		}
+	}	
 
 	function isClient(req, res, next){
 		if(req.user){
@@ -166,51 +178,51 @@ module.exports = function (app, express) {
 		.get('/admin', ensureAuthenticated, isAdmin, admin.index)
 		.get('/admin/first', admin.createFirst)
 		//courts
-		.get('/admin/court', court.index)
-		.get('/admin/court/available', ensureAuthenticated, court.available)
-		.post('/admin/court', ensureAuthenticated, isUser, court.create)
-		.delete('/admin/court/:id', ensureAuthenticated, isEmployee, court.silentRemove)
+		.get('/admin/court', ensureAuthenticated, isUser, court.index)
+		.get('/admin/court/available', ensureAuthenticated, isUser, court.available)
+		.post('/admin/court', ensureAuthenticated, isUserNotClient, court.create)
+		.delete('/admin/court/:id', ensureAuthenticated, isUserNotClient, court.silentRemove)
 		//clients
-		.get('/admin/client', ensureAuthenticated, isUser, client.index)
-		.get('/admin/client/available', ensureAuthenticated, isUser, client.available)
+		.get('/admin/client', ensureAuthenticated, isUserNotClient, client.index)
+		.get('/admin/client/available', ensureAuthenticated, isUserNotClient, client.available)
 		//consultants
-		.get('/admin/consultant', ensureAuthenticated, isUser, consultant.index)
-		.get('/admin/consultant/available', ensureAuthenticated, isUser, consultant.available)
+		.get('/admin/consultant', ensureAuthenticated, isUserNotClient, consultant.index)
+		.get('/admin/consultant/available', ensureAuthenticated, isUserNotClient, consultant.available)
 		//employees
-		.get('/admin/employee', ensureAuthenticated, isUser, employee.index)
-		.get('/admin/employee/available', ensureAuthenticated, isUser, employee.available)
-		.get('/admin/employee/nonlegal/', ensureAuthenticated, isUser, employee.nonlegal) //no consultants or admins
-		.get('/admin/employee/nonlegal/available', ensureAuthenticated, isUser, employee.nonlegalAvailable) //no consultants or admins
+		.get('/admin/employee', ensureAuthenticated, isUserNotClient, employee.index)
+		.get('/admin/employee/available', ensureAuthenticated, isUserNotClient, employee.available)
+		.get('/admin/employee/nonlegal/', ensureAuthenticated, isUserNotClient, employee.nonlegal) //no consultants or admins
+		.get('/admin/employee/nonlegal/available', ensureAuthenticated, isUserNotClient, employee.nonlegalAvailable) //no consultants or admins
 		//case
 		.get('/case', ensureAuthenticated, isUser, courtCase.index)
 		.get('/case/available', ensureAuthenticated, isUser, courtCase.caseAvailable)
-		.post('/case', ensureAuthenticated, isUser, courtCase.create)
-		.delete('/case/:id', ensureAuthenticated, isUser, courtCase.softRemove)
+		.post('/case', ensureAuthenticated, isUserNotClient, courtCase.create)
+		.delete('/case/:id', ensureAuthenticated, isUserNotClient, courtCase.softRemove)
 		.get('/case/updates/:id', ensureAuthenticated, isUser, courtCase.updates)
 		.get('/case/updates/:id/available', ensureAuthenticated, isUser, courtCase.updatesAvailable)
 		//.get('/case/updates/withids', ensureAuthenticated, isUser, courtCase.updatesWithId)
-		.get('/case/sessions', ensureAuthenticated, isUser, courtCase.sessionDates)
-		.get('/case/sessions/upcoming', ensureAuthenticated, isUser, courtCase.upcomingSessions)
-		.get('/case/sessions/previous', ensureAuthenticated, isUser, courtCase.previousSessions)
-		.post('/case/caseupdate/:id', ensureAuthenticated, isUser, courtCase.insertCaseUpdate)
-		.delete('/case/caseupdate/:id/:updateId', courtCase.softRemoveCaseUpdate)
-		.post('/case/tasks/updatebydate', ensureAuthenticated, isUser, courtCase.byDate)
-		.post('/case/tasks/updatebycase', ensureAuthenticated, isUser, courtCase.byCase)
-		.get('/case/memos/pending', ensureAuthenticated, isUser, courtCase.memosPending)
-		.get('/case/memos/closed', ensureAuthenticated, isUser, courtCase.memosClosed)
-		.post('/case/memos/insertconsultant', ensureAuthenticated, isUser, courtCase.insertMemoConsultant)
-		.get('/case/consultant/:id/memos', ensureAuthenticated, isUser, courtCase.consultantMemos)
-		.post('/case/client', ensureAuthenticated, isUser, courtCase.insertClient)
-		.post('/case/client/new', ensureAuthenticated, isUser, courtCase.insertNewClient)
-		.delete('/case/:caseId/client/:clientId', ensureAuthenticated, isUser, courtCase.clientSofttRemove)
-		.delete('/case/:caseId/defendant/:defendantId', ensureAuthenticated, isUser, courtCase.defendantSoftRemove)
+		.get('/case/sessions', ensureAuthenticated, isUserNotClient, courtCase.sessionDates)
+		.get('/case/sessions/upcoming', ensureAuthenticated, isUserNotClient, courtCase.upcomingSessions)
+		.get('/case/sessions/previous', ensureAuthenticated, isUserNotClient, courtCase.previousSessions)
+		.post('/case/caseupdate/:id', ensureAuthenticated, isUserNotClient, courtCase.insertCaseUpdate)
+		.delete('/case/caseupdate/:id/:updateId', ensureAuthenticated, isUserNotClient, courtCase.softRemoveCaseUpdate)
+		.post('/case/tasks/updatebydate', ensureAuthenticated, isUserNotClient, courtCase.byDate)
+		.post('/case/tasks/updatebycase', ensureAuthenticated, isUserNotClient, courtCase.byCase)
+		.get('/case/memos/pending', ensureAuthenticated, isUserNotClient, courtCase.memosPending)
+		.get('/case/memos/closed', ensureAuthenticated, isUserNotClient, courtCase.memosClosed)
+		.post('/case/memos/insertconsultant', ensureAuthenticated, isAdmin, courtCase.insertMemoConsultant)
+		.get('/case/consultant/:id/memos', ensureAuthenticated, isConsultant, courtCase.consultantMemos)
+		.post('/case/client', ensureAuthenticated, isUserNotClient, courtCase.insertClient)
+		.post('/case/client/new', ensureAuthenticated, isUserNotClient, courtCase.insertNewClient)
+		.delete('/case/:caseId/client/:clientId', ensureAuthenticated, isUserNotClient, courtCase.clientSofttRemove)
+		.delete('/case/:caseId/defendant/:defendantId', ensureAuthenticated, isUserNotClient, courtCase.defendantSoftRemove)
 		.post('/case/defendant', ensureAuthenticated, isUser, courtCase.insertDefendant)
-		.post('/case/defendant/new', ensureAuthenticated, isUser, courtCase.insertNewDefendant)
-		.post('/case/search', ensureAuthenticated, isUser, courtCase.search)
+		.post('/case/defendant/new', ensureAuthenticated, isUserNotClient, courtCase.insertNewDefendant)
+		.post('/case/search', ensureAuthenticated, isUserNotClient, courtCase.search)
 		.get('/case/:caseID/docs', ensureAuthenticated, isUser, courtCase.docs)
-		.get('/case/:caseID/download/:docID', courtCase.downloadDoc)
-		.post('/case/:caseID/upload', ensureAuthenticated, isUser, upload.single('doc') , courtCase.uploadDoc)
-		.delete('/case/:caseID/upload/:docID', courtCase.removeDoc)
+		.get('/case/:caseID/download/:docID', ensureAuthenticated, isUser, courtCase.downloadDoc)
+		.post('/case/:caseID/upload', ensureAuthenticated, isUserNotClient, upload.single('doc') , courtCase.uploadDoc)
+		.delete('/case/:caseID/upload/:docID', ensureAuthenticated, isUserNotClient, courtCase.removeDoc)
 		//caseType
 		.get('/casetype', ensureAuthenticated, isUser, caseType.index)
 		.get('/casetype/available', ensureAuthenticated, isUser, caseType.available) 
@@ -229,24 +241,24 @@ module.exports = function (app, express) {
 		//defendant
 		.get('/defendant', ensureAuthenticated, isUser, defendant.index)
 		.get('/defendant/available', ensureAuthenticated, isUser, defendant.available)
-		.post('/defendant', ensureAuthenticated, isAdmin, defendant.create)
-		.delete('/defendant/:id', ensureAuthenticated, isAdmin, defendant.softRemove)
+		.post('/defendant', ensureAuthenticated, isUserNotClient, defendant.create)
+		.delete('/defendant/:id', ensureAuthenticated, isUserNotClient, defendant.softRemove)
 		.get('/defendant/search/:phrase', ensureAuthenticated, isUser, defendant.search)
 		//Users
-		.get('/user', users.index) //get all users
-		.get('/user/available', ensureAuthenticated, isUser, users.available)
-		.post('/user', ensureAuthenticated, isUser, users.create) //create a new user
-		.put('/user', ensureAuthenticated, isAdmin, users.update) //update user info
+		.get('/user', ensureAuthenticated, isUserNotClient, users.index) //get all users
+		.get('/user/available', ensureAuthenticated, isUserNotClient, users.available)
+		.post('/user', ensureAuthenticated, isAdmin, users.create) //create a new user
+		.put('/user', ensureAuthenticated, isUser, users.update) //update user info
 		.put('/user/password', ensureAuthenticated, isUser, users.changePassword) //update the user password
 		.delete('/user/:id', ensureAuthenticated, isAdmin, users.softRemove) //delete user
-		.get('/user/:name', ensureAuthenticated, isUser, users.getByName) //get a user by name
-		.get('/user/search/:phrase', ensureAuthenticated, isUser, users.search)
+		.get('/user/:name', ensureAuthenticated, isUserNotClient, users.getByName) //get a user by name
+		.get('/user/search/:phrase', ensureAuthenticated, isUserNotClient, users.search)
 		//calendar
-		.get('/calendar', ensureAuthenticated, isUser, calendar.index)
-		.post('/calendar', ensureAuthenticated, isUser, calendar.create)
-		.post('/calendar/:id/done', ensureAuthenticated, isUser, calendar.markDone)
-		.post('/calendar/:id/reject', ensureAuthenticated, isUser, calendar.rejectTask)
-		.post('/calendar/:id/softRemove', ensureAuthenticated, isUser, calendar.softRemove)
+		.get('/calendar', ensureAuthenticated, isUserNotClient, calendar.index)
+		.post('/calendar', ensureAuthenticated, isUserNotClient, calendar.create)
+		.post('/calendar/:id/done', ensureAuthenticated, isUserNotClient, calendar.markDone)
+		.post('/calendar/:id/reject', ensureAuthenticated, isUserNotClient, calendar.rejectTask)
+		.post('/calendar/:id/softRemove', ensureAuthenticated, isUserNotClient, calendar.softRemove)
 	);
 
 	//404 Route/Page has not been found
