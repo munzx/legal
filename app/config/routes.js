@@ -216,8 +216,9 @@ module.exports = function (app, express) {
 		.delete('/caserole/:id', ensureAuthenticated, isAdmin, caseRole.remove)
 		//updateTypes
 		.get('/updatetype', ensureAuthenticated, isUser, updateType.index)
+		.get('/updatetype/available', ensureAuthenticated, isUser, updateType.available)
 		.post('/updatetype', ensureAuthenticated, isAdmin, updateType.create)
-		.delete('/updatetype/:id', ensureAuthenticated, isAdmin, updateType.remove)
+		.delete('/updatetype/:id', ensureAuthenticated, isAdmin, updateType.softRemove)
 		//defendant
 		.get('/defendant', ensureAuthenticated, isUser, defendant.index)
 		.post('/defendant', ensureAuthenticated, isAdmin, defendant.create)

@@ -7,7 +7,7 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 	$scope.newUpdate = {};
 	$scope.newUpdate.session = {};
 
-	connectUpdateTypeFactory.query({}, function(response){
+	connectUpdateTypeFactory.query({'action': 'available'}, function(response){
 		$scope.caseUpdates = response;
 	}, function(error){
 		$scope.error = error.data.message;

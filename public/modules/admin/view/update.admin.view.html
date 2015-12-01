@@ -24,9 +24,12 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="update in updatetypes" class="no-animate">
+					<tr ng-repeat="update in updatetypes" class="no-animate" ng-mouseenter="show = true" ng-mouseleave="show = false">
 						<td  class="text-center text-muted">
-							<span ng-click="removeUpdatetypes($index, update._id)" class="glyphicon glyphicon-remove cursor"></span>
+							<span ng-show="show && !update.removed"
+								ng-click="removeUpdatetypes($index, update._id)"
+								class="glyphicon glyphicon-remove cursor">
+							</span>
 						</td>
 						<td class="text-center">{{update.requireNextSession | localize: 'ar'}}</td>
 						<td class="text-center">{{update.requireRemarks | localize: 'ar'}}</td>
@@ -38,7 +41,10 @@
 						<td class="text-center">{{update.requireRoleUpdate | localize:'ar'}}</td>
 						<td class="text-center">{{update.requiredIdTitle || '---------'}}</td>
 						<td class="text-center">{{update.requiredId | localize:'ar'}}</td>
-						<td class="text-center">{{update.name}}</td>
+						<td class="text-center">
+							{{update.name}}
+							<label class="label label-danger" ng-show="update.removed">حذفت</label>
+						</td>
 					</tr>
 				</tbody>
 			</table>

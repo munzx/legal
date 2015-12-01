@@ -16,6 +16,16 @@ module.exports.index = function (req, res) {
 	});
 }
 
+module.exports.available = function (req, res) {
+	updateTypes.find({removed: 'false'}, function(err, result){
+		if(err){
+			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+		} else {
+			res.status(200).jsonp(result);
+		}
+	});
+}
+
 module.exports.create = function (req, res) {
 	console.log(req.body.updatetypesInfo);
 	var updatetype = new updateTypes,
@@ -30,18 +40,24 @@ module.exports.create = function (req, res) {
 	});
 }
 
-module.exports.remove = function (req, res) {
+module.exports.softRemove = function (req, res) {
 	updateTypes.findById(req.params.id, function(err, updatetype){
 		if(err){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {
-			updatetype.remove(function(){
-				if(err){
-					res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-				} else {
-					res.status(200).jsonp('تم محو نوع التحديث بنجاح');
-				}
-			});
+			updatetype.removed = true;
+			updatetype.removeUser = req.user._id;
+			if(updatetype.removed && updatetype.removeUser){
+				updatetype.save(function(err, updatetypeInfo){
+					if(err){
+						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+					} else {
+						res.status(200).jsonp(updatetypeInfo);
+					}
+				});
+			} else {
+				res.status(500).jsonp({message: 'لم يتم توفير البيانات اللازمة'});
+			}
 		}
 	});
 }

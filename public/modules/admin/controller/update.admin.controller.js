@@ -23,7 +23,7 @@ angular.module('adminModule').controller('updateTypesAdminController', ['$scope'
 
 	$scope.removeUpdatetypes = function(index, id){
 		connectUpdateTypeFactory.delete({'id': id}, function(response){
-			$scope.updatetypes.splice(index, 1);
+			$scope.updatetypes[index] = response;
 		}, function(error){
 			$scope.error = error.data.message;
 		});

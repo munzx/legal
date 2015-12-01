@@ -38,6 +38,14 @@ var updateTypesSchema = new Schema({
 		type: Boolean,
 		default: false	
 	},
+	removed: {
+		type: Boolean,
+		default: 'false'
+	},
+	removeUser: {
+		type: Schema.Types.ObjectId,
+		ref: 'user'
+	},
 	user: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 	created: {type: Date, default: Date.now}
 });
