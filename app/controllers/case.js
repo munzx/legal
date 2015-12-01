@@ -32,7 +32,6 @@ module.exports.caseAvailable = function (req, res) {
 	});
 }
 
-
 module.exports.create = function(req, res){
 	var newCase = new cases,
 	caseInfo = _.extend(newCase, req.body.caseInfo);
