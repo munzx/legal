@@ -221,7 +221,7 @@ module.exports.upcomingSessions = function(req, res){
 				if(caseInfo.sessions.length > 0){
 					var sessions = caseInfo.sessions;
 					sessions.forEach(function(info){
-						if(moment(info.newDate).isBefore(moment()) ){
+						if(moment(info.newDate).isAfter(moment()) ){
 							//get last session
 							session = info;
 							sessionInfo.court = caseInfo.court;
@@ -267,7 +267,7 @@ module.exports.previousSessions = function(req, res){
 				if(caseInfo.sessions.length > 0){
 					var sessions = caseInfo.sessions;
 					sessions.forEach(function(info){
-						if(moment(info.newDate).isAfter(moment())){
+						if(moment(info.newDate).isBefore(moment())){
 							//get last session
 							session = info;
 							sessionInfo.court = caseInfo.court;
