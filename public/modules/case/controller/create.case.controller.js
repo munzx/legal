@@ -81,7 +81,7 @@ angular.module('caseModule').controller('createCaseController', ['$scope', 'case
 		$scope.consultants = response;
 	});
 
-	connectDefendantFactory.query({}, function(response){
+	connectDefendantFactory.query({'action': 'available'}, function(response){
 		$scope.defendants = response;
 	});
 

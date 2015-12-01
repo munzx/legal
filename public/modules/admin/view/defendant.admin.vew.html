@@ -22,12 +22,20 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="defendant in defendants | filter:searchPhrase" class="no-animate">
-								<td class="text-center text-muted">
-									<span ng-click="removeDefendant($index, defendant._id)" class="glyphicon glyphicon-remove cursor"></span>
+							<tr ng-repeat="defendant in defendants | filter:searchPhrase"
+								class="no-animate"
+								ng-mouseenter="show = true"
+								ng-mouseleave="show = false">
+								<td class="text-center">
+									<span ng-show="show && !defendant.removed"
+										ng-click="removeDefendant($index, defendant._id)"
+										class="glyphicon glyphicon-remove cursor text-muted"></span>
 								</td>
 								<td class="text-center">{{defendant.mobilePhone}}</td>
-								<td class="text-center">{{defendant.firstName}} {{defendant.lastName}}</td>
+								<td class="text-center">
+									{{defendant.firstName}} {{defendant.lastName}}
+									<label class="label label-danger" ng-show="defendant.removed">حذف</label>
+								</td>
 							</tr>
 						</tbody>
 					</table>

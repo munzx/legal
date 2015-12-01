@@ -78,7 +78,7 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 						selectedCase.updates = response.updates;
 						$modalInstance.dismiss('cancel');
 					}, function(error){
-						console.log(error);
+						$scope.error = error;
 					});
 				}
 
@@ -115,11 +115,10 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 				$scope.confirm = function(){
 					connectCaseFactory.remove({'caseId': selectedCase._id, 'action': 'defendant', 'id': defendant._id}, function(response){
 						$modalInstance.dismiss('cancel');
-						console.log(response);
 						selectedCase.defendant[index].removed = true;
 						selectedCase.updates = response.updates;
 					}, function(error){
-						console.log(error);
+						$scope.error = error;
 					});
 				}
 

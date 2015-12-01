@@ -18,6 +18,17 @@ module.exports.index = function (req, res) {
 	});
 }
 
+module.exports.available = function (req, res) {
+	defendants.find({removed: 'false'}).sort('-created').exec(function(err, result){
+		if(err){
+			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+		} else {
+			res.status(200).jsonp(result);
+		}
+	});
+}
+
+
 module.exports.create = function(req, res){
 	var defendant = new defendants,
 		defendantInfo = _.extend(defendant, req.body.defendantInfo);
@@ -31,18 +42,24 @@ module.exports.create = function(req, res){
 	});
 }
 
-module.exports.remove = function(req, res){
+module.exports.softRemove = function(req, res){
 	defendants.findById(req.params.id, function(err, defendant){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
-			defendant.remove(function(error){
-				if(error){
-					res.status(500).jsonp({message: error});
-				} else {
-					res.status(200).jsonp('تم محو بانات الخصم');
-				}
-			});
+			defendant.removed = true;
+			defendant.removeUser = req.user._id;
+			if(defendant.removed && defendant.removeUser){
+				defendant.save(function(error, info){
+					if(error){
+						res.status(500).jsonp({message: error});
+					} else {
+						res.status(200).jsonp(info);
+					}
+				});
+			} else {
+				res.status(500).jsonp({message: 'لم يتم توفير البيانات اللازمة'});
+			}
 		}
 	});
 }

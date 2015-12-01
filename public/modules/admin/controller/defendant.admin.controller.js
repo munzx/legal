@@ -10,7 +10,7 @@ angular.module('adminModule').controller('defendantAdminController', ['$scope', 
 	$scope.removeDefendant = function(index, id){
 		connectDefendantFactory.delete({'id': id}, function(response){
 			$scope.error = false;
-			$scope.defendants.splice(index, 1);
+			$scope.defendants[index] = response;
 		}, function(error){
 			$scope.error = error.data.message;
 		});

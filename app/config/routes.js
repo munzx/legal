@@ -228,8 +228,9 @@ module.exports = function (app, express) {
 		.delete('/updatetype/:id', ensureAuthenticated, isAdmin, updateType.softRemove)
 		//defendant
 		.get('/defendant', ensureAuthenticated, isUser, defendant.index)
+		.get('/defendant/available', ensureAuthenticated, isUser, defendant.available)
 		.post('/defendant', ensureAuthenticated, isAdmin, defendant.create)
-		.delete('/defendant/:id', ensureAuthenticated, isAdmin, defendant.remove)
+		.delete('/defendant/:id', ensureAuthenticated, isAdmin, defendant.softRemove)
 		.get('/defendant/search/:phrase', ensureAuthenticated, isUser, defendant.search)
 		//Users
 		.get('/user', users.index) //get all users
