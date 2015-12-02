@@ -108,7 +108,7 @@ module.exports.update = function(req, res){
 				newInfo.email = req.body.info.email;
 			}
 
-			function saveInfo () {
+			var saveInfo = function () {
 				var newUserInfo = _.extend(userInfo, newInfo);
 				newUserInfo.save(function (err, result) {
 					if(err){
