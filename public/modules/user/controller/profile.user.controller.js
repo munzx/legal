@@ -28,6 +28,9 @@ angular.module('userModule').controller('profileUserController', ['$scope', 'con
 
 	$scope.updateProfile = function () {
 		connectUserFactory.update({'info': $scope.profile}, function (response) {
+			$scope.profile.newPassowrd = '';
+			$scope.profile.currentPassowrd = '';
+			$scope.profile.repeatedNewPassowrd = '';
 			$scope.success = true;
 			$scope.error = false;
 			$timeout(function () {
