@@ -61,10 +61,6 @@ angular.module('adminModule').controller('caseTypeAdminController', ['$scope', '
 				}
 			}
 		});
-
-
-
-
 	}
 
 }]);

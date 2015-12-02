@@ -70,9 +70,49 @@ angular.module('adminModule').controller('indexCaseController', ['$scope', 'conn
 	}
 
 	$scope.removeCase = function (index, id) {
-		connectCaseFactory.remove({caseId: id}, function(response){
-			$scope.cases[index] = response;
+		var modalInstance = $modal.open({
+			templateUrl: 'public/modules/config/view/message/confirm.message.config.view.html',
+			backdrop: 'static',
+			controller: ['$scope', '$modalInstance', 'id', 'cases', 'index', '$filter', function($scope, $modalInstance, id, cases, index, $filter){
+				var caseDate = $filter('date')(cases[index].caseDate, 'yyyy/MM/dd');
+
+				$scope.message = {};
+				$scope.message.title = 'حذف قضية';
+				$scope.message.text = ' هل ترغب بحذف القضية ' + cases[index].caseType  + ' رقم ' + cases[index].caseNumber  + ' بتاريخ ' + caseDate + ' ?';
+				$scope.message.confirm = 'نعم';
+				$scope.message.cancel = 'لا';
+
+				$scope.confirm = function(){
+					connectCaseFactory.remove({caseId: id}, function(response){
+						cases[index] = response;
+						$modalInstance.dismiss('cancel');
+					},function(error){
+						$scope.error = error.data.message;
+					});
+				}
+
+				$scope.cancel = function(){
+					$modalInstance.dismiss('cancel');
+				}
+
+				$scope.closeModal = function(){
+					$modalInstance.dismiss('cancel');
+				}
+			}],
+			resolve: {
+				id: function(){
+					return id;
+				},
+				cases: function () {
+					return $scope.cases;
+				},
+				index: function(){
+					return index;
+				}
+			}
 		});
+
+
 	}
 
 }]);
