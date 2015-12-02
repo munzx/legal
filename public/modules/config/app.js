@@ -58,6 +58,12 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			controller: 'signoutAuthController',
 			cache: false
 		})
+		.state('profile', {
+			url: '/profile',
+			templateUrl: 'public/modules/user/view/profile.user.view.html',
+			controller: 'profileUserController',
+			cache: false
+		})
 		.state('admin', {
 			url: '/admin',
 			templateUrl: 'public/modules/admin/view/index.admin.view.html',

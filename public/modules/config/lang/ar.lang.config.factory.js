@@ -20,6 +20,7 @@ angular.module('yousufalsharif').factory('arLang', [function () {
 		'false': 'لا',
 		'client already exists': 'الموكل مضاف مسبقا',
 		'defendant already exists': 'الخصم مضاف مسبقا',
-		'no file has been uploaded': 'لم يتم رفع أي مستند'
+		'no file has been uploaded': 'لم يتم رفع أي مستند',
+		'current password is not correct': 'كلمة السر الحالية غير صحيحة'
 	}
 }]);

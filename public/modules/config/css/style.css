@@ -224,3 +224,20 @@ h1, h2, h3, h4, h5, h6, p, li, ul, b, a, placeholder, input, option, select, che
     border-radius: 32px;
     color: black;
 }
+
+.profile-center {
+    margin: 0 auto;
+}
+
+.box-center {
+    margin: 0 auto;
+}
+
+.image-center {
+    margin: 0 auto;
+    width: 100%;
+}
+
+.cursor {
+    cursor: pointer;
+}

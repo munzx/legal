@@ -1,0 +1,70 @@
+<div class="row">
+	<div class="col-md-8 col-md-offset-2">
+		<h4 class="text-center">{{pageTitle}}</h4>
+		<h4 class="alert alert-danger" ng-show="error">{{error | localize:'ar'}}</h4>
+		<h4 class="alert alert-success" ng-show="success">تم تحذيث البيانات بنجاح</h4>
+		<div class="row">
+			<div class="col-md-12">
+				<form class="form" name="info">
+					<div class="form-group">
+						<div class="form-input">
+							<div class="input-group input-group-lg">
+								<span class="input-group-addon">
+									<i class="text-muted glyphicon glyphicon-phone"></i>
+								</span>
+								<input type="text" class="form-control" name="mobilePhone" placeholder="رقم الهاتف" ng-model="profile.mobilePhone" required>
+							</div>
+							<h5 class="alert alert-danger" ng-show="info.mobilePhone.$error.required && info.mobilePhone.$dirty">
+								رقم الهاتف مطلوب
+							</h5>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="form-input">
+							<div class="input-group input-group-lg">
+								<span class="input-group-addon">
+									<i class="text-muted glyphicon glyphicon-envelope"></i>
+								</span>
+								<input type="email" class="form-control" name="email" placeholder="البريد الإلكتروني" ng-model="profile.email" required>
+							</div>
+							<h5 class="alert alert-danger" ng-show="info.email.$error.required && info.email.$dirty">
+								حقل البريد الإلكتروني مطلوب
+							</h5>
+							<h5 class="alert alert-danger" ng-show="info.email.$invalid && info.email.$dirty">
+								يرجى إدخال عنوان بريد إلكتروني صحيح
+							</h5>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="form-input">
+							<div class="input-group input-group-lg">
+								<span class="input-group-addon">
+									<i class="text-muted glyphicon glyphicon-asterisk"></i>
+								</span>
+								<input type="text" class="form-control" placeholder="كلمة السر الحالية" 
+										ng-model="profile.currentPassowrd">
+							</div>
+							<div class="input-group input-group-lg">
+								<span class="input-group-addon">
+									<i class="text-muted glyphicon glyphicon-asterisk"></i>
+								</span>
+								<input type="text" class="form-control" placeholder="كلمة السر الجديدة"
+										ng-model="profile.newPassowrd">
+							</div>
+							<div class="input-group input-group-lg">
+								<span class="input-group-addon">
+									<i class="text-muted glyphicon glyphicon-asterisk"></i>
+								</span>
+								<input type="text" class="form-control" placeholder="أعد كتابة كلمة السر الجديدة" 
+										ng-model="profile.repeatedNewPassowrd">
+							</div>
+						</div>
+					</div>
+				</form>
+				<button class="btn btn-block btn-lg btn-info"
+						ng-disabled="isPasswordValid() || info.email.$invalid || info.mobilePhone.$invalid"
+						ng-click="updateProfile()">تحديث</button>
+			</div>
+		</div>
+	</div>
+</div>
