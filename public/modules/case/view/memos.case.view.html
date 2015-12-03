@@ -55,7 +55,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="memo in memos | dateRangeConfigFilter:'updateCreated':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey" class="no-animate">
+							<tr ng-repeat="memo in memos | dateRangeConfigFilter:'memoRequiredDate':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey" class="no-animate">
 								<td class="text-center">{{memo.memoStatus | localize:'ar'}}</td>
 								<td class="text-center">
 									{{memo.memoRequiredDate | date: 'yyyy-MM-dd'}}
