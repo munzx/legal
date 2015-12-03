@@ -15,7 +15,6 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
     	datasetFill: false,
     	skipLabels: true
     });
-
 	$urlRouterProvider.otherwise('notfound');
 	$stateProvider
 		.state('notfound',{
