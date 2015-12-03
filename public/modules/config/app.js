@@ -2,7 +2,7 @@
 
 // intitiate the app and Inject all of the app module dependencies
 //configure the routes
-var yousufalsharif = angular.module('yousufalsharif', ['xeditable', 'akoenig.deckgrid', 'ngAnimate', 'infinite-scroll', 'adminModule', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'updateTypesModule', 'consultantModule', 'chart.js', 'AngularPrint', 'employeeModule', 'calendarModule', 'uploadModule', 'caseTypeModule']);
+var yousufalsharif = angular.module('yousufalsharif', ['ngAnimate', 'adminModule', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'updateTypesModule', 'consultantModule', 'chart.js', 'AngularPrint', 'employeeModule', 'calendarModule', 'uploadModule', 'caseTypeModule']);
 
 //RouteScopes & Routes Configurations 
 yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'ChartJsProvider', function ($urlRouterProvider, $stateProvider, $locationProvider, ChartJsProvider) {
@@ -15,6 +15,7 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
     	datasetFill: false,
     	skipLabels: true
     });
+
 	$urlRouterProvider.otherwise('notfound');
 	$stateProvider
 		.state('notfound',{
@@ -191,8 +192,7 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 
 		$locationProvider.html5Mode(true).hashPrefix('!');
 }])
-.run(['$rootScope', '$location', 'editableOptions', '$state', function ($rootScope, $location, editableOptions, $state) {
-	editableOptions.theme = 'bs3';
+.run(['$rootScope', '$location', '$state', function ($rootScope, $location, $state) {
 	//remove the extra sympoles that is inserted by facebook redirect "when facebook redirect to the success login pagein server side"
 	//when  a user try to sign up through facebook
 	if ($location.hash() === '_=_'){

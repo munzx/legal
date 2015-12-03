@@ -25,6 +25,7 @@ var multer = require('multer'),
 	account = require('../controllers/account'),
 	courtCase = require('../controllers/case'),
 	calendar = require('../controllers/calendar'),
+	report = require('../controllers/report'),
 	passport = require('passport'),
 	authLocal = require('./auth/local.strategy');
 
@@ -253,12 +254,14 @@ module.exports = function (app, express) {
 		.delete('/user/:id', ensureAuthenticated, isAdmin, users.softRemove) //delete user
 		.get('/user/:name', ensureAuthenticated, isUserNotClient, users.getByName) //get a user by name
 		.get('/user/search/:phrase', ensureAuthenticated, isUserNotClient, users.search)
-		//calendar
+		//Calendar
 		.get('/calendar', ensureAuthenticated, isUserNotClient, calendar.index)
 		.post('/calendar', ensureAuthenticated, isUserNotClient, calendar.create)
 		.post('/calendar/:id/done', ensureAuthenticated, isUserNotClient, calendar.markDone)
 		.post('/calendar/:id/reject', ensureAuthenticated, isUserNotClient, calendar.rejectTask)
 		.post('/calendar/:id/softRemove', ensureAuthenticated, isUserNotClient, calendar.softRemove)
+		//Report
+		.get('/report', ensureAuthenticated, isAdmin, report.index)
 	);
 
 	//404 Route/Page has not been found
