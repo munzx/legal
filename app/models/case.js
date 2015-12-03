@@ -258,6 +258,11 @@ var caseSchema = mongoose.Schema({
 			ref: 'user'
 		}
 	}],
+	user: {
+		type: Schema.Types.ObjectId,
+		required: 'لم يتم إضافة بيانات المدخل',
+		ref: 'user'
+	},
 	created: {type: Date, default: Date.now}
 });
 

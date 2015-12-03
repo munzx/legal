@@ -13,7 +13,7 @@ defendants = require('../models/defendant');
 
 
 module.exports.index = function (req, res) {
-	cases.find({}).sort('-created').populate('court').populate('consultant').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
+	cases.find({}).sort('-created').populate('user').populate('court').populate('consultant').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
@@ -23,7 +23,7 @@ module.exports.index = function (req, res) {
 }
 
 module.exports.caseAvailable = function (req, res) {
-	cases.find({removed: 'false'}).sort('-created').populate('court').populate('consultant').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
+	cases.find({removed: 'false'}).sort('-created').populate('user').populate('court').populate('consultant').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
@@ -35,12 +35,13 @@ module.exports.caseAvailable = function (req, res) {
 module.exports.create = function(req, res){
 	var newCase = new cases,
 	caseInfo = _.extend(newCase, req.body.caseInfo);
+	caseInfo.user = req.user._id;
 
 	caseInfo.save(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
-			cases.findById(result._id).sort('-created').populate('court').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
+			cases.findById(result._id).sort('-created').populate('user').populate('court').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
 				if(err){
 					res.status(500).jsonp({message: err});
 				} else {

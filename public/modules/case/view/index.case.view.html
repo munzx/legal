@@ -46,6 +46,7 @@
 							<th class="text-center"><i class="glyphicon glyphicon-remove text-muted"></i></th>
 							<th class="text-center">تاريخ الإدخال</th>
 							<th class="text-center">تاريخ الدعوى</th>
+							<th class="text-center">المدخل</th>
 							<th class="text-center">الحالة</th>
 							<th class="text-center">الموضوع</th>
 							<th class="text-center">رقم الدعوى</th>
@@ -66,6 +67,7 @@
 					</td>
 					<td class="text-center">{{case.created | date: 'yyyy-MM-dd'}}</td>
 					<td class="text-center">{{case.caseDate | date: 'yyyy-MM-dd'}}</td>
+					<td class="text-center">{{case.user.firstName}} {{case.user.lastName}}</td>
 					<td class="text-center">{{case.status | localize:'ar'}}</td>
 					<td class="text-center">{{case.subject}}</td>
 					<td class="text-center">{{case.caseNumber}}</td>
