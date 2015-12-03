@@ -1,30 +1,34 @@
 <div data-ui-view>
 	<div class="row add-space" >
 		<div class="col-md-12">
-			<form class="form-inline" style="background: #EEEEEE;">
-				<div class="form-group">
-					<div class="input-group">
-						<button class="btn btn-md btn-info icon-right" ng-click="showNewCaseForm()" style="margin-top:-2px;">
-							<span class="glyphicon glyphicon-plus"></span> إضافة قضية جديدة
-						</button>
-					</div>
+			<div class="jumbotron">
+				<div class="container">
+					<form class="form-inline">
+						<div class="form-group">
+							<div class="input-group">
+								<button class="btn btn-md btn-info icon-right" ng-click="showNewCaseForm()" style="margin-top:-2px;">
+									<span class="glyphicon glyphicon-plus"></span> إضافة قضية جديدة
+								</button>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<label class="input-group-addon">تاريخ الدعوى من</label>
+								<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
+							</div>
+							<div class="input-group">
+								<label class="input-group-addon">إلى</label>
+								<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<input ng-model="searchKey" placeholder="بحث" class="form-control">
+							</div>
+						</div>
+					</form>
 				</div>
-				<div class="form-group">
-					<div class="input-group">
-						<label class="input-group-addon">تاريخ الدعوى من</label>
-						<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
-					</div>
-					<div class="input-group">
-						<label class="input-group-addon">إلى</label>
-						<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="input-group">
-						<input ng-model="searchKey" placeholder="بحث" class="form-control">
-					</div>
-				</div>
-			</form>
+			</div>
 		</div>
 	</div>
 	<p>&nbsp;</p>
@@ -51,29 +55,29 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="case in cases | dateRangeConfigFilter:'caseDate':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey"
-							ng-mouseenter="show = true"
-							ng-mouseleave="show = false"
-							class="no-animate">
-							<td class="text-center">
-								<span ng-show="!case.removed && show"
-									class="glyphicon glyphicon-remove cursor text-muted"
-									ng-click="removeCase($index, case._id)">
-								</span>
-							</td>
-							<td class="text-center">{{case.created | date: 'yyyy-MM-dd'}}</td>
-							<td class="text-center">{{case.caseDate | date: 'yyyy-MM-dd'}}</td>
-							<td class="text-center">{{case.status | localize:'ar'}}</td>
-							<td class="text-center">{{case.subject}}</td>
-							<td class="text-center">{{case.caseNumber}}</td>
-							<td class="text-center">
-								{{case.reportNumber}}
-								<label class="label label-danger" ng-show="case.removed">حذفت</label>
-							</td>
-							<td><i class="glyphicon glyphicon-chevron-down cursor" ng-click="showCaseDetails($index)"></i></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
+						ng-mouseenter="show = true"
+						ng-mouseleave="show = false"
+						class="no-animate">
+						<td class="text-center">
+							<span ng-show="!case.removed && show"
+							class="glyphicon glyphicon-remove cursor text-muted"
+							ng-click="removeCase($index, case._id)">
+						</span>
+					</td>
+					<td class="text-center">{{case.created | date: 'yyyy-MM-dd'}}</td>
+					<td class="text-center">{{case.caseDate | date: 'yyyy-MM-dd'}}</td>
+					<td class="text-center">{{case.status | localize:'ar'}}</td>
+					<td class="text-center">{{case.subject}}</td>
+					<td class="text-center">{{case.caseNumber}}</td>
+					<td class="text-center">
+						{{case.reportNumber}}
+						<label class="label label-danger" ng-show="case.removed">حذفت</label>
+					</td>
+					<td><i class="glyphicon glyphicon-chevron-down cursor" ng-click="showCaseDetails($index)"></i></td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
+</div>
+</div>
 </div>

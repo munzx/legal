@@ -7,7 +7,11 @@
 	<div ng-show="defendants.length">
 		<div class="row add-space">
 			<div class="col-md-12">
-				<input type="text" class="form-control pull-right" placeholder="بحث" ng-model="searchPhrase" />
+				<div class="jumbotron">
+					<div class="container">
+						<input type="text" class="form-control pull-right" placeholder="بحث" ng-model="searchPhrase" />
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="row">
@@ -23,24 +27,24 @@
 						</thead>
 						<tbody>
 							<tr ng-repeat="defendant in defendants | filter:searchPhrase"
-								class="no-animate"
-								ng-mouseenter="show = true"
-								ng-mouseleave="show = false">
-								<td class="text-center">
-									<span ng-show="show && !defendant.removed"
-										ng-click="removeDefendant($index, defendant._id)"
-										class="glyphicon glyphicon-remove cursor text-muted"></span>
-								</td>
-								<td class="text-center">{{defendant.mobilePhone}}</td>
-								<td class="text-center">
-									{{defendant.firstName}} {{defendant.lastName}}
-									<label class="label label-danger" ng-show="defendant.removed">حذف</label>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+							class="no-animate"
+							ng-mouseenter="show = true"
+							ng-mouseleave="show = false">
+							<td class="text-center">
+								<span ng-show="show && !defendant.removed"
+								ng-click="removeDefendant($index, defendant._id)"
+								class="glyphicon glyphicon-remove cursor text-muted"></span>
+							</td>
+							<td class="text-center">{{defendant.mobilePhone}}</td>
+							<td class="text-center">
+								{{defendant.firstName}} {{defendant.lastName}}
+								<label class="label label-danger" ng-show="defendant.removed">حذف</label>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
-		</div>	
-	</div>
+		</div>
+	</div>	
+</div>
 </section>

@@ -12,9 +12,10 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
     });
     // Configure all line charts
     ChartJsProvider.setOptions('Line', {
-    	datasetFill: false,
+    	datasetFill: true,
     	skipLabels: true
     });
+ 
 	$urlRouterProvider.otherwise('notfound');
 	$stateProvider
 		.state('notfound',{

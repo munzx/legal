@@ -1,6 +1,65 @@
 <div data-ui-view>
-	<h1>Home page</h1>
-	<canvas id="doughnut" class="chart chart-doughnut"
-	  chart-data="data" chart-labels="labels">
-	</canvas> 
+	<div class="row add-space" >
+		<div class="col-md-12">
+			<div class="jumbotron">
+			  <div class="container">
+				<form class="form-inline">
+					<div class="form-group">
+						<div class="input-group">
+							<label class="input-group-addon"> من تاريخ </label>
+							<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
+						</div>
+						<div class="input-group">
+							<label class="input-group-addon">إلى</label>
+							<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
+						</div>
+					</div>
+				</form>
+			  </div>
+			</div>
+		</div>
+	</div>
+	<p>&nbsp;</p>
+	<div class="row">
+		<div class="col-md-12" ng-show="error">
+			<h4 class='alert alert-danger'>{{error}}</h4>
+		</div>
+	</div>
+	<p>&nbsp;</p>
+	<div class="row add-space">
+		<div class="col-md-6">
+			<canvas id="doughnut" class="chart chart-doughnut"
+				data="doughnut.data" legend="true" labels="doughnut.labels">
+			</canvas> 
+		</div>
+		<div class="col-md-6">
+			<canvas id="pie" class="chart chart-pie"
+				data="pie.data" legend="true" labels="pie.labels">
+			</canvas>
+		</div>
+	</div>
+	<p>&nbsp;</p>
+	<div class="row add-space">
+		<div class="col-md-10 col-md-offset-1">
+			<canvas id="bar" class="chart chart-bar"
+				data="bar.data" legend="true" labels="bar.labels">
+			</canvas>	
+		</div>
+	</div>
+	<p>&nbsp;</p>
+	<div class="row add-space">
+		<div class="col-md-10 col-md-offset-1">
+			<canvas id="radar" class="chart chart-radar"
+				data="radar.data" legend="true"  labels="radar.labels">
+			</canvas>
+		</div>
+	</div>
+	<p>&nbsp;</p>
+	<div class="row add-space">
+		<div class="col-md-10 col-md-offset-1">
+			<canvas id="line" class="chart chart-line" data="line.data" labels="line.labels" 
+  				legend="true" series="line.series" click="line.onClick">
+  			</canvas> 
+		</div>
+	</div>
 </div>

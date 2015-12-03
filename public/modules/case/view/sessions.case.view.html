@@ -1,47 +1,49 @@
 <section>
 	<div class="row">
-		<div class="row add-space" style="padding:0px;">
-			<div class="col-md-12">
-				<form class="form-inline" style="background: #EEEEEE;">
-					<div class="form-group">
-						<div class="input-group">
-							<button ng-disabled="activePrevious" ng-show='isAdmin' class="btn btn-info btn-md" ng-click="sechedule()">
-								المهام <span class="glyphicon glyphicon-list"></span>
-							</button>
+		<div class="col-md-12">
+			<div class="jumbotron">
+				<div class="container">
+					<form class="form-inline">
+						<div class="form-group">
+							<div class="input-group">
+								<button ng-disabled="activePrevious" ng-show='isAdmin' class="btn btn-info btn-md" ng-click="sechedule()">
+									المهام <span class="glyphicon glyphicon-list"></span>
+								</button>
+							</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<div class="input-group">
-							<ul class="nav nav-pills" style="float: right;margin-right:0 !important;padding-right:0 !important;">
-								<li role="presentation" ng-click="previous()" class="{{activePrevious}}"><a href="#">السابقة</a></li>
-								<li role="presentation" ng-click="upcoming()" class="{{activeUpcoming}}"><a href="#">القادمة</a></li>
-							</ul>
+						<div class="form-group">
+							<div class="input-group">
+								<ul class="nav nav-pills" style="float: right;margin-right:0 !important;padding-right:0 !important;">
+									<li role="presentation" ng-click="previous()" class="{{activePrevious}}"><a href="#">السابقة</a></li>
+									<li role="presentation" ng-click="upcoming()" class="{{activeUpcoming}}"><a href="#">القادمة</a></li>
+								</ul>
+							</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<div class="input-group">
-							<label class="input-group-addon">تاريخ الجلسة من</label>
-							<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
+						<div class="form-group">
+							<div class="input-group">
+								<label class="input-group-addon">تاريخ الجلسة من</label>
+								<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
+							</div>
+							<div class="input-group">
+								<label class="input-group-addon">إلى</label>
+								<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
+							</div>
 						</div>
-						<div class="input-group">
-							<label class="input-group-addon">إلى</label>
-							<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
+						<div class="form-group">
+							<div class="input-group">
+								<input ng-model="searchKey" placeholder="بحث" class="form-control">
+							</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<div class="input-group">
-							<input ng-model="searchKey" placeholder="بحث" class="form-control">
+						<div class="form-group">
+							<div class="input-group">
+								<button print-btn print-landscape class="btn btn-warning btn-md">
+									طباعة
+									<span class="glyphicon glyphicon-print"></span>
+								</button>
+							</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<div class="input-group">
-							<button print-btn print-landscape class="btn btn-warning btn-md">
-								طباعة
-								<span class="glyphicon glyphicon-print"></span>
-							</button>
-						</div>
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>

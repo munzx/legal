@@ -1,31 +1,35 @@
 <section>
-	<div class="row add-space" style="padding:0px;">
+	<div class="row add-space">
 		<div class="col-md-12">
-			<form class="form-inline" style="background: #EEEEEE;">
-				<div class="form-group">
-					<div class="input-group">
-						<ul class="nav nav-pills icon-right" style="padding:0;">
-							<li role="presentation" ng-click="memosClosed()" class="{{activeClosed}}"><a href="#">مغلقة</a></li>
-							<li role="presentation" ng-click="memosPending()" class="{{activePending}}"><a href="#">معلقة</a></li>
-						</ul>
-					</div>
+			<div class="jumbotron">
+				<div class="container">
+					<form class="form-inline">
+						<div class="form-group">
+							<div class="input-group">
+								<ul class="nav nav-pills icon-right">
+									<li role="presentation" ng-click="memosClosed()" class="{{activeClosed}}"><a href="#">مغلقة</a></li>
+									<li role="presentation" ng-click="memosPending()" class="{{activePending}}"><a href="#">معلقة</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<label class="input-group-addon">تاريخ المذكرة من</label>
+								<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
+							</div>
+							<div class="input-group">
+								<label class="input-group-addon">إلى</label>
+								<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group">
+								<input ng-model="searchKey" placeholder="بحث" class="form-control">
+							</div>
+						</div>
+					</form>
 				</div>
-				<div class="form-group">
-					<div class="input-group">
-						<label class="input-group-addon">تاريخ المذكرة من</label>
-						<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
-					</div>
-					<div class="input-group">
-						<label class="input-group-addon">إلى</label>
-						<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="input-group">
-						<input ng-model="searchKey" placeholder="بحث" class="form-control">
-					</div>
-				</div>
-			</form>
+			</div>
 		</div>
 	</div>
 	<div class="row">

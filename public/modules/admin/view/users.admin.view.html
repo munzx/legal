@@ -1,43 +1,49 @@
 <section>
-	<div class="row add-space" style="background: #EEEEEE;"  style="padding:0;">
-		<div class="col-md-12" style="padding:0;">
-			<button class="btn btn-md btn-info icon-right" style="height: 110% !important;" ng-click="showNewUserForm()">
-				إضافة مستخدم جديد <span class="glyphicon glyphicon-plus"></span>
-			</button>
-			<ul class="nav nav-pills" style="float: right;margin-right:0 !important;padding-right:0 !important;">
-				<li role="presentation" ng-show="activeLinkArray['all']">
-					<input type="text" class="form-control pull-right" placeholder="بحث"
-					ng-model="searchPhrase"
-					ng-change="updateSearch()"
-					typeahead-loading="Loadingusers"
-					typeahead-no-results="noResults"
-					typeahead-on-select="onSelect($item, $model, $label); searchPhrase = ''; "
-					typeahead="item.firstName 
-					+ ' - ' 
-					+ item.lastName
-					+ ' - '
-					+ item.name
-					+ ' - '
-					+ item.email
-					+ ' - '
-					+ item.mobilePhone
-					+ ' - '
-					+ item.address
-					for item in searchResult($viewValue)">
-				</li>
-				<li role="presentation" ng-click="getClients()" class="{{activeLinkArray['client']}}">
-					<a href="#">الموكليين</a>
-				</li>
-				<li role="presentation" ng-click="getEmployees()" class="{{activeLinkArray['employee']}}">
-					<a href="#">الموظفين</a>
-				</li>
-				<li role="presentation" ng-click="getConsultants()" class="{{activeLinkArray['consultant']}}">
-					<a href="#">المستشاريين</a>
-				</li>
-				<li role="presentation" ng-click="getAll()" class="{{activeLinkArray['all']}}">
-					<a href="#">الكل</a>
-				</li>
-			</ul>
+	<div class="row add-space">
+		<div class="col-md-12">
+			<div class="jumbotron">
+				<div class="container">
+						<button class="btn btn-md btn-info icon-right" style="margin-bottom: 10px !important;" ng-click="showNewUserForm()">
+							إضافة مستخدم جديد <span class="glyphicon glyphicon-plus"></span>
+						</button>
+					<div class="col-md-6 col-xs-12">
+						<input type="text" class="form-control pull-right" placeholder="بحث"
+						ng-model="searchPhrase"
+						ng-change="updateSearch()"
+						typeahead-loading="Loadingusers"
+						typeahead-no-results="noResults"
+						typeahead-on-select="onSelect($item, $model, $label); searchPhrase = ''; "
+						typeahead="item.firstName 
+						+ ' - ' 
+						+ item.lastName
+						+ ' - '
+						+ item.name
+						+ ' - '
+						+ item.email
+						+ ' - '
+						+ item.mobilePhone
+						+ ' - '
+						+ item.address
+						for item in searchResult($viewValue)">				
+					</div>
+					<div class="col-md-4 col-xs-12">
+						<ul class="nav nav-pills" style="float: right;margin-right:0 !important;padding-right:0 !important;">
+							<li role="presentation" ng-click="getClients()" class="{{activeLinkArray['client']}}">
+								<a href="#">الموكليين</a>
+							</li>
+							<li role="presentation" ng-click="getEmployees()" class="{{activeLinkArray['employee']}}">
+								<a href="#">الموظفين</a>
+							</li>
+							<li role="presentation" ng-click="getConsultants()" class="{{activeLinkArray['consultant']}}">
+								<a href="#">المستشاريين</a>
+							</li>
+							<li role="presentation" ng-click="getAll()" class="{{activeLinkArray['all']}}">
+								<a href="#">الكل</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="row add-space" ng-hide="users.length">
@@ -63,8 +69,8 @@
 						<tr ng-repeat="user in users" class="no-animate" ng-mouseenter="show = true" ng-mouseleave="show = false">
 							<td class="text-center text-muted">
 								<span ng-show="show && !user.removed"
-									ng-click="removeUserInfo($index, user._id)"
-									class="glyphicon glyphicon-remove cursor text-muted"></span>
+								ng-click="removeUserInfo($index, user._id)"
+								class="glyphicon glyphicon-remove cursor text-muted"></span>
 							</td>
 							<td class="text-center">{{user.role | localize:'ar'}}</td>
 							<td class="text-center">{{user.email}}</td>
