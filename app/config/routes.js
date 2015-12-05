@@ -183,6 +183,8 @@ module.exports = function (app, express) {
 		.get('/admin/court/available', ensureAuthenticated, isUser, court.available)
 		.post('/admin/court', ensureAuthenticated, isUserNotClient, court.create)
 		.delete('/admin/court/:id', ensureAuthenticated, isUserNotClient, court.silentRemove)
+		//Report
+		.get('/admin/report', ensureAuthenticated, isAdmin, report.index)
 		//clients
 		.get('/admin/client', ensureAuthenticated, isUserNotClient, client.index)
 		.get('/admin/client/available', ensureAuthenticated, isUserNotClient, client.available)
@@ -260,8 +262,6 @@ module.exports = function (app, express) {
 		.post('/calendar/:id/done', ensureAuthenticated, isUserNotClient, calendar.markDone)
 		.post('/calendar/:id/reject', ensureAuthenticated, isUserNotClient, calendar.rejectTask)
 		.post('/calendar/:id/softRemove', ensureAuthenticated, isUserNotClient, calendar.softRemove)
-		//Report
-		.get('/report', ensureAuthenticated, isAdmin, report.index)
 	);
 
 	//404 Route/Page has not been found
