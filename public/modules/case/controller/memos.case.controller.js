@@ -9,7 +9,6 @@ angular.module('caseModule').controller('memosCaseController', ['$scope', 'conne
 	$scope.memosPending = function(){
 		connectCaseFactory.query({'action': 'memos', 'subaction': 'pending'}, function(response){
 			$scope.memos = response;
-			console.log(response);
 			$scope.activeClosed = '';
 			$scope.activePending = 'active';
 		}, function(error){

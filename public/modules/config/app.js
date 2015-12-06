@@ -2,7 +2,7 @@
 
 // intitiate the app and Inject all of the app module dependencies
 //configure the routes
-var yousufalsharif = angular.module('yousufalsharif', ['ngAnimate', 'adminModule', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'updateTypesModule', 'consultantModule', 'chart.js', 'AngularPrint', 'employeeModule', 'calendarModule', 'uploadModule', 'caseTypeModule']);
+var yousufalsharif = angular.module('yousufalsharif', ['ngAnimate', 'adminModule', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'updateTypesModule', 'consultantModule', 'chart.js', 'AngularPrint', 'employeeModule', 'calendarModule', 'uploadModule', 'caseTypeModule', 'reportModule']);
 
 //RouteScopes & Routes Configurations 
 yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'ChartJsProvider', function ($urlRouterProvider, $stateProvider, $locationProvider, ChartJsProvider) {
@@ -15,7 +15,7 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
     	datasetFill: true,
     	skipLabels: true
     });
- 
+
 	$urlRouterProvider.otherwise('notfound');
 	$stateProvider
 		.state('notfound',{
@@ -65,76 +65,136 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			controller: 'profileUserController',
 			cache: false
 		})
+		// .state('admin', {
+		// 	url: '/admin',
+		// 	templateUrl: 'public/modules/admin/view/index.admin.view.html',
+		// 	controller: 'indexAdminController',
+		// 	cache: false
+		// })
 		.state('admin', {
 			url: '/admin',
-			templateUrl: 'public/modules/admin/view/index.admin.view.html',
-			controller: 'indexAdminController',
-			cache: false
+			cache: false,
+			abstract: true,
+			templateUrl: 'public/modules/admin/view/index.admin.view.html'
+		})
+		.state('admin.report', {
+			url: '/report',
+			cache: false,
+			views: {
+				'page': {
+					templateUrl: 'public/modules/report/view/index.report.view.html',
+					controller: 'indexReportController'
+				}
+			}
 		})
 		.state('admin.memos', {
 			url: '/memos',
-			templateUrl: 'public/modules/case/view/memos.case.view.html',
-			controller: 'memosCaseController',
-			cache: false
+			cache: false,
+			views: {
+				'page': {
+					templateUrl: 'public/modules/case/view/memos.case.view.html',
+					controller: 'memosCaseController'
+				}
+			}
 		})
 		.state('admin.users', {
 			url: '/users',
-			templateUrl: 'public/modules/admin/view/users.admin.view.html',
-			controller: 'usersAdminController',
-			cache: false
+			cache: false,
+			views: {
+				'page': {
+					templateUrl: 'public/modules/admin/view/users.admin.view.html',
+					controller: 'usersAdminController'
+				}
+			}
 		})
 		.state('admin.defendants', {
 			url: '/defendant',
-			templateUrl: 'public/modules/admin/view/defendant.admin.vew.html',
-			controller: 'defendantAdminController',
-			cache: false
+			cache: false,
+			views: {
+				'page': {
+					templateUrl: 'public/modules/admin/view/defendant.admin.vew.html',
+					controller: 'defendantAdminController'
+				}
+			}
 		})
 		.state('admin.cases', {
 			url: '/cases',
-			templateUrl: 'public/modules/case/view/index.case.view.html',
-			controller: 'indexCaseController',
-			cache: false
+			cache: false,
+			views: {
+				'page': {
+					templateUrl: 'public/modules/case/view/index.case.view.html',
+					controller: 'indexCaseController'
+				}
+			}
 		})
 		.state('admin.sessions', {
 			url: '/sessions',
-			templateUrl: 'public/modules/case/view/sessions.case.view.html',
-			controller: 'sessionsCaseController',
-			cache: false
+			cache: false,
+			views: {
+				'page': {
+					templateUrl: 'public/modules/case/view/sessions.case.view.html',
+					controller: 'sessionsCaseController'
+				}
+			}
 		})
 		.state('admin.settings', {
 			url: '/settings',
-			templateUrl: 'public/modules/admin/view/settings.admin.view.html',
-			controller: 'settingsAdminController'
+			views: {
+				'page': {
+					templateUrl: 'public/modules/admin/view/settings.admin.view.html',
+					controller: 'settingsAdminController'
+				}
+			}
 		})
 		.state('admin.settings.courts', {
 			url: '/courts',
-			templateUrl: 'public/modules/admin/view/courts.admin.view.html',
-			controller: 'courtsAdminController',
-			cache: false
+			cache: false,
+			views : {
+				'page': {
+					templateUrl: 'public/modules/admin/view/courts.admin.view.html',
+					controller: 'courtsAdminController'
+				}
+			}
 		})
 		.state('admin.settings.caseRole', {
 			url: '/caserole',
-			templateUrl: 'public/modules/admin/view/caserole.admin.view.html',
-			controller: 'caseRoleAdminController',
-			cache: false
+			cache: false,
+			views: {
+				'page': {
+					templateUrl: 'public/modules/admin/view/caserole.admin.view.html',
+					controller: 'caseRoleAdminController'
+				}
+			}
 		})
 		.state('admin.settings.updatetypes', {
 			url: '/updatetypes',
-			templateUrl: 'public/modules/admin/view/update.admin.view.html',
-			controller: 'updateTypesAdminController',
-			cache: false
+			cache: false,
+			views: {
+				'page': {
+					templateUrl: 'public/modules/admin/view/update.admin.view.html',
+					controller: 'updateTypesAdminController'		
+				}
+			}
 		})
 		.state('admin.settings.casetypes', {
 			url: '/casetypes',
-			templateUrl: 'public/modules/admin/view/casetypes.admin.view.html',
-			controller: 'caseTypeAdminController',
-			cache: false
+			cache: false,
+			views: {
+				'page': {
+					templateUrl: 'public/modules/admin/view/casetypes.admin.view.html',
+					controller: 'caseTypeAdminController'					
+				}
+			}
 		})
 		.state('admin.tasks', {
 			url: '/tasks',
-			templateUrl: 'public/modules/calendar/view/index.calendar.view.html',
-			controller: 'indexCalendarController',
-			cache: false
+			cache: false,
+			views: {
+				'page': {
+					templateUrl: 'public/modules/calendar/view/index.calendar.view.html',
+					controller: 'indexCalendarController'					
+				}
+			}
 		})
 		.state('employee', {
 			url: '/employee',
