@@ -4,10 +4,12 @@ angular.module('caseModule').controller('memosCaseController', ['$scope', 'conne
 	$scope.user = registerUserConfigFactory.getUser();
 	if($scope.user === false) $state.go('signin');
 	$scope.isAdmin = ($scope.user.role === 'admin')? true: false;
+	$scope.searchInfo = {};
 
 	$scope.memosPending = function(){
 		connectCaseFactory.query({'action': 'memos', 'subaction': 'pending'}, function(response){
 			$scope.memos = response;
+			console.log(response);
 			$scope.activeClosed = '';
 			$scope.activePending = 'active';
 		}, function(error){

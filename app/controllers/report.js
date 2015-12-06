@@ -26,7 +26,7 @@ module.exports.index = function (req, res) {
 			dateInput(req.params.dateFrom, req.params.dateTo, function (info) {
 				date.from = info.from;
 				date.to = info.to;
-			}, 'month', 10);
+			}, 'months', 10);
 
 			var dateInfo = {};
 			var range = moment.range(date.from, date.to);

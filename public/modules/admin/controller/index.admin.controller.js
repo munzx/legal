@@ -2,18 +2,18 @@
 
 angular.module('adminModule').controller('indexAdminController', ['$scope', '$state', 'registerUserConfigFactory', '$timeout', 'connectAdminFactory', function ($scope, $state, registerUserConfigFactory, $timeout, connectAdminFactory) {
 	$scope.user = registerUserConfigFactory.getUser();
-	$scope.searchInfo = {};
+	$scope.report = {};
 
 	var getReport = function () {
-		connectAdminFactory.get({'page': 'report', "from": $scope.searchInfo.searchDateFrom, "to": $scope.searchInfo.searchDateTo},
+		connectAdminFactory.get({'page': 'report', "from": $scope.report.searchDateFrom, "to": $scope.report.searchDateTo},
 		function (response) {
 			var info = response.info;
 			var dateInfo = response.dateInfo;
 			var dateInput = response.dateInput;
 
 			//set the search dates
-			$scope.searchInfo.searchDateFrom = new Date(dateInput.from);
-			$scope.searchInfo.searchDateTo = new Date(dateInput.to);
+			$scope.report.searchDateFrom = new Date(dateInput.from);
+			$scope.report.searchDateTo = new Date(dateInput.to);
 
 
 			//Acivities

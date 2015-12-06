@@ -3,12 +3,12 @@
 var moment = require('moment');
 
 module.exports = function dateInput (dateFrom, dateTo, callback, dateType, period) {
-	if(dateType != 'month' && dateType != 'year' && dateType != 'day'){
-		dateType = 'day';
+	if(dateType != 'months' && dateType != 'years' && dateType != 'days'){
+		dateType = 'days';
 	}
 
 	if(typeof period !== 'number'){
-		if(dateType == 'day'){
+		if(dateType == 'days'){
 			period = 28;
 		} else {
 			period = 1;
