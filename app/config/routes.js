@@ -184,7 +184,7 @@ module.exports = function (app, express) {
 		.post('/admin/court', ensureAuthenticated, isUserNotClient, court.create)
 		.delete('/admin/court/:id', ensureAuthenticated, isUserNotClient, court.silentRemove)
 		//Report
-		.get('/admin/report', ensureAuthenticated, isAdmin, report.index)
+		.get('/admin/report/:dateFrom?/:dateTo?', ensureAuthenticated, isAdmin, report.index)
 		//clients
 		.get('/admin/client', ensureAuthenticated, isUserNotClient, client.index)
 		.get('/admin/client/available', ensureAuthenticated, isUserNotClient, client.available)

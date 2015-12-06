@@ -7,11 +7,11 @@
 					<div class="form-group">
 						<div class="input-group">
 							<label class="input-group-addon"> من تاريخ </label>
-							<input type="date" ng-model="searchInfo.searchDateFrom" name="searchDateFrom" class="form-control"/>
+							<input type="month" ng-model="searchInfo.searchDateFrom" ng-change="searchReport()" name="searchDateFrom" class="form-control"/>
 						</div>
 						<div class="input-group">
 							<label class="input-group-addon">إلى</label>
-							<input type="date" ng-model="searchInfo.searchDateTo" name="searchDateTo" class="form-control" />
+							<input type="month" ng-model="searchInfo.searchDateTo" ng-change="searchReport()" name="searchDateTo" class="form-control" />
 						</div>
 					</div>
 				</form>
@@ -81,7 +81,7 @@
 		<div class="col-md-10 col-md-offset-1">
 			<h4 class="text-center">النشاط العام</h4>
 			<canvas id="line" class="chart chart-line" data="line.data" labels="line.labels" 
-  				legend="true" series="line.series" click="line.onClick">
+  				legend="true" series="line.series">
   			</canvas> 
 		</div>
 	</div>
