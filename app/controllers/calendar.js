@@ -20,6 +20,26 @@ module.exports.index = function (req, res) {
 	});
 }
 
+module.exports.pending = function (req, res) {
+	calenders.find({'status': 'pending'}).populate('user').populate('responsibility').exec(function(err, result){
+		if(err){
+			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+		} else {
+			res.status(200).jsonp(result);
+		}
+	});
+}
+
+module.exports.closed = function (req, res) {
+	calenders.find({'status': 'close'}).populate('user').populate('responsibility').exec(function(err, result){
+		if(err){
+			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
+		} else {
+			res.status(200).jsonp(result);
+		}
+	});
+}
+
 module.exports.create = function(req, res){
 	var newCalender = new calenders,
 		info = _.extend(newCalender, req.body.info);

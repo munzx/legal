@@ -65,12 +65,6 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			controller: 'profileUserController',
 			cache: false
 		})
-		// .state('admin', {
-		// 	url: '/admin',
-		// 	templateUrl: 'public/modules/admin/view/index.admin.view.html',
-		// 	controller: 'indexAdminController',
-		// 	cache: false
-		// })
 		.state('admin', {
 			url: '/admin',
 			cache: false,

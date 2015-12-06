@@ -258,6 +258,8 @@ module.exports = function (app, express) {
 		.get('/user/search/:phrase', ensureAuthenticated, isUserNotClient, users.search)
 		//Calendar
 		.get('/calendar', ensureAuthenticated, isUserNotClient, calendar.index)
+		.get('/calendar/pending', ensureAuthenticated, isUserNotClient, calendar.pending)
+		.get('/calendar/close', ensureAuthenticated, isUserNotClient, calendar.closed)
 		.post('/calendar', ensureAuthenticated, isUserNotClient, calendar.create)
 		.post('/calendar/:id/done', ensureAuthenticated, isUserNotClient, calendar.markDone)
 		.post('/calendar/:id/reject', ensureAuthenticated, isUserNotClient, calendar.rejectTask)

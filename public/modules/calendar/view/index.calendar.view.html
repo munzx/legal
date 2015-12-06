@@ -68,7 +68,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="info in filterdTasks | dateRangeConfigFilter:'deadLine':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey"
+							<tr ng-repeat="info in tasks | dateRangeConfigFilter:'deadLine':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey"
 							class="no-animate cursor" 
 							ng-class="{'success': info.status == 'close', 'warning': info.status == 'pending'}"
 							ng-click="showTaskActions($index)"
