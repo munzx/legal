@@ -181,7 +181,6 @@ angular.module('caseModule').controller('createCaseController', ['$scope', 'case
 	}
 
 	$scope.createNewCase = function(){
-		console.log($scope.courts);
 		$scope.error = false;
 		var caseInfo = {
 			caseType: $scope.newCase.caseType,

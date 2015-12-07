@@ -25,10 +25,10 @@ angular.module('reportModule').controller('indexReportController', ['$scope', '$
 			for(var y in dateInfo){
 				for(var m in dateInfo[y]){
 					$scope.line.labels.push(y + "/" + m);
-					$scope.line.data[0].push(dateInfo[y][m].memo);
-					$scope.line.data[1].push(dateInfo[y][m].session);
-					$scope.line.data[2].push(dateInfo[y][m].case);
-					$scope.line.data[3].push(dateInfo[y][m].task);
+					$scope.line.data[3].push(dateInfo[y][m].memo);
+					$scope.line.data[2].push(dateInfo[y][m].session);
+					$scope.line.data[1].push(dateInfo[y][m].case);
+					$scope.line.data[0].push(dateInfo[y][m].task);
 				}
 			}
 
