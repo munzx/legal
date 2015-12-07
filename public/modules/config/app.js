@@ -243,6 +243,18 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 			controller: 'indexCaseController',
 			cache: false
 		})
+		.state('client', {
+			url: '/client',
+			templateUrl: 'public/modules/client/view/dashboard.client.view.html',
+			controller: 'dashboardClientController',
+			cache: false
+		})
+		.state('client.case', {
+			url: '/case',
+			templateUrl: 'public/modules/case/view/index.case.view.html',
+			controller: 'indexCaseController',
+			cache: false
+		});
 
 		$locationProvider.html5Mode(true).hashPrefix('!');
 }])

@@ -5,7 +5,7 @@
 				<div class="container">
 					<form class="form-inline">
 						<div class="form-group">
-							<div class="input-group">
+							<div class="input-group" ng-if="user.role != 'client' ">
 								<button class="btn btn-md btn-info icon-right" ng-click="showNewCaseForm()" style="margin-top:-2px;">
 									<span class="glyphicon glyphicon-plus"></span> إضافة قضية جديدة
 								</button>
@@ -60,7 +60,7 @@
 						ng-mouseleave="show = false"
 						class="no-animate">
 						<td class="text-center">
-							<span ng-show="!case.removed && show"
+							<span ng-show="!case.removed && show && user.role != 'client'"
 							class="glyphicon glyphicon-remove cursor text-muted"
 							ng-click="removeCase($index, case._id)">
 						</span>

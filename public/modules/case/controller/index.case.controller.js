@@ -7,9 +7,16 @@ angular.module('adminModule').controller('indexCaseController', ['$scope', 'conn
 	//scope dates
 	$scope.searchInfo = {};
 
-	connectCaseFactory.query({}, function(response){
-		$scope.cases = response;
-	});
+	//clients can see thier cases only
+	if($scope.user.role !== 'client'){
+		connectCaseFactory.query({}, function(response){
+			$scope.cases = response;
+		});
+	} else {
+		connectCaseFactory.query({'action': 'client'}, function(response){
+			$scope.cases = response;
+		});
+	}
 
 	$scope.searchInOptions = ['client', 'defendant', 'consultant', 'case', 'update', 'session'];
 
@@ -64,6 +71,9 @@ angular.module('adminModule').controller('indexCaseController', ['$scope', 'conn
 			resolve: {
 				selectedCase: function(){
 					return $scope.cases[index];
+				},
+				user: function () {
+					return $scope.user;
 				}
 			}
 		});

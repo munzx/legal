@@ -197,7 +197,7 @@ module.exports = function (app, express) {
 		.get('/admin/employee/nonlegal/', ensureAuthenticated, isUserNotClient, employee.nonlegal) //no consultants or admins
 		.get('/admin/employee/nonlegal/available', ensureAuthenticated, isUserNotClient, employee.nonlegalAvailable) //no consultants or admins
 		//case
-		.get('/case', ensureAuthenticated, isUser, courtCase.index)
+		.get('/case', ensureAuthenticated, isUserNotClient, courtCase.index)
 		.get('/case/available', ensureAuthenticated, isUser, courtCase.caseAvailable)
 		.post('/case', ensureAuthenticated, isUserNotClient, courtCase.create)
 		.delete('/case/:id', ensureAuthenticated, isUserNotClient, courtCase.softRemove)
@@ -215,6 +215,7 @@ module.exports = function (app, express) {
 		.get('/case/memos/closed', ensureAuthenticated, isUserNotClient, courtCase.memosClosed)
 		.post('/case/memos/insertconsultant', ensureAuthenticated, isAdmin, courtCase.insertMemoConsultant)
 		.get('/case/consultant/:id/memos', ensureAuthenticated, isConsultant, courtCase.consultantMemos)
+		.get('/case/client', ensureAuthenticated, isClient, courtCase.getCase)
 		.post('/case/client', ensureAuthenticated, isUserNotClient, courtCase.insertClient)
 		.post('/case/client/new', ensureAuthenticated, isUserNotClient, courtCase.insertNewClient)
 		.delete('/case/:caseId/client/:clientId', ensureAuthenticated, isUserNotClient, courtCase.clientSofttRemove)

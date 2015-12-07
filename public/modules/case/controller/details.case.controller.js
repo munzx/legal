@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('caseModule').controller('detailsCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', '$modal', function ($scope, connectCaseFactory, selectedCase, $modalInstance, $modal) {
+angular.module('caseModule').controller('detailsCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', '$modal', 'user', function ($scope, connectCaseFactory, selectedCase, $modalInstance, $modal, user) {
 	$scope.selectedCase = selectedCase;
+	$scope.user = user;
 
 	$scope.closeModal = function(){
 		$modalInstance.dismiss('cancel');

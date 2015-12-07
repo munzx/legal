@@ -22,6 +22,16 @@ module.exports.index = function (req, res) {
 	});
 }
 
+module.exports.getCase = function (req, res) {
+	cases.find({'client.user': req.user._id}).sort('-created').populate('user').populate('court').populate('consultant').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
+		if(err){
+			res.status(500).jsonp({message: err});
+		} else {
+			res.status(200).jsonp(result);
+		}
+	});
+}
+
 module.exports.caseAvailable = function (req, res) {
 	cases.find({removed: 'false'}).sort('-created').populate('user').populate('court').populate('consultant').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
 		if(err){

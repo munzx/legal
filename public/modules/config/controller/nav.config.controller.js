@@ -33,6 +33,10 @@ angular.module('yousufalsharif').controller('navConfig', ['$rootScope', '$scope'
 					//navigation menu
 					$scope.nav = 'public/modules/config/view/consultant.nav.html';
 					break;
+				case 'client':
+					//navigation menu
+					$scope.nav = 'public/modules/config/view/client.nav.html';
+					break;
 				default :
 					//navigation menu
 					$scope.nav = 'public/modules/config/view/user.nav.html';

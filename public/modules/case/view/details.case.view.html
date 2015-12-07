@@ -16,7 +16,7 @@
 					</div>
 				</div>
 				<div class="col-md-6">
-					<div class="icon-right">
+					<div class="icon-right" ng-if="user.role != 'client'">
 						<button ng-click="showUploads()"
 								class="btn btn-sm btn-default col-lg-3 col-md-3 col-sm-3 col-xs-12">
 							المستندات <span class="glyphicon glyphicon-folder-close"></span>
@@ -61,7 +61,7 @@
 						</tr>
 						<tr ng-repeat="client in selectedCase.client" class="no-animate" class="text-center" ng-mouseenter="show = true" ng-mouseleave="show = false">
 							<td colspan="1">
-								<span ng-show="show && !client.removed" style="float: left;" class="text-muted">
+								<span ng-show="show && !client.removed && user.role != 'client'" style="float: left;" class="text-muted">
 									<span class="glyphicon glyphicon-remove cursor" ng-click="showRemoveClientConfirmForm($index)"></span>
 								</span>
 							</td>
@@ -82,7 +82,7 @@
 						</tr>
 						<tr ng-repeat="defendant in selectedCase.defendant" class="no-animate" class="no-animate" class="text-center" ng-mouseenter="show = true" ng-mouseleave="show = false">
 							<td>
-								<span ng-show="show && !defendant.removed" style="float: left;" class="text-muted">
+								<span ng-show="show && !defendant.removed && user.role != 'client'" style="float: left;" class="text-muted">
 									<span class="glyphicon glyphicon-remove cursor" ng-click="showRemoveDefendantConfirmForm($index)"></span>
 								</span>
 							</td>
@@ -135,7 +135,7 @@
 								class="no-animate" ng-mouseenter="show = true"
 								ng-mouseleave="show = false">
 								<td class=" text-center">
-									<i ng-show="show && updateInfo.removed == false"
+									<i ng-show="show && updateInfo.removed == false && user.role != 'client'"
 										class="glyphicon glyphicon-remove text-muted cursor"
 										ng-click="softRemoveUpdate($index)"></i>
 								</td>
