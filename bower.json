@@ -25,7 +25,8 @@
     "angular-ui-router": "~0.2.13",
     "angular-chart.js": "~0.7.0",
     "angular-animate": "~1.4.0",
-    "angular-print": "~0.3.7"
+    "angular-print": "~0.3.7",
+    "angular-socket-io": "~0.7.0"
   },
   "resolutions": {
     "angular": "~1.4.0"
