@@ -36,7 +36,7 @@ module.exports = function () {
 
 	//exclude password
 	passport.deserializeUser(function(id, done){
-		user.findOne({_id: id}, {password: 0}).exec(function(err, user){
+		user.findOne({_id: id, 'removed': false}, {password: 0}).exec(function(err, user){
 			if(err){
 				done(err);
 			} else {
