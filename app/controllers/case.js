@@ -86,6 +86,7 @@ module.exports.insertCaseUpdate = function(req, res){
 					updateType: req.body.update.name,
 					updateId: req.body.update.session.updateId,
 					updateInfo: req.body.update.info,
+					deadline:  req.body.update.deadline,
 					memoRequired: req.body.update.memoRequired,
 					sessionRequired: req.body.update.sessionRequired,
 					user: req.user._id
@@ -118,13 +119,13 @@ module.exports.insertCaseUpdate = function(req, res){
 					});
 				}
 
-				//if the memo is required then make sure "memoRequiredDate" is defined
+				//if the memo is required then make sure "deadline" is defined
 				if(updateInfo.memoRequired){
 					updateInfo.memoId = req.body.update.memoId || caseInfo.caseNumber;
 					updateInfo.memoType = req.body.update.memoType || caseInfo.caseType;
-					updateInfo.memoRequiredDate = req.body.update.memoRequiredDate;
+					updateInfo.deadline = req.body.update.deadline;
 
-					if(!updateInfo.memoRequiredDate || !updateInfo.memoId || !updateInfo.memoType){
+					if(!updateInfo.deadline || !updateInfo.memoId || !updateInfo.memoType){
 						isValid = false;
 					}
 				}
@@ -385,7 +386,7 @@ module.exports.memosPending = function(req, res){
 							updateInfo.memoType = update.memoType;
 							updateInfo.memoConsultant = update.memoConsultant;
 							updateInfo.memoRequired = update.memoRequired;
-							updateInfo.memoRequiredDate = update.memoRequiredDate;
+							updateInfo.deadline = update.deadline;
 							updateInfo.memoStatus = update.memoStatus;
 							updateInfo.updateDate = update.newDate;
 							updateInfo.updateTime = update.newTime;
@@ -432,7 +433,7 @@ module.exports.memosClosed = function(req, res){
 							updateInfo.memoType = update.memoType;
 							updateInfo.memoConsultant = update.memoConsultant;
 							updateInfo.memoRequired = update.memoRequired;
-							updateInfo.memoRequiredDate = update.memoRequiredDate;
+							updateInfo.deadline = update.deadline;
 							updateInfo.memoStatus = update.memoStatus;
 							updateInfo.updateDate = update.newDate;
 							updateInfo.updateTime = update.newTime;
@@ -480,7 +481,7 @@ module.exports.consultantMemos = function(req, res){
 								updateInfo.caseNumber = caseInfo.caseNumber;
 								updateInfo.memoConsultant = update.memoConsultant;
 								updateInfo.memoRequired = update.memoRequired;
-								updateInfo.memoRequiredDate = update.memoRequiredDate;
+								updateInfo.deadline = update.deadline;
 								updateInfo.memoStatus = update.memoStatus;
 								updateInfo.updateDate = update.newDate;
 								updateInfo.updateTime = update.newTime;

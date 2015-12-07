@@ -55,11 +55,11 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="memo in memos | dateRangeConfigFilter:'memoRequiredDate':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey" class="no-animate">
+							<tr ng-repeat="memo in memos | dateRangeConfigFilter:'deadline':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey" class="no-animate">
 								<td class="text-center">{{memo.memoStatus | localize:'ar'}}</td>
 								<td class="text-center">
-									{{memo.memoRequiredDate | date: 'yyyy-MM-dd'}}
-									<p ng-hide="memo.memoRequiredDate">----</p>
+									{{memo.deadline | date: 'yyyy-MM-dd'}}
+									<p ng-hide="memo.deadline">----</p>
 								</td>
 								<td class="text-center">
 									<a href="" ng-show="isAdmin" ng-click="showUpdateConsultantForm($index)">{{fullName(memo.memoConsultant) || 'empty'}}</a>

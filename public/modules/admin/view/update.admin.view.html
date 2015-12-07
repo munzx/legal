@@ -13,6 +13,7 @@
 				<thead>
 					<tr>
 						<th class="text-center"><span class="glyphicon glyphicon-remove cursor text-muted"></span></th>
+						<th class="text-center">موعد نهائي</th>
 						<th class="text-center">تحديد جلسة</th>
 						<th class="text-center">إضافة ملاحظة</th>
 						<th class="text-center">عنوان الطلب</th>
@@ -31,6 +32,7 @@
 								class="glyphicon glyphicon-remove cursor">
 							</span>
 						</td>
+						<td class="text-center">{{update.requireDeadline | localize: 'ar'}}</td>
 						<td class="text-center">{{update.requireNextSession | localize: 'ar'}}</td>
 						<td class="text-center">{{update.requireRemarks | localize: 'ar'}}</td>
 						<td class="text-center">

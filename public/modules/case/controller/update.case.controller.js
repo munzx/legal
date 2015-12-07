@@ -49,7 +49,8 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 			'requiredIdTitle': $scope.caseUpdates[$scope.newUpdate.name].requiredIdTitle,
 			'requireNextSession':$scope.caseUpdates[$scope.newUpdate.name].requireNextSession,
 			'requireRemarks': $scope.caseUpdates[$scope.newUpdate.name].requireRemarks,
-			'requestMemo': $scope.caseUpdates[$scope.newUpdate.name].requestMemo
+			'requestMemo': $scope.caseUpdates[$scope.newUpdate.name].requestMemo,
+			'requireDeadline': $scope.caseUpdates[$scope.newUpdate.name].requireDeadline
 		}
 	}
 
@@ -73,7 +74,7 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		}
 
 		//if memo is required
-		//the memo date is passed through UI "memoRequiredDate"
+		//the memo deadline is passed through UI "deadline"
 		if($scope.newUpdate.memoRequired){
 			if($scope.caseUpdatesWithUpdateId[$scope.newUpdate.memoUpdateIndex]){
 				$scope.newUpdate.memoId = $scope.caseUpdatesWithUpdateId[$scope.newUpdate.memoUpdateIndex].updateId;
@@ -101,6 +102,7 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		$scope.showNextSessionBox =  options.requireNextSession || '';
 		$scope.showRemarks =  options.requireRemarks || '';
 		$scope.showMemoBox = options.requestMemo || '';
+		$scope.showRequireDeadline = options.requireDeadline || '';
 		//if the 'requireId' is empty then make it empty instead of false to avoid error
 		//after the update , not sure if the following line is needed
 		$scope.newUpdate.session.updateId = ($scope.showRequireId === false)? $scope.newUpdate.session.updateId: '';

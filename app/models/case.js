@@ -124,10 +124,6 @@ var caseSchema = mongoose.Schema({
 			type: Boolean,
 			default: false
 		},
-		memoRequiredDate: {
-			type: Date,
-			default: ''
-		},
 		memoId: {
 			type: String,
 			default: ''
@@ -141,6 +137,10 @@ var caseSchema = mongoose.Schema({
 			default: 'pending',
 			enum: ['closed', 'pending', 'done'],
 			lowercase: true
+		},
+		deadline: {
+			type: Date,
+			default: ''
 		},
 		memoConsultant: [{
 			type: Schema.Types.ObjectId,

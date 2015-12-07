@@ -34,6 +34,10 @@ var updateTypesSchema = new Schema({
 		type: Boolean,
 		default: false
 	},
+	requireDeadline: {
+		type: Boolean,
+		default: false
+	},
 	requireRemarks: {
 		type: Boolean,
 		default: false	
