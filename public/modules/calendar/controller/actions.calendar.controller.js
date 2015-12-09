@@ -34,8 +34,6 @@ angular.module('calendarModule').controller('actionsCalendarController', ['$scop
 
 					$scope.confrimYes = function(){
 						connectCalendarFactory.save({'id': task._id, 'subaction': 'done'}, {'remarks': remarks}, function(response){
-							task.status = 'close';
-							task.remarks = response.remarks;
 							$modalInstance.dismiss('cancel');
 							parentModalInstance.dismiss('cancel');
 						}, function(error){
@@ -74,8 +72,6 @@ angular.module('calendarModule').controller('actionsCalendarController', ['$scop
 
 					$scope.confrimYes = function(){
 						connectCalendarFactory.save({'id': task._id, 'subaction': 'softRemove'}, {'remarks': remarks}, function(response){
-							task.removed = true;
-							task.remarks = response.remarks;
 							$modalInstance.dismiss('cancel');
 							parentModalInstance.dismiss('cancel');
 						}, function(error){
@@ -114,8 +110,6 @@ angular.module('calendarModule').controller('actionsCalendarController', ['$scop
 
 					$scope.confrimYes = function(){
 						connectCalendarFactory.save({'id': task._id, 'subaction': 'reject'}, {'remarks': remarks}, function(response){
-							task.rejected = true;
-							task.remarks = response.remarks;
 							$modalInstance.dismiss('cancel');
 							parentModalInstance.dismiss('cancel');
 						}, function(error){

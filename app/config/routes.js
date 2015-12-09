@@ -29,7 +29,7 @@ report = require('../controllers/report'),
 passport = require('passport'),
 authLocal = require('./auth/local.strategy');
 
-module.exports = function (app, express) {
+module.exports = function (app, express, io) {
 	//Assign variable to rename the PASSPORT local authentication strategy
 	var Auth = passport.authenticate('local');
 	//check if the user is authinticated
@@ -125,6 +125,12 @@ module.exports = function (app, express) {
 		}
 	}
 
+	// Make io accessible to our router
+	app.use(function(req, res, next){
+		req.io = io;
+		next();
+	});
+
 	//Index page
 	app.get('/', function(req, res){
 		res.render('../public/modules/config/view/index', {
@@ -160,11 +166,11 @@ module.exports = function (app, express) {
 	});
 
 	//set up routing to use version 1
-	var v1 = express.Router();
-	app.use('/api', v1);
+	var api = express.Router();
+	app.use('/api', api);
 
 	//register version and use it
-	v1.use('/v1', express.Router()
+	api.use('/v1', express.Router()
 	//test zone
 	.get('/test', test.index)
 	//Cms

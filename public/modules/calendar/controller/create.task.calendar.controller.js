@@ -20,7 +20,6 @@ angular.module('calendarModule').controller('createTaskCalendarController', ['$s
 		//get the selected user from users by index
 		$scope.info.responsibility = $scope.users[$scope.info.responsibilityIndex]._id;
 		connectCalendarFactory.save({}, {'info': $scope.info}, function(response){
-			tasks.push(response);
 			$modalInstance.dismiss('cancel');
 		}, function(error){
 			console.log(error);

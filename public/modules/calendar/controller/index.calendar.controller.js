@@ -1,9 +1,30 @@
 'use strict';
 
-angular.module('calendarModule').controller('indexCalendarController', ['$scope', 'connectCalendarFactory', '$modal', 'registerUserConfigFactory', '$filter', function ($scope, connectCalendarFactory, $modal, registerUserConfigFactory, $filter) {
+angular.module('calendarModule').controller('indexCalendarController', ['$scope', 'connectCalendarFactory', '$modal', 'registerUserConfigFactory', '$filter', 'socketConfigFactory', 'helperConfigFactory', function ($scope, connectCalendarFactory, $modal, registerUserConfigFactory, $filter, socketConfigFactory, helperConfigFactory) {
+	//init scope, for some reason if we update the tasks later and if we did not init this it wont update!
+	$scope.tasks = {};
+
 	connectCalendarFactory.query({}, function(response){
 		$scope.tasks = response;
 	});
+
+	//listen to tasks
+	socketConfigFactory.on('tasks.add', function (task) {
+		$scope.tasks.push(task);
+	});
+
+	//listen to tasks
+	socketConfigFactory.on('tasks.update', function (task) {
+		var getIndex = helperConfigFactory.map($scope.tasks, function (taskInfo) {
+			if(taskInfo._id.toString() == task._id.toString()){
+				return true;
+			}
+		});
+		if(getIndex){
+			$scope.tasks[getIndex] = task;
+		}
+	});
+
 
 	$scope.user = registerUserConfigFactory.getUser();
 

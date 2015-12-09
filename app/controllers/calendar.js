@@ -56,6 +56,7 @@ module.exports.create = function(req, res){
 					if(err){
 						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 					} else {
+						req.io.emit('tasks.add', info);
 						res.status(200).jsonp(info);
 					}
 				});
@@ -77,6 +78,7 @@ module.exports.markDone = function(req, res){
 						if(err){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
+							req.io.emit('tasks.update', done);
 							res.status(200).jsonp(done);
 						}
 					});
@@ -104,6 +106,7 @@ module.exports.softRemove = function(req, res){
 						if(err){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
+							req.io.emit('tasks.update', done);
 							res.status(200).jsonp(done);
 						}
 					});
@@ -130,6 +133,7 @@ module.exports.rejectTask = function(req, res){
 						if(err){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
+							req.io.emit('tasks.update', done);
 							res.status(200).jsonp(done);
 						}
 					});
