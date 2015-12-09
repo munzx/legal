@@ -316,7 +316,7 @@ module.exports.byDate = function(req, res){
 		dataDates = result;
 	});
 
-	cases.find({"sessions.newDate": {"$gte": dataDates.from, "$lt": dataDates.to}}).populate('sessions.lawyer').exec(function(err, result){
+	cases.find({"sessions.newDate": {"$gte": dataDates.from, "$lte": dataDates.to}}).populate('sessions.lawyer').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
