@@ -5,6 +5,14 @@ angular.module('updateTypesModule').controller('indexUpdateTypesController', ['$
 		$modalInstance.dismiss('cancel');
 	}
 
+	$scope.updateType = {};
+
+	$scope.falseOnMemoRequest = function () {
+		if($scope.updateType.requestMemo){
+			$scope.updateType.requireDeadline = true;
+		}
+	}
+
 	$scope.createUpdateType = function(){
 		connectUpdateTypeFactory.save({}, {'updatetypesInfo': $scope.updateType}, function(response){
 			updatetypes.push(response);
