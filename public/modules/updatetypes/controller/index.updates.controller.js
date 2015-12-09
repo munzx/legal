@@ -10,6 +10,7 @@ angular.module('updateTypesModule').controller('indexUpdateTypesController', ['$
 	$scope.falseOnMemoRequest = function () {
 		if($scope.updateType.requestMemo){
 			$scope.updateType.requireDeadline = true;
+			return true;
 		}
 	}
 
