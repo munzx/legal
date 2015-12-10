@@ -7,6 +7,7 @@ var express = require('express'),
 	port = process.env.PORT || 3000,
 	io = require('socket.io')(http);
 
+
 //Set default node envoironment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 

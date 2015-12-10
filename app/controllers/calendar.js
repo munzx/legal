@@ -11,7 +11,7 @@ var mongoose = require('mongoose'),
 
 
 module.exports.index = function (req, res) {
-	calenders.find({}).populate('user').populate('responsibility').exec(function(err, result){
+	calenders.find({}).populate('user').populate('responsibility').sort('-created').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {

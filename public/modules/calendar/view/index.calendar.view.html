@@ -70,7 +70,9 @@
 						<tbody>
 							<tr ng-repeat="info in tasks | dateRangeConfigFilter:'deadLine':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey"
 							class="no-animate cursor" 
-							ng-class="{'success': info.status == 'close', 'warning': info.status == 'pending'}"
+							ng-class="{'success': info.status == 'close'
+										, 'warning': (info.status == 'pending') && !isTodayOrMissed(info.deadLine)
+										, 'danger': (info.status == 'pending') && isTodayOrMissed(info.deadLine)}"
 							ng-click="showTaskActions($index)"
 							>
 							<td class="text-center">{{info.status | localize: 'ar'}}</td>

@@ -4,13 +4,22 @@ angular.module('calendarModule').controller('indexCalendarController', ['$scope'
 	//init scope, for some reason if we update the tasks later and if we did not init this it wont update!
 	$scope.tasks = {};
 
+	$scope.isTodayOrMissed = function (deadline) {
+		var deadline = new Date(deadline);
+		var today = new Date();
+		deadline.setHours(0,0,0,0);
+		today.setHours(0,0,0,0);
+		var check = (deadline.getTime() <= today.getTime())? true: false;
+		return check;
+	}
+
 	connectCalendarFactory.query({}, function(response){
 		$scope.tasks = response;
 	});
 
 	//listen to tasks
 	socketConfigFactory.on('tasks.add', function (task) {
-		$scope.tasks.push(task);
+		$scope.tasks.unshift(task);
 	});
 
 	//listen to tasks
@@ -22,6 +31,8 @@ angular.module('calendarModule').controller('indexCalendarController', ['$scope'
 		});
 		if(getIndex){
 			$scope.tasks[getIndex] = task;
+			$scope.tasks[getIndex].removed = task.removed;
+			$scope.tasks[getIndex].rejected = task.rejected;
 		}
 	});
 
