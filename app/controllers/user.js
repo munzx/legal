@@ -68,6 +68,8 @@ module.exports.create = function(req, res){
 						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 					} else {
 						res.status(200).jsonp(user);
+						req.io.emit('user.add', user);
+						req.io.emit('user.available.add', user);
 					}
 				});
 			}
@@ -172,7 +174,9 @@ module.exports.softRemove = function(req, res){
 						if(err){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
-							res.status(200).jsonp(userInfo)
+							res.status(200).jsonp(userInfo);
+						req.io.emit('user.update', userInfo);
+						req.io.emit('user.available.update', userInfo);
 						}
 					});
 				} else {

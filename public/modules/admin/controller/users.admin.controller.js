@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('adminModule').controller('usersAdminController', ['$scope', '$state', 'connectUserFactory', '$modal', 'connectAdminFactory', '$http', 'limitToFilter', function ($scope, $state, connectUserFactory, $modal, connectAdminFactory, $http, limitToFilter) {
+angular.module('adminModule').controller('usersAdminController', ['$scope', '$state', 'connectUserFactory', '$modal', 'connectAdminFactory', '$http', 'limitToFilter', 'socketConfigFactory', 'helperConfigFactory', function ($scope, $state, connectUserFactory, $modal, connectAdminFactory, $http, limitToFilter, socketConfigFactory, helperConfigFactory) {
 
 	//make the clicked link active
 	function activeSubNav(link){
@@ -13,6 +13,25 @@ angular.module('adminModule').controller('usersAdminController', ['$scope', '$st
 		//then active the clicked link
 		$scope.activeLinkArray[link] = 'active';
 	}
+
+
+	//listen to user add
+	socketConfigFactory.on('user.add', function (response) {
+		$scope.users.push(response);
+	});
+
+	//listen to user update
+	socketConfigFactory.on('user.update', function (response) {
+		var getIndex = helperConfigFactory.map($scope.users, function (user) {
+			if(response._id.toString() == user._id.toString()){
+				return true;
+			}
+		});
+		if(getIndex){
+			$scope.users[getIndex] = response;
+		}
+	});
+
 
 	$scope.searchResult = function(val){
 	    return $http.get('/api/v1/user/search/' + val).then(function(response){
@@ -77,7 +96,6 @@ angular.module('adminModule').controller('usersAdminController', ['$scope', '$st
 
 				$scope.confirm = function(){
 					connectUserFactory.delete({'id': userId}, function(response){
-						users[index] = response;
 						$modalInstance.dismiss('cancel');
 					}, function(error){
 						$scope.error = response.data.message;

@@ -8,7 +8,6 @@ angular.module('userModule').controller('indexUserController', ['$scope', 'users
 
 	$scope.createNewUser = function(){
 		connectUserFactory.save({}, {'userInfo': $scope.userInfo}, function(response){
-			users.push(response);
 			$modalInstance.dismiss('cancel');
 			$scope.error = false;
 			$scope.userCreated = true;
