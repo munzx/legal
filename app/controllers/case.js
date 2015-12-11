@@ -607,6 +607,8 @@ module.exports.insertNewClient = function(req, res){
 				if(err){
 					res.status(500).jsonp({message: err});
 				} else {
+						req.io.emit('user.add', result);
+						req.io.emit('user.available.add', result);
 					var clientInfo = {
 						user: result._id,
 						role: req.body.userInfo.clientRole,
@@ -712,6 +714,9 @@ module.exports.insertNewDefendant = function(req, res){
 				if(err){
 					res.status(500).jsonp({message: err});
 				} else {
+					req.io.emit('defendant.add', result);
+					req.io.emit('defendant.available.add', result);
+
 					var defendantInfo = {
 						user: result._id,
 						role: req.body.userInfo.defendantRole,

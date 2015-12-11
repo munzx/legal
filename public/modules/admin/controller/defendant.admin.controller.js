@@ -1,10 +1,27 @@
 'use strict';
 
-angular.module('adminModule').controller('defendantAdminController', ['$scope', 'connectDefendantFactory', '$http', '$modal', function ($scope, connectDefendantFactory, $http, $modal) {
+angular.module('adminModule').controller('defendantAdminController', ['$scope', 'connectDefendantFactory', '$http', '$modal', 'socketConfigFactory', 'helperConfigFactory', function ($scope, connectDefendantFactory, $http, $modal, socketConfigFactory, helperConfigFactory) {
 	connectDefendantFactory.query({}, function(response){
 		$scope.defendants = response;
 	}, function(error){
 		$scope.error = error.data.message;
+	});
+
+	//listen to defendant add
+	socketConfigFactory.on('defendant.add', function (response) {
+		$scope.defendants.push(response);
+	});
+
+	//listen to defendant update
+	socketConfigFactory.on('defendant.update', function (response) {
+		var getIndex = helperConfigFactory.map($scope.defendants, function (defendant) {
+			if(defendant._id.toString() == response._id.toString()){
+				return true;
+			}
+		});
+		if(getIndex){
+			$scope.defendants[getIndex] = response;
+		}
 	});
 
 	$scope.removeDefendant = function(index, id){
@@ -20,7 +37,6 @@ angular.module('adminModule').controller('defendantAdminController', ['$scope', 
 
 				$scope.confirm = function(){
 					connectDefendantFactory.delete({'id': id}, function(response){
-						defendants[index] = response;
 						$modalInstance.dismiss('cancel');
 					}, function(error){
 						$scope.error = error.data.message;

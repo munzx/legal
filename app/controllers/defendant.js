@@ -37,7 +37,9 @@ module.exports.create = function(req, res){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
-			res.status(200).jsonp(result);	
+			res.status(200).jsonp(result);
+			req.io.emit('defendant.add', result);
+			req.io.emit('defendant.available.add', result);
 		}
 	});
 }
@@ -55,6 +57,8 @@ module.exports.softRemove = function(req, res){
 						res.status(500).jsonp({message: error});
 					} else {
 						res.status(200).jsonp(info);
+						req.io.emit('defendant.update', info);
+						req.io.emit('defendant.available.update', info);
 					}
 				});
 			} else {

@@ -133,6 +133,8 @@ module.exports.update = function(req, res){
 			} else {
 				saveInfo();
 			}
+			req.io.emit('user.update', userInfo);
+			req.io.emit('user.available.update', userInfo);
 		} else {
 			res.status(500).jsonp({message: 'User not found'});
 		}
@@ -175,8 +177,8 @@ module.exports.softRemove = function(req, res){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
 							res.status(200).jsonp(userInfo);
-						req.io.emit('user.update', userInfo);
-						req.io.emit('user.available.update', userInfo);
+							req.io.emit('user.update', userInfo);
+							req.io.emit('user.available.update', userInfo);
 						}
 					});
 				} else {
