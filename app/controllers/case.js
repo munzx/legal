@@ -944,6 +944,7 @@ module.exports.removeDoc = function(req, res){
 									res.status(500).jsonp({message: err});
 								} else {
 									res.status(200).jsonp({'docs': docInfo.docs});
+									req.io.emit('cases.update.docs.update', {'docs': docInfo.docs});
 								}
 							});
 						}

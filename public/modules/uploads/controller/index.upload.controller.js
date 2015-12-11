@@ -3,11 +3,14 @@
 angular.module('uploadModule').controller('indexUploadController', ['$scope', '$modalInstance', 'selectedCase', '$modal', '$http', 'connectCaseFactory', 'socketConfigFactory', function ($scope, $modalInstance, selectedCase, $modal, $http, connectCaseFactory, socketConfigFactory) {
 	$scope.selectedCase = selectedCase;
 
-	//listen to update
+	//listen to add
 	socketConfigFactory.on('cases.update.docs', function (response) {
 		$scope.allDocs();
 	});
-
+	//listen to update
+	socketConfigFactory.on('cases.update.docs.update', function (response) {
+		$scope.allDocs();
+	});
 
 	$scope.closeModal = function(){
 		$modalInstance.dismiss('cancel');
