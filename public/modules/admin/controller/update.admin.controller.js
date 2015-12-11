@@ -49,7 +49,6 @@ angular.module('adminModule').controller('updateTypesAdminController', ['$scope'
 
 				$scope.confirm = function(){
 					connectUpdateTypeFactory.delete({'id': id}, function(response){
-						updatetypes[index] = response;
 						$modalInstance.dismiss('cancel');
 					}, function(error){
 						$scope.error = error.data.message;
