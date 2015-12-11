@@ -974,6 +974,7 @@ module.exports.updates = function (req, res) {
 					}
 				});
 				res.status(200).jsonp(serve);
+				req.io.emit('updateType.update', serve);
 			} else {
 				res.status(200).jsonp([]);
 			}
@@ -1000,6 +1001,7 @@ module.exports.updatesAvailable = function (req, res) {
 				res.status(200).jsonp(serve);
 			} else {
 				res.status(200).jsonp([]);
+				req.io.emit('updateType.availableUpdate', serve);
 			}
 		});
 	} else {

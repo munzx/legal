@@ -16,7 +16,6 @@ angular.module('updateTypesModule').controller('indexUpdateTypesController', ['$
 
 	$scope.createUpdateType = function(){
 		connectUpdateTypeFactory.save({}, {'updatetypesInfo': $scope.updateType}, function(response){
-			updatetypes.push(response);
 			$modalInstance.dismiss('cancel');
 		}, function(error){
 			$scope.error = error.data.message;

@@ -1,10 +1,25 @@
 'use strict';
 
-angular.module('adminModule').controller('updateTypesAdminController', ['$scope', '$modal', 'connectUpdateTypeFactory', function ($scope, $modal, connectUpdateTypeFactory) {
-	connectUpdateTypeFactory.query({}, function(response){
-		$scope.updatetypes = response;
-	}, function(error){
-		$scope.error = error.data.message;
+angular.module('adminModule').controller('updateTypesAdminController', ['$scope', '$modal', 'connectUpdateTypeFactory', 'socketConfigFactory', function ($scope, $modal, connectUpdateTypeFactory, socketConfigFactory) {
+	var getUpdateType = function () {
+		connectUpdateTypeFactory.query({}, function(response){
+			$scope.updatetypes = response;
+		}, function(error){
+			$scope.error = error.data.message;
+		});	
+	}
+
+	//init getUpdateType
+	getUpdateType();
+
+	//listen to update
+	socketConfigFactory.on('updateType.update.add', function (response) {
+		$scope.updatetypes.push(response);
+	});
+
+	//listen to update
+	socketConfigFactory.on('updateType.update.update', function (response) {
+		getUpdateType();
 	});
 
 	$scope.showNewUpdateForm = function(){

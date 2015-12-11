@@ -5,7 +5,7 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 	$scope.user = user;
 
 	//listen to update
-	socketConfigFactory.on('cases.update', function (caseInfo) {
+	socketConfigFactory.on('cases.update.add', function (caseInfo) {
 		$scope.selectedCase = caseInfo;
 	});
 

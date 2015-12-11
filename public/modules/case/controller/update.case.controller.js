@@ -1,16 +1,31 @@
 'use strict';
 
-angular.module('caseModule').controller('updateCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', 'connectUpdateTypeFactory', 'connectCaseRoleFactory', 'socketConfigFactory', 'helperConfigFactory', function ($scope, connectCaseFactory, selectedCase, $modalInstance, connectUpdateTypeFactory, connectCaseRoleFactory, socketConfigFactory, helperConfigFactory) {
+angular.module('caseModule').controller('updateCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', 'connectUpdateTypeFactory', 'connectCaseRoleFactory', 'socketConfigFactory', function ($scope, connectCaseFactory, selectedCase, $modalInstance, connectUpdateTypeFactory, connectCaseRoleFactory, socketConfigFactory) {
 	$scope.selectedCase = selectedCase;
 
 	//init newDate
 	$scope.newUpdate = {};
 	$scope.newUpdate.session = {};
 
-	connectUpdateTypeFactory.query({'action': 'available'}, function(response){
-		$scope.caseUpdates = response;
-	}, function(error){
-		$scope.error = error.data.message;
+	var getUpdateType = function () {
+		connectUpdateTypeFactory.query({'action': 'available'}, function(response){
+			$scope.caseUpdates = response;
+		}, function(error){
+			$scope.error = error.data.message;
+		});	
+	}
+
+	//init get getUpdateType
+	getUpdateType();
+
+	//listen to add
+	socketConfigFactory.on('updateType.availableUpdate.add', function (response) {
+		$scope.caseUpdates.push(response);
+	});
+
+	//listen to update
+	socketConfigFactory.on('updateType.availableUpdate.update', function (response) {
+		getUpdateType();
 	});
 
 	connectCaseFactory.query({action: 'updates', actionId: $scope.selectedCase._id, subaction: 'available'}, function (response) {
