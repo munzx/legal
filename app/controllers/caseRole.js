@@ -35,6 +35,8 @@ module.exports.create = function(req, res){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {
 			res.status(200).jsonp(result);
+			req.io.emit('caseRoles.role.add', result);
+			req.io.emit('caseRoles.available.add', result);
 		}
 	});
 }
@@ -52,6 +54,8 @@ module.exports.softRemove = function(req, res){
 						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 					} else {
 						res.status(200).jsonp(result);
+						req.io.emit('caseRoles.role.update', result);
+						req.io.emit('caseRoles.available.update', result);
 					}
 				});
 			} else {

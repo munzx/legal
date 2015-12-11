@@ -15,8 +15,15 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		});	
 	}
 
-	//init get getUpdateType
+	var getCaseRoles = function () {
+		connectCaseRoleFactory.query({action: 'available'}, function(response){
+			$scope.caseRoles = response;
+		});
+	}
+
+	//inits
 	getUpdateType();
+	getCaseRoles();
 
 	//listen to add
 	socketConfigFactory.on('updateType.availableUpdate.add', function (response) {
@@ -28,15 +35,24 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		getUpdateType();
 	});
 
+	//listen to caseRoles add
+	socketConfigFactory.on('caseRoles.available.add', function (response) {
+		$scope.caseRoles.push(response);
+	});
+
+	//listen to caseRoles update
+	socketConfigFactory.on('caseRoles.available.update', function (response) {
+		getCaseRoles();
+		console.log('Bism Allah , here is the caserole updates')
+	});
+
+
 	connectCaseFactory.query({action: 'updates', actionId: $scope.selectedCase._id, subaction: 'available'}, function (response) {
 		$scope.caseUpdatesWithUpdateId = response;
 	}, function(error){
 		$scope.error = error.data.message;
 	});
 
-	connectCaseRoleFactory.query({action: 'available'}, function(response){
-		$scope.caseRoles = response;
-	});
 
 	//save the clients and the defendants current info
 	$scope.udatedClientInfo = angular.copy(selectedCase.client);

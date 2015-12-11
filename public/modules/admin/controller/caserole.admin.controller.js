@@ -1,10 +1,25 @@
 'use strict';
 
-angular.module('adminModule').controller('caseRoleAdminController', ['$scope', 'connectCaseRoleFactory', '$modal', function ($scope, connectCaseRoleFactory, $modal) {
-	connectCaseRoleFactory.query({}, function(response){
-		$scope.caseRoles = response;
-	}, function(error){
-		$scope.error = error.data.message;
+angular.module('adminModule').controller('caseRoleAdminController', ['$scope', 'connectCaseRoleFactory', '$modal', 'socketConfigFactory', function ($scope, connectCaseRoleFactory, $modal, socketConfigFactory) {
+	var getCaseRoles = function () {
+		connectCaseRoleFactory.query({}, function(response){
+			$scope.caseRoles = response;
+		}, function(error){
+			$scope.error = error.data.message;
+		});		
+	}
+
+	//init caseroles
+	getCaseRoles();
+
+	//listen to caseRoles add
+	socketConfigFactory.on('caseRoles.role.add', function (response) {
+		$scope.caseRoles.push(response);
+	});
+
+	//listen to caseRoles update
+	socketConfigFactory.on('caseRoles.role.update', function (response) {
+		getCaseRoles();
 	});
 
 	$scope.showNewCaseRoleForm = function(){
@@ -33,7 +48,6 @@ angular.module('adminModule').controller('caseRoleAdminController', ['$scope', '
 
 				$scope.confirm = function(){
 					connectCaseRoleFactory.delete({'id': id}, function(response){
-						caseRoles[index] = response;
 						$modalInstance.dismiss('cancel');
 					}, function(error){
 						$scope.error = error.data.message;

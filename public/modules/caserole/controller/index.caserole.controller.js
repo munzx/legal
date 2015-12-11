@@ -7,7 +7,6 @@ angular.module('caseRoleModule').controller('indexCaseRoleController', ['$scope'
 
 	$scope.createNewCaseRole = function(){
 		connectCaseRoleFactory.save({}, {'caseRoleInfo': $scope.newCaseRole}, function(response){
-			caseRoles.push(response);
 			$modalInstance.dismiss('cancel');
 		}, function(error){
 			$scope.error = error.data.message;
