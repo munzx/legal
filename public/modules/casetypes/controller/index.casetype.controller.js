@@ -7,7 +7,6 @@ angular.module('caseTypeModule').controller('indexCaseTypeController', ['$scope'
 
 	$scope.createNewCaseType = function(){
 		connectCaseTypeFactory.save({}, {'caseTypeInfo': $scope.newCaseType}, function(response){
-			caseTypes.push(response);
 			$modalInstance.dismiss('cancel');
 		}, function(error){
 			$scope.error = error.data.message;

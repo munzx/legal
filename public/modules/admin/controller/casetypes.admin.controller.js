@@ -1,10 +1,25 @@
 'use strict';
 
-angular.module('adminModule').controller('caseTypeAdminController', ['$scope', '$modal', 'connectCaseTypeFactory', function ($scope, $modal, connectCaseTypeFactory) {
-	connectCaseTypeFactory.query({}, function(response){
-		$scope.caseTypes = response;
-	}, function(error){
-		$scope.error = error.data.message;
+angular.module('adminModule').controller('caseTypeAdminController', ['$scope', '$modal', 'connectCaseTypeFactory', 'socketConfigFactory', function ($scope, $modal, connectCaseTypeFactory, socketConfigFactory) {
+	var getCaseTypes = function () {
+		connectCaseTypeFactory.query({}, function(response){
+			$scope.caseTypes = response;
+		}, function(error){
+			$scope.error = error.data.message;
+		});
+	}
+
+	//init getCaseTypes
+	getCaseTypes();
+
+	//listen to add
+	socketConfigFactory.on('caseType.add', function (response) {
+		$scope.caseTypes.push(response);
+	});
+
+	//listen to update
+	socketConfigFactory.on('caseType.update', function (response) {
+		getCaseTypes();
 	});
 
 	$scope.showNewCaseTypeForm = function () {
@@ -34,7 +49,6 @@ angular.module('adminModule').controller('caseTypeAdminController', ['$scope', '
 
 				$scope.confirm = function(){
 					connectCaseTypeFactory.delete({'id': id}, function(response){
-						caseTypes[index] = response;
 						$modalInstance.dismiss('cancel');
 					}, function(error){
 						$scope.error = error.data.message;

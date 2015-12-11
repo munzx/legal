@@ -1,8 +1,24 @@
 'use strict';
 
-angular.module('adminModule').controller('courtsAdminController', ['$scope', 'connectAdminFactory', '$state', '$modal', function ($scope, connectAdminFactory, $state, $modal) {
-	connectAdminFactory.query({page: 'court'}, function(response){
-		$scope.courts = response;
+angular.module('adminModule').controller('courtsAdminController', ['$scope', 'connectAdminFactory', '$state', '$modal', 'socketConfigFactory', function ($scope, connectAdminFactory, $state, $modal, socketConfigFactory) {
+	var getCourts = function () {
+		connectAdminFactory.query({page: 'court'}, function(response){
+			$scope.courts = response;
+		});
+	}
+
+	//init getCourts
+	getCourts();
+
+
+	//listen to court add
+	socketConfigFactory.on('court.add', function (response) {
+		$scope.courts.push(response);
+	});
+
+	//listen to court add
+	socketConfigFactory.on('court.update', function (response) {
+		getCourts();
 	});
 
 	$scope.showNewCourtForm = function(){
@@ -32,7 +48,6 @@ angular.module('adminModule').controller('courtsAdminController', ['$scope', 'co
 
 				$scope.confirm = function(){
 					connectAdminFactory.delete({page: 'court', param: id}, function(response){
-						courts[index] = response;
 						$modalInstance.dismiss('cancel');
 					}, function(error){
 						$scope.error = response.data.message;

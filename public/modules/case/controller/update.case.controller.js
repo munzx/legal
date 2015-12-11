@@ -25,12 +25,12 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 	getUpdateType();
 	getCaseRoles();
 
-	//listen to add
+	//listen to updateType add
 	socketConfigFactory.on('updateType.availableUpdate.add', function (response) {
 		$scope.caseUpdates.push(response);
 	});
 
-	//listen to update
+	//listen to updateType update
 	socketConfigFactory.on('updateType.availableUpdate.update', function (response) {
 		getUpdateType();
 	});
@@ -43,7 +43,6 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 	//listen to caseRoles update
 	socketConfigFactory.on('caseRoles.available.update', function (response) {
 		getCaseRoles();
-		console.log('Bism Allah , here is the caserole updates')
 	});
 
 

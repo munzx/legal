@@ -35,6 +35,8 @@ module.exports.create = function(req, res){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {
 			res.status(200).jsonp(result);
+			req.io.emit('court.add', result);
+			req.io.emit('court.available.add', result);
 		}
 	});
 }
@@ -52,7 +54,9 @@ module.exports.silentRemove = function(req, res){
 						if(err){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
-							res.status(200).jsonp(result)
+							res.status(200).jsonp(result);
+							req.io.emit('court.update', result);
+							req.io.emit('court.available.update', result);
 						}
 					});
 				} else {

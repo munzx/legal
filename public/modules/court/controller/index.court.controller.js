@@ -9,7 +9,6 @@ angular.module('courtModule').controller('indexCourtController', ['$scope', '$mo
 	$scope.createCourte = function(){
 		connectAdminFactory.save({page: 'court'}, {'courtInfo': $scope.courtInfo}, function(response){
 			$scope.error = false;
-			courts.push(response);
 			$modalInstance.dismiss('cancel');
 		}, function(response){
 			$scope.error = response.data.message;
