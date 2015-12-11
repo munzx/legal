@@ -197,7 +197,6 @@ angular.module('caseModule').controller('createCaseController', ['$scope', 'case
 		}
 
 		connectCaseFactory.save({}, {'caseInfo': caseInfo}, function(response){
-			cases.unshift(response);
 			$modalInstance.dismiss('cancel');
 		}, function(error){
 			$scope.error = error.data.message;

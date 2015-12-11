@@ -56,6 +56,7 @@ module.exports.create = function(req, res){
 					res.status(500).jsonp({message: err});
 				} else {
 					res.status(200).jsonp(result);
+					req.io.emit('cases.add', result);
 				}
 			});	
 		}
@@ -75,6 +76,7 @@ module.exports.softRemove = function(req, res){
 						res.status(500).jsonp({message: error});
 					} else {
 						res.status(200).jsonp(info);
+						req.io.emit('cases.update', info);
 					}
 				});
 			} else {
@@ -159,6 +161,7 @@ module.exports.insertCaseUpdate = function(req, res){
 									res.status(500).jsonp(err);
 								} else {
 									res.status(200).jsonp(caseAllInfo);
+									req.io.emit('cases.update', caseAllInfo);
 								}
 							});
 						} else {
@@ -194,7 +197,10 @@ module.exports.softRemoveCaseUpdate = function (req, res) {
 							if(err){
 								res.status(500).jsonp({message: err});
 							} else {
-								res.status(200).jsonp(info);
+								cases.populate(info, [{path: 'user'}, {path: 'consultant'}, {path: 'court'}, {path: 'client.user'}, {path: 'updates.user'}, {path: 'sessions.user'}, {path: 'defendant.user'}], function(err, userInfo){
+									res.status(200).jsonp(userInfo);
+									req.io.emit('cases.update', userInfo);
+								});
 							}
 						});
 					}
@@ -572,14 +578,9 @@ module.exports.insertClient = function(req, res){
 							if(err){
 								res.status(500).jsonp({message: err});
 							} else {
-								cases.populate(result, [{path: 'client.user'}, {path: 'updates.user'}], function(err, userInfo){
-									//get the last client , the one just been inserted
-									//get the last update as well
-									var info = {
-										'update': userInfo.updates[userInfo.updates.length - 1],
-										'client': userInfo.client[userInfo.client.length - 1]
-									}
-									res.status(200).jsonp(info);
+								cases.populate(result, [{path: 'user'}, {path: 'consultant'}, {path: 'court'}, {path: 'client.user'}, {path: 'updates.user'}, {path: 'sessions.user'}, {path: 'defendant.user'}], function(err, userInfo){
+									res.status(200).jsonp(userInfo);
+									req.io.emit('cases.update', userInfo);
 								});
 							}
 						});
@@ -629,14 +630,9 @@ module.exports.insertNewClient = function(req, res){
 								if(err){
 									res.status(500).jsonp({message: err});
 								} else {
-									cases.populate(result, [{path: 'client.user'}, {path: 'updates.user'}], function(err, userInfo){
-										//get the last client , the one just been inserted
-										//get the last update as well
-										var info = {
-											'update': userInfo.updates[userInfo.updates.length - 1],
-											'client': userInfo.client[userInfo.client.length - 1]
-										}
-										res.status(200).jsonp(info);
+									cases.populate(result, [{path: 'user'}, {path: 'consultant'}, {path: 'court'}, {path: 'client.user'}, {path: 'updates.user'}, {path: 'sessions.user'}, {path: 'defendant.user'}], function(err, userInfo){
+										res.status(200).jsonp(userInfo);
+										req.io.emit('cases.update', userInfo);
 									});
 								}
 							});
@@ -687,14 +683,9 @@ module.exports.insertDefendant = function(req, res){
 							if(err){
 								res.status(500).jsonp({message: err});
 							} else {
-								cases.populate(result, [{path: 'defendant.user'}, {path: 'updates.user'}], function(err, userInfo){
-									//get the last defendant , the one just been inserted
-									//get the last update as well
-									var info = {
-										'update': userInfo.updates[userInfo.updates.length - 1],
-										'defendant': userInfo.defendant[userInfo.defendant.length - 1]
-									}
-									res.status(200).jsonp(info);
+								cases.populate(result, [{path: 'user'}, {path: 'consultant'}, {path: 'court'}, {path: 'client.user'}, {path: 'updates.user'}, {path: 'sessions.user'}, {path: 'defendant.user'}], function(err, userInfo){
+									res.status(200).jsonp(userInfo);
+									req.io.emit('cases.update', userInfo);
 								});
 							}
 						});
@@ -744,14 +735,9 @@ module.exports.insertNewDefendant = function(req, res){
 								if(err){
 									res.status(500).jsonp({message: err});
 								} else {
-									cases.populate(result, [{path: 'defendant.user'}, {path: 'updates.user'}], function(err, userInfo){
-										//get the last defendant , the one just been inserted
-										//get the last update as well
-										var info = {
-											'update': userInfo.updates[userInfo.updates.length - 1],
-											'defendant': userInfo.defendant[userInfo.defendant.length - 1]
-										}
-										res.status(200).jsonp(info);
+									cases.populate(result, [{path: 'user'}, {path: 'consultant'}, {path: 'court'}, {path: 'client.user'}, {path: 'updates.user'}, {path: 'sessions.user'}, {path: 'defendant.user'}], function(err, userInfo){
+										res.status(200).jsonp(userInfo);
+										req.io.emit('cases.update', userInfo);
 									});
 								}
 							});
@@ -767,7 +753,7 @@ module.exports.insertNewDefendant = function(req, res){
 
 
 module.exports.clientSofttRemove = function(req, res){
-	cases.findById(req.params.caseId).exec(function(err, caseInfo){
+	cases.findById(req.params.caseId).populate('user').populate('court').populate('client.user').populate('defendant.user').populate('consultant').populate('sessions.user').populate('updates.user').exec(function(err, caseInfo){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else if(caseInfo) {
@@ -792,6 +778,7 @@ module.exports.clientSofttRemove = function(req, res){
 						res.status(500).jsonp({message: err});
 					} else {
 						res.status(200).jsonp(result);
+						req.io.emit('cases.update', result);
 					}
 				});
 			} else {
@@ -804,7 +791,7 @@ module.exports.clientSofttRemove = function(req, res){
 }
 
 module.exports.defendantSoftRemove = function(req, res){
-	cases.findById(req.params.caseId).exec(function(err, caseInfo){
+	cases.findById(req.params.caseId).populate('user').populate('court').populate('client.user').populate('defendant.user').populate('consultant').populate('sessions.user').populate('updates.user').exec(function(err, caseInfo){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else if(caseInfo) {
@@ -829,6 +816,7 @@ module.exports.defendantSoftRemove = function(req, res){
 						res.status(500).jsonp({message: err});
 					} else {
 						res.status(200).jsonp(result);
+						req.io.emit('cases.update', result);
 					}
 				});
 			} else {
@@ -872,7 +860,7 @@ module.exports.docs = function(req, res){
 			if(err){
 				res.status(500).jsonp({message: err});
 			} else {
-				res.status(200).jsonp(result.docs);
+				res.status(200).jsonp(result.docs.reverse());
 			}
 		});
 	} else {
@@ -906,6 +894,7 @@ module.exports.uploadDoc = function(req, res){
 									res.status(500).jsonp({message: err});
 								} else {
 									res.status(200).jsonp(docInfo.docs[docInfo.docs.length -1]);
+									req.io.emit('cases.update.docs', docInfo.docs[docInfo.docs.length -1]);
 								}
 							});
 						}

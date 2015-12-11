@@ -11,8 +11,10 @@
 			<div class="row add-space">
 				<div class="col-md-6">
 					<div style="float: left;">
-						<h4 ng-show="nextSessionDate()"><span class="label label-default">موعد الجلسة القادمة {{nextSessionDate() | date: 'yyyy-MM-dd' }} الساعة {{nextSessionTime() | date: 'HH:mm'}}</span></h4>
-						<h4 ng-hide="nextSessionDate()"><span class="label label-default"> لم يتم تحديد موعد الجلسة القادمة</span></h4>
+						<h4 ng-show="showNextSession()"><span class="label label-default">
+							موعد الجلسة القادمة {{(selectedCase.sessions[selectedCase.sessions.length - 1].newDate) | date: 'yyyy-MM-dd' }} 
+							الساعة {{(selectedCase.sessions[selectedCase.sessions.length - 1].newTime) | date: 'HH:mm'}}</span></h4>
+						<h4 ng-hide="showNextSession()"><span class="label label-default"> لم يتم تحديد موعد الجلسة القادمة</span></h4>
 					</div>
 				</div>
 				<div class="col-md-6">

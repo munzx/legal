@@ -1,7 +1,13 @@
 'use strict';
 
-angular.module('uploadModule').controller('indexUploadController', ['$scope', '$modalInstance', 'selectedCase', '$modal', '$http', 'connectCaseFactory', function ($scope, $modalInstance, selectedCase, $modal, $http, connectCaseFactory) {
+angular.module('uploadModule').controller('indexUploadController', ['$scope', '$modalInstance', 'selectedCase', '$modal', '$http', 'connectCaseFactory', 'socketConfigFactory', function ($scope, $modalInstance, selectedCase, $modal, $http, connectCaseFactory, socketConfigFactory) {
 	$scope.selectedCase = selectedCase;
+
+	//listen to update
+	socketConfigFactory.on('cases.update.docs', function (response) {
+		$scope.allDocs();
+	});
+
 
 	$scope.closeModal = function(){
 		$modalInstance.dismiss('cancel');

@@ -13,8 +13,6 @@ angular.module('clientModule').controller('addClientController', ['$scope', '$mo
 		$scope.error = false;
 		$scope.userInfo.role = 'client';
 		connectCaseFactory.save({'action': 'client', 'subaction': 'new'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
-			selectedCase.client.push(response.client);
-			selectedCase.updates.push(response.update);
 			$modalInstance.dismiss('cancel');
 			closeParentModal();
 		}, function(error){

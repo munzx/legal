@@ -22,7 +22,6 @@ angular.module('uploadModule').controller('addUploadController', ['$scope', '$mo
 					transformRequest: angular.identity,
 					headers: {'Content-Type': undefined}
 				}).success(function(data, success){
-					docs.push(data);
 					$modalInstance.dismiss('cancel');
 					parentModalInstance.dismiss('cancel');
 				})

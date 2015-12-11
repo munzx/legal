@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('caseModule').controller('updateCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', 'connectUpdateTypeFactory', 'connectCaseRoleFactory', function ($scope, connectCaseFactory, selectedCase, $modalInstance, connectUpdateTypeFactory, connectCaseRoleFactory) {
+angular.module('caseModule').controller('updateCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', 'connectUpdateTypeFactory', 'connectCaseRoleFactory', 'socketConfigFactory', 'helperConfigFactory', function ($scope, connectCaseFactory, selectedCase, $modalInstance, connectUpdateTypeFactory, connectCaseRoleFactory, socketConfigFactory, helperConfigFactory) {
 	$scope.selectedCase = selectedCase;
 
 	//init newDate
@@ -83,11 +83,6 @@ angular.module('caseModule').controller('updateCaseController', ['$scope', 'conn
 		}
 
 		connectCaseFactory.save({'action': 'caseupdate', 'id': selectedCase._id}, {'update': $scope.newUpdate}, function(response){
-			selectedCase.updates = response.updates;
-			selectedCase.sessions = response.sessions;
-			//update the case clients and defendants info
-			selectedCase.client = response.client;
-			selectedCase.defendant = response.defendant;
 			$modalInstance.dismiss('cancel');
 		}, function(error){
 			$scope.error = error.message;

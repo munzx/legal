@@ -1,25 +1,23 @@
 'use strict';
 
-angular.module('caseModule').controller('detailsCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', '$modal', 'user', function ($scope, connectCaseFactory, selectedCase, $modalInstance, $modal, user) {
+angular.module('caseModule').controller('detailsCaseController', ['$scope', 'connectCaseFactory', 'selectedCase', '$modalInstance', '$modal', 'user', 'socketConfigFactory', function ($scope, connectCaseFactory, selectedCase, $modalInstance, $modal, user, socketConfigFactory) {
 	$scope.selectedCase = selectedCase;
 	$scope.user = user;
+
+	//listen to update
+	socketConfigFactory.on('cases.update', function (caseInfo) {
+		$scope.selectedCase = caseInfo;
+	});
 
 	$scope.closeModal = function(){
 		$modalInstance.dismiss('cancel');
 	}
 
-	$scope.nextSessionDate = function(){
+	$scope.showNextSession = function(){
 		if($scope.selectedCase.sessions){
-			return ($scope.selectedCase.sessions.length)? $scope.selectedCase.sessions[selectedCase.sessions.length - 1].newDate: '';
+			return true;
 		}
-		return '';
-	}
-
-	$scope.nextSessionTime = function(){
-		if($scope.selectedCase.sessions){
-			return ($scope.selectedCase.sessions.length)? $scope.selectedCase.sessions[selectedCase.sessions.length - 1].newTime: '';
-		}
-		return '';
+		return false;
 	}
 
 	$scope.showUpdateCase = function(){
@@ -75,8 +73,6 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 
 				$scope.confirm = function(){
 					connectCaseFactory.remove({'caseId': selectedCase._id, 'action': 'client', 'id': client._id}, function(response){
-						selectedCase.client[index].removed = true;
-						selectedCase.updates = response.updates;
 						$modalInstance.dismiss('cancel');
 					}, function(error){
 						$scope.error = error;
@@ -116,8 +112,6 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 				$scope.confirm = function(){
 					connectCaseFactory.remove({'caseId': selectedCase._id, 'action': 'defendant', 'id': defendant._id}, function(response){
 						$modalInstance.dismiss('cancel');
-						selectedCase.defendant[index].removed = true;
-						selectedCase.updates = response.updates;
 					}, function(error){
 						$scope.error = error;
 					});
@@ -173,7 +167,6 @@ angular.module('caseModule').controller('detailsCaseController', ['$scope', 'con
 				$scope.confirm = function(){
 					var updateInfo = selectedCase.updates[index];
 					connectCaseFactory.remove({'action': 'caseupdate', 'actionId': selectedCase._id, 'id': updateInfo._id}, function(response){
-						selectedCase.updates = response.updates;
 						$modalInstance.dismiss('cancel');
 					}, function(error){
 						$scope.error = error;

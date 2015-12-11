@@ -12,8 +12,6 @@ angular.module('defendantModule').controller('addDefendantController', ['$scope'
 	$scope.createNewDefendant = function(){
 		$scope.error = false;
 		connectCaseFactory.save({'action': 'defendant', 'subaction': 'new'}, {'caseId': selectedCase._id, 'userInfo': $scope.newDefendant}, function(response){
-			selectedCase.defendant.push(response.defendant);
-			selectedCase.updates.push(response.update);
 			$modalInstance.dismiss('cancel');
 			closeParentModal();
 		}, function(error){

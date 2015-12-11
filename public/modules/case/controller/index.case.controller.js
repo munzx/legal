@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('adminModule').controller('indexCaseController', ['$scope', 'connectCaseFactory', '$state', '$modal', 'registerUserConfigFactory', '$http', 'limitToFilter', function ($scope, connectCaseFactory, $state, $modal, registerUserConfigFactory, $http, limitToFilter) {
+angular.module('adminModule').controller('indexCaseController', ['$scope', 'connectCaseFactory', '$state', '$modal', 'registerUserConfigFactory', '$http', 'limitToFilter', 'socketConfigFactory', 'helperConfigFactory', function ($scope, connectCaseFactory, $state, $modal, registerUserConfigFactory, $http, limitToFilter, socketConfigFactory, helperConfigFactory) {
 	$scope.user = registerUserConfigFactory.getUser();
 	if($scope.user === false) $state.go('signin');
 
@@ -17,6 +17,20 @@ angular.module('adminModule').controller('indexCaseController', ['$scope', 'conn
 			$scope.cases = response;
 		});
 	}
+
+	//listen to add
+	socketConfigFactory.on('cases.add', function (caseInfo) {
+		$scope.cases.unshift(caseInfo);
+	});
+	//listen to update
+	socketConfigFactory.on('cases.update', function (caseInfo) {
+		var caseIndex = helperConfigFactory.map($scope.cases, function (item) {
+			if(item._id.toString() == caseInfo._id.toString()){
+				return true;
+			}
+		});
+		$scope.cases[caseIndex] = caseInfo;
+	});
 
 	$scope.searchInOptions = ['client', 'defendant', 'consultant', 'case', 'update', 'session'];
 
@@ -94,7 +108,6 @@ angular.module('adminModule').controller('indexCaseController', ['$scope', 'conn
 
 				$scope.confirm = function(){
 					connectCaseFactory.remove({caseId: id}, function(response){
-						cases[index] = response;
 						$modalInstance.dismiss('cancel');
 					},function(error){
 						$scope.error = error.data.message;

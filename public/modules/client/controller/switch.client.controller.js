@@ -19,8 +19,6 @@ angular.module('clientModule').controller('switchClientController', ['$scope', '
 		$scope.error = false;
 		$scope.userInfo.userId = $scope.clients[$scope.userIndex]._id;
 		connectCaseFactory.save({'action': 'client'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
-			$scope.selectedCase.client.push(response.client);
-			$scope.selectedCase.updates.push(response.update);
 			$modalInstance.dismiss('cancel');
 		}, function(error){
 			$scope.error = error.data.message;
