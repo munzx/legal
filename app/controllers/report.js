@@ -92,7 +92,7 @@ module.exports.index = function (req, res) {
 									dateInfo[moment(sessionInfo.created).year()][moment(sessionInfo.created).month() + 1].session++;
 								}
 								
-								if(info.sessions[sessionInfo.lawyer[sessionInfo.lawyer.length - 1]]){
+								if(sessionInfo.lawyer.length){
 									if(info.sessions[sessionInfo.lawyer[sessionInfo.lawyer.length - 1].name]){
 										info.sessions[sessionInfo.lawyer[sessionInfo.lawyer.length - 1].name]++;
 									} else {
