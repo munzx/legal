@@ -56,8 +56,10 @@ module.exports.create = function(req, res){
 					if(err){
 						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 					} else {
-						req.io.emit('tasks.add', info);
 						res.status(200).jsonp(info);
+						req.io.emit('tasks.add', info);
+						//update reports
+						req.io.emit('reports.update', true);
 					}
 				});
 			}
@@ -78,8 +80,10 @@ module.exports.markDone = function(req, res){
 						if(err){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
-							req.io.emit('tasks.update', done);
 							res.status(200).jsonp(done);
+							req.io.emit('tasks.update', done);
+							//update reports
+							req.io.emit('reports.update', true);
 						}
 					});
 				} else {
@@ -106,8 +110,10 @@ module.exports.softRemove = function(req, res){
 						if(err){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
-							req.io.emit('tasks.update', done);
 							res.status(200).jsonp(done);
+							req.io.emit('tasks.update', done);
+							//update reports
+							req.io.emit('reports.update', true);
 						}
 					});
 				} else {
@@ -133,8 +139,10 @@ module.exports.rejectTask = function(req, res){
 						if(err){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
-							req.io.emit('tasks.update', done);
 							res.status(200).jsonp(done);
+							req.io.emit('tasks.update', done);
+							//update reports
+							req.io.emit('reports.update', true);
 						}
 					});
 				} else {

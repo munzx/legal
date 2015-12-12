@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('reportModule').controller('indexReportController', ['$scope', '$state', 'registerUserConfigFactory', '$timeout', 'connectAdminFactory', function ($scope, $state, registerUserConfigFactory, $timeout, connectAdminFactory) {
+angular.module('reportModule').controller('indexReportController', ['$scope', '$state', 'registerUserConfigFactory', '$timeout', 'connectAdminFactory', 'socketConfigFactory', function ($scope, $state, registerUserConfigFactory, $timeout, connectAdminFactory, socketConfigFactory) {
 	$scope.user = registerUserConfigFactory.getUser();
 	$scope.report = {};
 
@@ -47,7 +47,6 @@ angular.module('reportModule').controller('indexReportController', ['$scope', '$
 				$scope.pie.data.push(info.courtCase[i]);
 			}
 
-
 			//Employees and sessions
 			$scope.bar = {};
 			$scope.bar.labels = [];
@@ -57,14 +56,13 @@ angular.module('reportModule').controller('indexReportController', ['$scope', '$
 				$scope.bar.data[0].push(info.sessions[i]);
 			}
 
-
 			//Consultants and memos
 			$scope.bar2 = {};
 			$scope.bar2.labels =[];
 			$scope.bar2.data = [[]];
-			for(var i in info.consultantCase){
+			for(var i in info.memos){
 				$scope.bar2.labels.push(i);
-				$scope.bar2.data[0].push(info.consultantCase[i]);
+				$scope.bar2.data[0].push(info.memos[i]);
 			}
 
 			//Tasks
@@ -86,6 +84,13 @@ angular.module('reportModule').controller('indexReportController', ['$scope', '$
 
 	//Init get report
 	getReport();
+
+	//listen to add
+	socketConfigFactory.on('reports.update', function (state) {
+		if(state){
+			getReport();
+		}
+	});
 
 	$scope.searchReport = function () {
 		getReport();

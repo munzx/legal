@@ -41,7 +41,7 @@ module.exports.index = function (req, res) {
 			cb(null, date, dateInfo);
 		},
 		function (dateInput, dateInfo, cb) {
-			cases.find({"created": {"$gte": dateInput.from, "$lt": dateInput.to}}).populate('user').populate('updates.user').populate('updates.memoConsultant').populate('sessions.user').populate('court').populate('consultant').populate('memos.user').exec(function (err, allCases) {
+			cases.find({"created": {"$gte": dateInput.from, "$lt": dateInput.to}}).populate('user').populate('updates.user').populate('updates.memoConsultant').populate('sessions.user').populate('sessions.lawyer').populate('court').populate('consultant').populate('memos.user').exec(function (err, allCases) {
 				if(err){
 					cb(err);
 				} else {
@@ -91,10 +91,11 @@ module.exports.index = function (req, res) {
 								if(dateInfo[moment(sessionInfo.created).year()][moment(sessionInfo.created).month() + 1]){
 									dateInfo[moment(sessionInfo.created).year()][moment(sessionInfo.created).month() + 1].session++;
 								}
-								if(info.sessions[sessionInfo.user.name]){
-									info.sessions[sessionInfo.user.name]++;
+								
+								if(info.sessions[sessionInfo.lawyer[sessionInfo.lawyer.length - 1].name]){
+									info.sessions[sessionInfo.lawyer[sessionInfo.lawyer.length - 1].name]++;
 								} else {
-									info.sessions[sessionInfo.user.name] = 1;
+									info.sessions[sessionInfo.lawyer[sessionInfo.lawyer.length - 1].name] = 1;
 								}
 							});
 						}
@@ -103,10 +104,10 @@ module.exports.index = function (req, res) {
 						if(caseInfo.updates.length > 0){
 							caseInfo.updates.forEach(function (updateInfo) {
 								if(updateInfo.memoRequired){
+									info.memosCount++;
 									if(dateInfo[moment(updateInfo.created).year()][moment(updateInfo.created).month() + 1]){
 										dateInfo[moment(updateInfo.created).year()][moment(updateInfo.created).month() + 1].memo++;
 									}
-									info.memosCount++;
 									if(updateInfo.memoConsultant.length){
 										if(info.memos[updateInfo.memoConsultant[updateInfo.memoConsultant.length - 1].name]){
 											info.memos[updateInfo.memoConsultant[updateInfo.memoConsultant.length - 1].name]++;

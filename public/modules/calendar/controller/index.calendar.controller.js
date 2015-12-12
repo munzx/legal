@@ -2,7 +2,38 @@
 
 angular.module('calendarModule').controller('indexCalendarController', ['$scope', 'connectCalendarFactory', '$modal', 'registerUserConfigFactory', '$filter', 'socketConfigFactory', 'helperConfigFactory', function ($scope, connectCalendarFactory, $modal, registerUserConfigFactory, $filter, socketConfigFactory, helperConfigFactory) {
 	//init scope, for some reason if we update the tasks later and if we did not init this it wont update!
-	$scope.tasks = {};
+	$scope.tasks = [];
+
+	connectCalendarFactory.query({}, function(response){
+		$scope.tasks = response;
+	});
+
+	//listen to tasks
+	socketConfigFactory.on('tasks.add', function (task) {
+		var activeStatus = getActiveStatus();
+		if(activeStatus == 'pending'){
+			$scope.memosPending();
+		} else if(activeStatus == 'close'){
+			$scope.memosClosed();
+		} else {
+			$scope.memosAll();
+		}
+	});
+
+	//listen to tasks
+	socketConfigFactory.on('tasks.update', function (task) {
+		var activeStatus = getActiveStatus();
+		if(activeStatus == 'pending'){
+			$scope.memosPending();
+		} else if(activeStatus == 'close'){
+			$scope.memosClosed();
+		} else {
+			$scope.memosAll();
+		}
+	});
+
+
+	$scope.user = registerUserConfigFactory.getUser();
 
 	$scope.isTodayOrMissed = function (deadline) {
 		var deadline = new Date(deadline);
@@ -12,32 +43,6 @@ angular.module('calendarModule').controller('indexCalendarController', ['$scope'
 		var check = (deadline.getTime() <= today.getTime())? true: false;
 		return check;
 	}
-
-	connectCalendarFactory.query({}, function(response){
-		$scope.tasks = response;
-	});
-
-	//listen to tasks
-	socketConfigFactory.on('tasks.add', function (task) {
-		$scope.tasks.unshift(task);
-	});
-
-	//listen to tasks
-	socketConfigFactory.on('tasks.update', function (task) {
-		var getIndex = helperConfigFactory.map($scope.tasks, function (taskInfo) {
-			if(taskInfo._id.toString() == task._id.toString()){
-				return true;
-			}
-		});
-		if(getIndex){
-			$scope.tasks[getIndex] = task;
-			$scope.tasks[getIndex].removed = task.removed;
-			$scope.tasks[getIndex].rejected = task.rejected;
-		}
-	});
-
-
-	$scope.user = registerUserConfigFactory.getUser();
 
 	$scope.memosAll = function () {
 		connectCalendarFactory.query({}, function(response){
@@ -80,7 +85,17 @@ angular.module('calendarModule').controller('indexCalendarController', ['$scope'
 		}
 	}
 
-	//init acive status
+	var getActiveStatus = function () {
+		if($scope.activeClosed == 'active'){
+			return 'close';
+		} else if($scope.activePending == 'active'){
+			return 'pending';
+		} else {
+			return 'all';
+		}
+	}
+
+	//init active status
 	activeStatus('all');
 
 	$scope.showNewTaskForm = function(){

@@ -231,6 +231,8 @@ module.exports.insertCaseUpdate = function(req, res){
 										//we are using the 'isOld' check to know id the session is 'previous' or 'upcoming'
 										var isOld = moment(sessionTemplate.newDate).isBefore(moment(new Date()));
 										req.io.emit('sessions.add', {'info': sessionTemplate, 'isOld': isOld});
+										//update reports
+										req.io.emit('reports.update', true);
 									}
 								}
 							});
@@ -395,6 +397,8 @@ module.exports.byDate = function(req, res){
 				});
 				res.status(200).jsonp({message:'تم تحديث المهام بنجاح'});
 				req.io.emit('sessions.update');
+				//update reports
+				req.io.emit('reports.update', true);
 			} else {
 				res.status(500).jsonp({message: 'يرجى التأكد من إدخال جميع البيانات المطلوبة'});
 			}
@@ -419,6 +423,8 @@ module.exports.byCase = function(req, res){
 					} else {
 						res.status(200).jsonp({message:'تم تحديث المهام بنجاح'});
 						req.io.emit('sessions.update', result);
+						//update reports
+						req.io.emit('reports.update', true);
 					}
 				});
 			} else {
@@ -557,6 +563,8 @@ module.exports.insertMemoConsultant = function(req, res){
 					} else {
 						res.status(200).jsonp(info);
 						req.io.emit('memos.update', info);
+						//update reports
+						req.io.emit('reports.update', true);
 					}
 				});
 			} else {
