@@ -22,7 +22,6 @@ angular.module('caseModule').controller('updateConsultantCaseController', ['$sco
 
 			connectCaseFactory.save({'action': 'memos', 'subaction': 'insertconsultant'}, {'update': update}, function(response){
 				$modalInstance.dismiss('cancel');
-				$scope.memoInfo.memoConsultant.push($scope.consultants[$scope.consultantIndex]);
 			}, function(error){
 				$scope.error = error.data.message;
 			});

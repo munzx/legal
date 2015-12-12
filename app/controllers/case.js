@@ -12,6 +12,58 @@ users = require('../models/user'),
 defendants = require('../models/defendant');
 
 
+//this is used to hold info to be sent to users through socket.io
+//as the front-end app needs this info in certain form provided by 'sessionInfoTemplate'
+var sessionInfoTemplate = function (session, caseInfo) {
+	if(session && caseInfo){
+		var sessionInfo = {};
+		session = session;
+		sessionInfo.court = caseInfo.court;
+		sessionInfo.caseId = caseInfo._id;
+		sessionInfo.defendant = caseInfo.defendant;
+		sessionInfo.client = caseInfo.client;
+		sessionInfo.refNumber = session.refNumber;
+		sessionInfo.refType = session.refType;
+		sessionInfo.lawyer = session.lawyer;
+		sessionInfo.sessionStatus = caseInfo.status;
+		sessionInfo.sessionDate = session.newDate;
+		sessionInfo.sessionTime = session.newTime;
+		sessionInfo.sessionCreated = session.created;
+		sessionInfo.sessionUpdateId = session.updateId;
+		sessionInfo.sessionUser = session.user;
+		sessionInfo.sessionRemoved = session.removed;
+		return sessionInfo;
+	} else {
+		return false;
+	}
+}
+
+//this is used to hold info to be sent to users through socket.io
+//as the front-end app needs this info in certain form provided by 'memoInfoTemplate'
+var memoInfoTemplate = function (update, caseInfo) {
+	if(update && caseInfo){
+		var updateInfo = {};
+		updateInfo.court = caseInfo.court;
+		updateInfo.caseId = caseInfo._id;
+		updateInfo.defendant = caseInfo.defendant;
+		updateInfo.client = caseInfo.client;
+		updateInfo.memoId = update.memoId;
+		updateInfo.memoType = update.memoType;
+		updateInfo.memoConsultant = update.memoConsultant;
+		updateInfo.memoRequired = update.memoRequired;
+		updateInfo.deadline = update.deadline;
+		updateInfo.memoStatus = update.memoStatus;
+		updateInfo.updateDate = update.newDate;
+		updateInfo.updateTime = update.newTime;
+		updateInfo.updateCreated = update.created;
+		updateInfo.updateId = update._id;
+		updateInfo.updateUser = update.user;
+		return updateInfo;
+	} else {
+		return false;
+	}
+}
+
 module.exports.index = function (req, res) {
 	cases.find({}).sort('-created').populate('user').populate('court').populate('consultant').populate('client.user').populate('defendant.user').populate('updates.user').exec(function(err, result){
 		if(err){
@@ -151,33 +203,51 @@ module.exports.insertCaseUpdate = function(req, res){
 
 				if(isValid){
 					caseInfo.updates.push(updateInfo);
-
 					caseInfo.save(function(error, updatedResult){
 						if(error){
 							res.status(500).jsonp(error);
 						} else if(updatedResult) {
-							cases.populate(updatedResult, [{path: 'updates.user'}, {path: 'client.user'}, {path: 'defendant.user'}], function(err, caseAllInfo){
+							cases.populate(updatedResult, [{path: 'user'}, {path: 'updates.user'}, {path: 'client.user'}, {path: 'defendant.user'}, {path: 'court'}, {path: 'sessions.user'}], function(err, caseAllInfo){
 								if(err){
 									res.status(500).jsonp(err);
 								} else {
 									res.status(200).jsonp(caseAllInfo);
+									//prodcast the case update
 									req.io.emit('cases.update', caseAllInfo);
+									//if new memo was etered then broadcast the event
+									if(updateInfo.memoRequired){
+										//this is used to hold info to be sent to users through socket.io
+										//as the front-end app needs this info in certain form provided by 'memoInfoTemplate'
+										var memoTemplate = memoInfoTemplate(updatedResult.updates[updatedResult.updates.length - 1], caseInfo);
+										//we are using the 'isOld' check to know id the memo is 'previous' or 'upcoming'
+										var isOld = moment(memoTemplate.deadline).isBefore(moment(new Date())); 
+										req.io.emit('memos.add', {'info': memoTemplate, 'isOld': isOld});
+									}
+									//if new session was etered then broadcast the event
+									if(updateInfo.sessionRequired){
+										//this is used to hold info to be sent to users through socket.io
+										//as the front-end app needs this info in certain form provided by 'sessionInfoTemplate'
+										var sessionTemplate = sessionInfoTemplate(updatedResult.sessions[updatedResult.sessions.length - 1], caseInfo);
+										//we are using the 'isOld' check to know id the session is 'previous' or 'upcoming'
+										var isOld = moment(sessionTemplate.newDate).isBefore(moment(new Date()));
+										req.io.emit('sessions.add', {'info': sessionTemplate, 'isOld': isOld});
+									}
 								}
 							});
 						} else {
 							res.status(500).jsonp({message: 'لم يتم تسجيل البيانات'});		
 						}
 					});
-				} else {
-					res.status(500).jsonp({message: 'لم يتم توفير البانات الازمة'});
-				}
-			} else {
-				res.status(500).jsonp({message: 'لم يتم العثور على الدعوى'});
-			}
-		});
-	} else {
-		res.status(500).jsonp({message: 'لم يتم توفير رقم المعرف'});
-	}
+} else {
+	res.status(500).jsonp({message: 'لم يتم توفير البانات الازمة'});
+}
+} else {
+	res.status(500).jsonp({message: 'لم يتم العثور على الدعوى'});
+}
+});
+} else {
+	res.status(500).jsonp({message: 'لم يتم توفير رقم المعرف'});
+}
 }
 
 module.exports.softRemoveCaseUpdate = function (req, res) {
@@ -187,6 +257,11 @@ module.exports.softRemoveCaseUpdate = function (req, res) {
 				res.status(500).jsonp({message: err});
 			} else {
 				var updateInfo = result.updates.id(req.params.updateId);
+				if(updateInfo.memoRequired){
+					var memoTemplate = memoInfoTemplate(updateInfo, result);
+					//we are using the 'isOld' check to know id the memo is 'previous' or 'upcoming'
+					var isOld = moment(memoTemplate.deadline).isBefore(moment(new Date())); 
+				}
 				if(updateInfo){
 					if(updateInfo.removed){
 						res.status(500).jsonp({message: 'التحديث محذوف مسبقا'});
@@ -200,6 +275,7 @@ module.exports.softRemoveCaseUpdate = function (req, res) {
 								cases.populate(info, [{path: 'user'}, {path: 'consultant'}, {path: 'court'}, {path: 'client.user'}, {path: 'updates.user'}, {path: 'sessions.user'}, {path: 'defendant.user'}], function(err, userInfo){
 									res.status(200).jsonp(userInfo);
 									req.io.emit('cases.update', userInfo);
+									req.io.emit('memos.update', {'info': memoTemplate, 'isOld': isOld});
 								});
 							}
 						});
@@ -226,7 +302,7 @@ module.exports.sessionDates = function(req, res){
 }
 
 module.exports.upcomingSessions = function(req, res){
-	cases.find({}).where('sessions').exists().populate('sessions').populate('defendant.user').populate('court').populate('client.user').populate('sessions.user').populate('sessions.lawyer').sort('-newDate').exec(function(err, result){
+	cases.find({}).where('sessions').exists().populate('sessions').populate('defendant.user').populate('court').populate('client.user').populate('sessions.user').populate('sessions.lawyer').sort('created').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
@@ -241,21 +317,7 @@ module.exports.upcomingSessions = function(req, res){
 					sessions.forEach(function(info){
 						if(moment(info.newDate).isAfter(moment()) ){
 							//get last session
-							session = info;
-							sessionInfo.court = caseInfo.court;
-							sessionInfo.caseId = caseInfo._id;
-							sessionInfo.defendant = caseInfo.defendant;
-							sessionInfo.client = caseInfo.client;
-							sessionInfo.refNumber = session.refNumber;
-							sessionInfo.refType = session.refType;
-							sessionInfo.lawyer = session.lawyer;
-							sessionInfo.sessionStatus = caseInfo.status;
-							sessionInfo.sessionDate = session.newDate;
-							sessionInfo.sessionTime = session.newTime;
-							sessionInfo.sessionCreated = session.created;
-							sessionInfo.sessionUpdateId = session.updateId;
-							sessionInfo.sessionUser = session.user;
-							sessionInfo.sessionRemoved = session.removed;
+							var sessionInfo = sessionInfoTemplate(info, caseInfo);
 							//get last session info and case info
 							upcomingSessions.push(sessionInfo);
 							//clear sessionInfo
@@ -265,14 +327,14 @@ module.exports.upcomingSessions = function(req, res){
 				}
 			});
 
-			var sort = _.sortBy(upcomingSessions, 'sessionDate');
+			var sort = _.sortBy(upcomingSessions, 'newDate');
 			res.status(200).jsonp(sort);
 		}
 	});
 }
 
 module.exports.previousSessions = function(req, res){
-	cases.find({}).where('sessions').exists().populate('sessions').populate('defendant.user').populate('client.user').populate('court').populate('sessions.user').populate('sessions.lawyer').sort('-newDate').exec(function(err, result){
+	cases.find({}).where('sessions').exists().populate('sessions').populate('defendant.user').populate('client.user').populate('court').populate('sessions.user').populate('sessions.lawyer').sort('created').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
@@ -287,20 +349,7 @@ module.exports.previousSessions = function(req, res){
 					sessions.forEach(function(info){
 						if(moment(info.newDate).isBefore(moment())){
 							//get last session
-							session = info;
-							sessionInfo.court = caseInfo.court;
-							sessionInfo.caseId = caseInfo._id;
-							sessionInfo.defendant = caseInfo.defendant;
-							sessionInfo.client = caseInfo.client;
-							sessionInfo.refNumber = session.refNumber;
-							sessionInfo.refType = session.refType;
-							sessionInfo.sessionStatus = caseInfo.status;
-							sessionInfo.sessionDate = session.newDate;
-							sessionInfo.sessionTime = session.newTime;
-							sessionInfo.sessionCreated = session.created;
-							sessionInfo.sessionUpdateId = session.updateId;
-							sessionInfo.sessionUser = session.user;
-							sessionInfo.sessionRemoved = session.removed;
+							var sessionInfo = sessionInfoTemplate(info, caseInfo);
 							//get last session info and case info
 							upcomingSessions.push(sessionInfo);
 							//clear sessionInfo
@@ -310,7 +359,7 @@ module.exports.previousSessions = function(req, res){
 				}
 			});
 
-			var sort = _.sortBy(upcomingSessions, 'sessionDate');
+			var sort = _.sortBy(upcomingSessions, 'newDate');
 			res.status(200).jsonp(sort);
 		}
 	});
@@ -345,6 +394,7 @@ module.exports.byDate = function(req, res){
 					});
 				});
 				res.status(200).jsonp({message:'تم تحديث المهام بنجاح'});
+				req.io.emit('sessions.update');
 			} else {
 				res.status(500).jsonp({message: 'يرجى التأكد من إدخال جميع البيانات المطلوبة'});
 			}
@@ -368,6 +418,7 @@ module.exports.byCase = function(req, res){
 						res.status(500).jsonp({message: err});
 					} else {
 						res.status(200).jsonp({message:'تم تحديث المهام بنجاح'});
+						req.io.emit('sessions.update', result);
 					}
 				});
 			} else {
@@ -394,21 +445,7 @@ module.exports.memosPending = function(req, res){
 						//get last update
 						update = info;
 						if(update.memoRequired && update.memoStatus == 'pending'){
-							updateInfo.court = caseInfo.court;
-							updateInfo.caseId = caseInfo._id;
-							updateInfo.defendant = caseInfo.defendant;
-							updateInfo.client = caseInfo.client;
-							updateInfo.memoId = update.memoId;
-							updateInfo.memoType = update.memoType;
-							updateInfo.memoConsultant = update.memoConsultant;
-							updateInfo.memoRequired = update.memoRequired;
-							updateInfo.deadline = update.deadline;
-							updateInfo.memoStatus = update.memoStatus;
-							updateInfo.updateDate = update.newDate;
-							updateInfo.updateTime = update.newTime;
-							updateInfo.updateCreated = update.created;
-							updateInfo.updateId = update._id;
-							updateInfo.updateUser = update.user;
+							updateInfo = memoInfoTemplate(update, caseInfo);
 							//get last update info and case info
 							upcomingupdates.push(updateInfo);
 							//clear updateInfo
@@ -418,7 +455,7 @@ module.exports.memosPending = function(req, res){
 				}
 			});
 
-			var sort = _.sortBy(upcomingupdates, 'sessionDate');
+			var sort = _.sortBy(upcomingupdates, 'deadline');
 			res.status(200).jsonp(sort);
 		}
 	});
@@ -441,21 +478,7 @@ module.exports.memosClosed = function(req, res){
 						//get last update
 						update = info;
 						if(update.memoRequired && update.memoStatus == 'closed'){
-							updateInfo.court = caseInfo.court;
-							updateInfo.caseId = caseInfo._id;
-							updateInfo.defendant = caseInfo.defendant;
-							updateInfo.client = caseInfo.client;
-							updateInfo.memoId = update.memoId;
-							updateInfo.memoType = update.memoType;
-							updateInfo.memoConsultant = update.memoConsultant;
-							updateInfo.memoRequired = update.memoRequired;
-							updateInfo.deadline = update.deadline;
-							updateInfo.memoStatus = update.memoStatus;
-							updateInfo.updateDate = update.newDate;
-							updateInfo.updateTime = update.newTime;
-							updateInfo.updateCreated = update.created;
-							updateInfo.updateId = update._id;
-							updateInfo.updateUser = update.user;
+							updateInfo = memoInfoTemplate(update, caseInfo);
 							//get last update info and case info
 							upcomingupdates.push(updateInfo);
 							//clear updateInfo
@@ -465,7 +488,7 @@ module.exports.memosClosed = function(req, res){
 				}
 			});
 
-var sort = _.sortBy(upcomingupdates, 'sessionDate');
+var sort = _.sortBy(upcomingupdates, 'deadline');
 res.status(200).jsonp(sort);
 }
 });
@@ -511,13 +534,13 @@ module.exports.consultantMemos = function(req, res){
 							}
 						}			
 					});
-				}
-			});
+}
+});
 
-			var sort = _.sortBy(allUpdates, 'sessionDate');
-			res.status(200).jsonp(sort);
-		}
-	});
+var sort = _.sortBy(allUpdates, 'sessionDate');
+res.status(200).jsonp(sort);
+}
+});
 }
 
 module.exports.insertMemoConsultant = function(req, res){
@@ -533,6 +556,7 @@ module.exports.insertMemoConsultant = function(req, res){
 						res.status(500).jsonp({message: err});
 					} else {
 						res.status(200).jsonp(info);
+						req.io.emit('memos.update', info);
 					}
 				});
 			} else {
@@ -607,8 +631,8 @@ module.exports.insertNewClient = function(req, res){
 				if(err){
 					res.status(500).jsonp({message: err});
 				} else {
-						req.io.emit('user.add', result);
-						req.io.emit('user.available.add', result);
+					req.io.emit('user.add', result);
+					req.io.emit('user.available.add', result);
 					var clientInfo = {
 						user: result._id,
 						role: req.body.userInfo.clientRole,
@@ -642,10 +666,10 @@ module.exports.insertNewClient = function(req, res){
 					});
 				}
 			});
-		} else {
-			res.status(500).jsonp({message: 'Case not found'});
-		}
-	});
+} else {
+	res.status(500).jsonp({message: 'Case not found'});
+}
+});
 }
 
 
@@ -750,10 +774,10 @@ module.exports.insertNewDefendant = function(req, res){
 					});
 				}
 			});
-		} else {
-			res.status(500).jsonp({message: 'Case not found'});
-		}
-	});
+} else {
+	res.status(500).jsonp({message: 'Case not found'});
+}
+});
 }
 
 
@@ -971,7 +995,7 @@ module.exports.updates = function (req, res) {
 				res.status(500).jsonp({message: err});
 			} else if(result){
 				var info = result.updates,
-					serve = [];
+				serve = [];
 
 				info.forEach(function (item) {
 					if(item.updateId){
@@ -996,7 +1020,7 @@ module.exports.updatesAvailable = function (req, res) {
 				res.status(500).jsonp({message: err});
 			} else if(result){
 				var info = result.updates,
-					serve = [];
+				serve = [];
 
 				info.forEach(function (item) {
 					if(item.updateId && item.removed === false){

@@ -57,7 +57,6 @@ angular.module('caseModule').controller('tasksCaseController', ['$scope', '$moda
 			connectCaseFactory.save({'action': 'tasks', 'subaction': 'updatebydate'}, {'info': info}, function(response){
 				sysMsg('success', response.message);
 				//update the parent "sessions"
-				upcoming();
 			}, function(error){
 				sysMsg('error', error.data.message, true);
 			});
@@ -74,7 +73,6 @@ angular.module('caseModule').controller('tasksCaseController', ['$scope', '$moda
 		connectCaseFactory.save({'action': 'tasks', 'subaction': 'updatebycase'}, {'info': info}, function(response){
 			sysMsg('success', response.message);
 			//update the parent "sessions"
-			upcoming();
 		}, function(error){
 			sysMsg('error', error.data.message)
 		});
