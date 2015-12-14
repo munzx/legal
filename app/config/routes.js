@@ -26,7 +26,8 @@ courtCase = require('../controllers/case'),
 calendar = require('../controllers/calendar'),
 report = require('../controllers/report'),
 passport = require('passport'),
-authLocal = require('./auth/local.strategy');
+authLocal = require('./auth/local.strategy'),
+timeline = require('../controllers/timeline');
 
 
 module.exports = function (app, express, io) {
@@ -265,6 +266,8 @@ module.exports = function (app, express, io) {
 	.post('/calendar/:id/done', ensureAuthenticated, isUserNotClient, calendar.markDone)
 	.post('/calendar/:id/reject', ensureAuthenticated, isUserNotClient, calendar.rejectTask)
 	.post('/calendar/:id/softRemove', ensureAuthenticated, isUserNotClient, calendar.softRemove)
+	//timeline
+	.get('/timeline', ensureAuthenticated, isUserNotClient, timeline.index)
 );
 
 //404 Route/Page has not been found
