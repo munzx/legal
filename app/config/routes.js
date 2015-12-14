@@ -28,6 +28,7 @@ report = require('../controllers/report'),
 passport = require('passport'),
 authLocal = require('./auth/local.strategy');
 
+
 module.exports = function (app, express, io) {
 	//Assign variable to rename the PASSPORT local authentication strategy
 	var Auth = passport.authenticate('local');
@@ -123,12 +124,6 @@ module.exports = function (app, express, io) {
 			next();
 		}
 	}
-
-	// Make io accessible to our router
-	app.use(function(req, res, next){
-		req.io = io;
-		next();
-	});
 
 	//Index page
 	app.get('/', function(req, res){

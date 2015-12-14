@@ -53,6 +53,7 @@ var memoInfoTemplate = function (update, caseInfo) {
 		updateInfo.memoRequired = update.memoRequired;
 		updateInfo.deadline = update.deadline;
 		updateInfo.memoStatus = update.memoStatus;
+		updateInfo.updateType = update.updateType;
 		updateInfo.updateDate = update.newDate;
 		updateInfo.updateTime = update.newTime;
 		updateInfo.updateCreated = update.created;
@@ -108,7 +109,11 @@ module.exports.create = function(req, res){
 					res.status(500).jsonp({message: err});
 				} else {
 					res.status(200).jsonp(result);
-					req.io.emit('cases.add', result);
+					req.feeds.insert('cases.add', req.user, result, function (err, result) {
+						if(err){
+							console.log(err);
+						}
+					}, true);
 				}
 			});	
 		}
@@ -128,7 +133,11 @@ module.exports.softRemove = function(req, res){
 						res.status(500).jsonp({message: error});
 					} else {
 						res.status(200).jsonp(info);
-						req.io.emit('cases.update', info);
+						req.feeds.insert('cases.update', req.user, info, function (err, result) {
+							if(err){
+								console.log(err);
+							}
+						}, true, 'removed');
 					}
 				});
 			} else {
@@ -213,7 +222,11 @@ module.exports.insertCaseUpdate = function(req, res){
 								} else {
 									res.status(200).jsonp(caseAllInfo);
 									//prodcast the case update
-									req.io.emit('cases.update', caseAllInfo);
+									req.feeds.insert('cases.update', req.user, caseAllInfo, function (err, result) {
+										if(err){
+											console.log(err);
+										}
+									}, true);
 									//if new memo was etered then broadcast the event
 									if(updateInfo.memoRequired){
 										//this is used to hold info to be sent to users through socket.io
@@ -221,7 +234,11 @@ module.exports.insertCaseUpdate = function(req, res){
 										var memoTemplate = memoInfoTemplate(updatedResult.updates[updatedResult.updates.length - 1], caseInfo);
 										//we are using the 'isOld' check to know id the memo is 'previous' or 'upcoming'
 										var isOld = moment(memoTemplate.deadline).isBefore(moment(new Date())); 
-										req.io.emit('memos.add', {'info': memoTemplate, 'isOld': isOld});
+										req.feeds.insert('memos.add', req.user,  {'info': memoTemplate, 'isOld': isOld}, function (err, result) {
+											if(err){
+												console.log(err);
+											}
+										}, true);
 									}
 									//if new session was etered then broadcast the event
 									if(updateInfo.sessionRequired){
@@ -230,9 +247,11 @@ module.exports.insertCaseUpdate = function(req, res){
 										var sessionTemplate = sessionInfoTemplate(updatedResult.sessions[updatedResult.sessions.length - 1], caseInfo);
 										//we are using the 'isOld' check to know id the session is 'previous' or 'upcoming'
 										var isOld = moment(sessionTemplate.newDate).isBefore(moment(new Date()));
-										req.io.emit('sessions.add', {'info': sessionTemplate, 'isOld': isOld});
-										//update reports
-										req.io.emit('reports.update', true);
+										req.feeds.insert('sessions.add', req.user, {'info': sessionTemplate, 'isOld': isOld}, function (err, result) {
+											if(err){
+												console.log(err);
+											}
+										}, true);
 									}
 								}
 							});
@@ -276,8 +295,16 @@ module.exports.softRemoveCaseUpdate = function (req, res) {
 							} else {
 								cases.populate(info, [{path: 'user'}, {path: 'consultant'}, {path: 'court'}, {path: 'client.user'}, {path: 'updates.user'}, {path: 'sessions.user'}, {path: 'defendant.user'}], function(err, userInfo){
 									res.status(200).jsonp(userInfo);
-									req.io.emit('cases.update', userInfo);
-									req.io.emit('memos.update', {'info': memoTemplate, 'isOld': isOld});
+									req.feeds.insert('cases.update', req.user, userInfo, function (err, result) {
+										if(err){
+											console.log(err);
+										}
+									}, true);
+									req.feeds.insert('memos.update', req.user, {'info': memoTemplate, 'isOld': isOld}, function (err, result) {
+										if(err){
+											console.log(err);
+										}
+									}, true);
 								});
 							}
 						});
@@ -373,7 +400,7 @@ module.exports.byDate = function(req, res){
 		dataDates = result;
 	});
 
-	cases.find({"sessions.newDate": {"$gte": dataDates.from, "$lte": dataDates.to}}).populate('sessions.lawyer').exec(function(err, result){
+	cases.find({"sessions.newDate": {"$gte": dataDates.from, "$lte": dataDates.to}}).populate('sessions.lawyer').populate('court').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
@@ -396,9 +423,12 @@ module.exports.byDate = function(req, res){
 					});
 				});
 				res.status(200).jsonp({message:'تم تحديث المهام بنجاح'});
-				req.io.emit('sessions.update');
-				//update reports
-				req.io.emit('reports.update', true);
+				req.feeds.insert('sessions.update.tasks', req.user, true, function (err, result) {
+					if(err){
+						console.log(err);
+					}
+				}, true);
+				req.feeds.send('sessions.update', result); //use this as in the front end they listens to the updates in session
 			} else {
 				res.status(500).jsonp({message: 'يرجى التأكد من إدخال جميع البيانات المطلوبة'});
 			}
@@ -422,9 +452,12 @@ module.exports.byCase = function(req, res){
 						res.status(500).jsonp({message: err});
 					} else {
 						res.status(200).jsonp({message:'تم تحديث المهام بنجاح'});
-						req.io.emit('sessions.update', result);
-						//update reports
-						req.io.emit('reports.update', true);
+						req.feeds.insert('sessions.update.tasks', req.user, true, function (err, result) {
+							if(err){
+								console.log(err);
+							}
+						}, true);
+						req.feeds.send('sessions.update', result); //use this as in the front end they listens to the updates in session
 					}
 				});
 			} else {
@@ -550,7 +583,7 @@ res.status(200).jsonp(sort);
 }
 
 module.exports.insertMemoConsultant = function(req, res){
-	cases.findById(req.body.update.caseId).populate('updates.user').exec(function(err, caseInfo){
+	cases.findById(req.body.update.caseId).populate('updates.user').populate('updates.memoConsultant').exec(function(err, caseInfo){
 		if(err){
 			res.status(500).jsonp({message: err});
 		} else {
@@ -562,9 +595,13 @@ module.exports.insertMemoConsultant = function(req, res){
 						res.status(500).jsonp({message: err});
 					} else {
 						res.status(200).jsonp(info);
-						req.io.emit('memos.update', info);
-						//update reports
-						req.io.emit('reports.update', true);
+						console.log(memoUpdateInfo);
+						req.feeds.insert('memos.update.consultant', req.user, memoUpdateInfo, function (err, result) {
+							if(err){
+								console.log(err);
+							}
+						}, true);
+						req.feeds.send('memos.update', info);
 					}
 				});
 			} else {
@@ -612,7 +649,11 @@ module.exports.insertClient = function(req, res){
 							} else {
 								cases.populate(result, [{path: 'user'}, {path: 'consultant'}, {path: 'court'}, {path: 'client.user'}, {path: 'updates.user'}, {path: 'sessions.user'}, {path: 'defendant.user'}], function(err, userInfo){
 									res.status(200).jsonp(userInfo);
-									req.io.emit('cases.update', userInfo);
+									req.feeds.insert('cases.update', req.user, userInfo, function (err, result) {
+										if(err){
+											console.log(err);
+										}
+									}, true);
 								});
 							}
 						});
@@ -639,8 +680,12 @@ module.exports.insertNewClient = function(req, res){
 				if(err){
 					res.status(500).jsonp({message: err});
 				} else {
-					req.io.emit('user.add', result);
-					req.io.emit('user.available.add', result);
+					req.feeds.insert('user.add', req.user, result, function (err, info) {
+						if(err){
+							console.log(err);
+						}
+					}, true);
+					req.feeds.send('user.available.add', result);
 					var clientInfo = {
 						user: result._id,
 						role: req.body.userInfo.clientRole,
@@ -666,7 +711,11 @@ module.exports.insertNewClient = function(req, res){
 								} else {
 									cases.populate(result, [{path: 'user'}, {path: 'consultant'}, {path: 'court'}, {path: 'client.user'}, {path: 'updates.user'}, {path: 'sessions.user'}, {path: 'defendant.user'}], function(err, userInfo){
 										res.status(200).jsonp(userInfo);
-										req.io.emit('cases.update', userInfo);
+										req.feeds.insert('cases.update', req.user, userInfo, function (err, result) {
+											if(err){
+												console.log(err);
+											}
+										}, true);
 									});
 								}
 							});
@@ -719,7 +768,11 @@ module.exports.insertDefendant = function(req, res){
 							} else {
 								cases.populate(result, [{path: 'user'}, {path: 'consultant'}, {path: 'court'}, {path: 'client.user'}, {path: 'updates.user'}, {path: 'sessions.user'}, {path: 'defendant.user'}], function(err, userInfo){
 									res.status(200).jsonp(userInfo);
-									req.io.emit('cases.update', userInfo);
+									req.feeds.insert('cases.update', req.user, userInfo, function (err, result) {
+										if(err){
+											console.log(err);
+										}
+									}, true);
 								});
 							}
 						});
@@ -746,8 +799,12 @@ module.exports.insertNewDefendant = function(req, res){
 				if(err){
 					res.status(500).jsonp({message: err});
 				} else {
-					req.io.emit('defendant.add', result);
-					req.io.emit('defendant.available.add', result);
+					req.feeds.insert('defendant.add', req.user, result, function (err, info) {
+						if(err){
+							console.log(err);
+						}
+					}, true);
+					req.feeds.send('defendant.available.add', result);
 
 					var defendantInfo = {
 						user: result._id,
@@ -774,7 +831,11 @@ module.exports.insertNewDefendant = function(req, res){
 								} else {
 									cases.populate(result, [{path: 'user'}, {path: 'consultant'}, {path: 'court'}, {path: 'client.user'}, {path: 'updates.user'}, {path: 'sessions.user'}, {path: 'defendant.user'}], function(err, userInfo){
 										res.status(200).jsonp(userInfo);
-										req.io.emit('cases.update', userInfo);
+										req.feeds.insert('cases.update', req.user, userInfo, function (err, result) {
+											if(err){
+												console.log(err);
+											}
+										}, true);
 									});
 								}
 							});
@@ -815,7 +876,11 @@ module.exports.clientSofttRemove = function(req, res){
 						res.status(500).jsonp({message: err});
 					} else {
 						res.status(200).jsonp(result);
-						req.io.emit('cases.update', result);
+						req.feeds.insert('cases.update', req.user, result, function (err, result) {
+							if(err){
+								console.log(err);
+							}
+						}, true);
 					}
 				});
 			} else {
@@ -853,7 +918,11 @@ module.exports.defendantSoftRemove = function(req, res){
 						res.status(500).jsonp({message: err});
 					} else {
 						res.status(200).jsonp(result);
-						req.io.emit('cases.update', result);
+						req.feeds.insert('cases.update', req.user, result, function (err, result) {
+							if(err){
+								console.log(err);
+							}
+						}, true);
 					}
 				});
 			} else {
@@ -931,7 +1000,11 @@ module.exports.uploadDoc = function(req, res){
 									res.status(500).jsonp({message: err});
 								} else {
 									res.status(200).jsonp(docInfo.docs[docInfo.docs.length -1]);
-									req.io.emit('cases.update.docs', docInfo.docs[docInfo.docs.length -1]);
+									req.feeds.insert('cases.update.docs', req.user, docInfo.docs[docInfo.docs.length -1], function (err, result) {
+										if(err){
+											console.log(err);
+										}
+									}, true);
 								}
 							});
 						}
@@ -981,7 +1054,11 @@ module.exports.removeDoc = function(req, res){
 									res.status(500).jsonp({message: err});
 								} else {
 									res.status(200).jsonp({'docs': docInfo.docs});
-									req.io.emit('cases.update.docs.update', {'docs': docInfo.docs});
+									req.feeds.insert('cases.update.docs.update', req.user, docInfo.docs[docInfo.docs.length -1], function (err, result) {
+										if(err){
+											console.log(err);
+										}
+									}, true, 'removed');
 								}
 							});
 						}
@@ -1011,7 +1088,6 @@ module.exports.updates = function (req, res) {
 					}
 				});
 				res.status(200).jsonp(serve);
-				req.io.emit('updateType.update', serve);
 			} else {
 				res.status(200).jsonp([]);
 			}
@@ -1038,7 +1114,6 @@ module.exports.updatesAvailable = function (req, res) {
 				res.status(200).jsonp(serve);
 			} else {
 				res.status(200).jsonp([]);
-				req.io.emit('updateType.availableUpdate', serve);
 			}
 		});
 	} else {

@@ -30,7 +30,10 @@
 				<li  ui-sref-active="active" ng-show="loggedLink">
 					<a ui-sref="admin.users"><b>المستخدمين</b></a>
 				</li>
-				<li  ng-show="loggedLink">
+				<li  ui-sref-active="active" ng-show="loggedLink">
+					<a ui-sref="admin.timeline"><b>الأحداث</b></a>
+				</li>
+				<li  ui-sref-active="active" ng-show="loggedLink">
 					<a ui-sref="admin.report"><b>التقارير</b></a>
 				</li>
 				<li class="dropdown" dropdown ng-show="loggedLink" >

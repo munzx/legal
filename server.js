@@ -2,10 +2,19 @@
 
 //Dependencies and variables
 var express = require('express'),
-	app = express(),
-	http = require('http').Server(app),
-	port = process.env.PORT || 3000,
-	io = require('socket.io')(http);
+app = express(),
+http = require('http').Server(app),
+port = process.env.PORT || 3000,
+io = require('socket.io')(http),
+feeds = require('./app/helpers/feed.builder.js')(io);
+
+
+// Make io accessible to our router
+app.use(function(req, res, next){
+	req.io = io;
+	req.feeds = feeds;
+	next();
+});
 
 
 //Set default node envoironment to development

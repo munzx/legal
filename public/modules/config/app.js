@@ -2,7 +2,7 @@
 
 // intitiate the app and Inject all of the app module dependencies
 //configure the routes
-var yousufalsharif = angular.module('yousufalsharif', ['btford.socket-io', 'ngAnimate', 'adminModule', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'updateTypesModule', 'consultantModule', 'chart.js', 'AngularPrint', 'employeeModule', 'calendarModule', 'uploadModule', 'caseTypeModule', 'reportModule']);
+var yousufalsharif = angular.module('yousufalsharif', ['btford.socket-io', 'ngAnimate', 'adminModule', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'updateTypesModule', 'consultantModule', 'chart.js', 'AngularPrint', 'employeeModule', 'calendarModule', 'uploadModule', 'caseTypeModule', 'reportModule', 'timelineModule']);
 
 //RouteScopes & Routes Configurations 
 yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'ChartJsProvider', function ($urlRouterProvider, $stateProvider, $locationProvider, ChartJsProvider) {
@@ -78,6 +78,16 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 				'page': {
 					templateUrl: 'public/modules/report/view/index.report.view.html',
 					controller: 'indexReportController'
+				}
+			}
+		})
+		.state('admin.timeline', {
+			url: '/timeline',
+			cache: false,
+			views: {
+				'page': {
+					templateUrl: 'public/modules/timeline/view/index.timeline.view.html',
+					controller: 'indexTimelineController'
 				}
 			}
 		})

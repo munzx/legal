@@ -16,6 +16,11 @@ module.exports.index = function (req, res) {
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {
 			res.status(200).jsonp(result);
+			req.feeds.reader(function (err, result) {
+				if(err){
+					console.log(err);
+				}
+			});
 		}
 	});
 }
@@ -57,9 +62,11 @@ module.exports.create = function(req, res){
 						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 					} else {
 						res.status(200).jsonp(info);
-						req.io.emit('tasks.add', info);
-						//update reports
-						req.io.emit('reports.update', true);
+						req.feeds.insert('tasks.add', req.user, info, function (err, result) {
+							if(err){
+								console.log(err);
+							}
+						}, true);
 					}
 				});
 			}
@@ -81,9 +88,12 @@ module.exports.markDone = function(req, res){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
 							res.status(200).jsonp(done);
-							req.io.emit('tasks.update', done);
 							//update reports
-							req.io.emit('reports.update', true);
+							req.feeds.insert('tasks.update', req.user, done, function (err, result) {
+								if(err){
+									console.log(err);
+								}
+							}, true, 'done');
 						}
 					});
 				} else {
@@ -111,9 +121,12 @@ module.exports.softRemove = function(req, res){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
 							res.status(200).jsonp(done);
-							req.io.emit('tasks.update', done);
 							//update reports
-							req.io.emit('reports.update', true);
+							req.feeds.insert('tasks.update', req.user, done, function (err, result) {
+								if(err){
+									console.log(err);
+								}
+							}, true, 'removed');
 						}
 					});
 				} else {
@@ -140,9 +153,12 @@ module.exports.rejectTask = function(req, res){
 							res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 						} else {
 							res.status(200).jsonp(done);
-							req.io.emit('tasks.update', done);
 							//update reports
-							req.io.emit('reports.update', true);
+							req.feeds.insert('tasks.update', req.user, done, function (err, result) {
+								if(err){
+									console.log(err);
+								}
+							}, true, 'rejected');
 						}
 					});
 				} else {
