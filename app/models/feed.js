@@ -49,7 +49,8 @@ var feedSchema = new Schema({
 		type: String,
 		default: '',
 		trim: true
-	}
+	},
+	created: {type: Date, default: Date.now}
 });
 
 

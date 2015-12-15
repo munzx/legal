@@ -5,8 +5,21 @@ _ = require('lodash'),
 moment = require('moment-range');
 
 
-var localize = function () {
-	var lang ;
+var localize = function (word) {
+   if(!word){ return false};
+	var words = {
+      'admin': 'أدمن',
+      'client': 'موكل',
+      'employee': 'موظف',
+      'consultant': 'مستشار',
+      'defendant': 'خصم',
+      'uploaded': 'رفع',
+      'removed': 'حذف',
+      'updated': 'تحديث',
+      'task': 'مهمة',
+      'marked done': 'إنهاء'
+   }
+   return words[word.toLowerCase()] || word;
 }
 
 var feedTemplate = function (user, info) {
@@ -39,7 +52,7 @@ var timeLineBuilder = {
 			return feed;
 		},
 		read: function (feed) {
-			return feed.feedUser.name + ' قام بإضافة ' + feed.feedType + ' ' + feed.feedDesc;
+			return feed.feedUser.name + ' قام بإضافة ' + localize(feed.feedType) + ' (' + feed.feedDesc + ')';
 		}
 	},
 	'tasks.update': {
@@ -69,7 +82,7 @@ var timeLineBuilder = {
 				default:
 				action = "updated";
 			}
-			return feed.feedUser.name + ' قام ' + action + ' ب ' + feed.feedType + ' ' + feed.feedDesc;
+			return feed.feedUser.name + ' قام ب' + localize(action) + ' ' + localize(feed.feedType) + ' (' + feed.feedDesc + ')';
 		}
 	},
 	'cases.add': {
@@ -85,7 +98,7 @@ var timeLineBuilder = {
 			return feed;
 		},
 		read: function (feed) {
-			return feed.feedUser.name + ' أضاف قضية ' + feed.feedDesc;
+			return feed.feedUser.name + ' أضاف قضية (' + feed.feedDesc + ')';
 		}
 	},
 	'cases.update': {
@@ -109,7 +122,7 @@ var timeLineBuilder = {
 				default:
 				action = 'updated'
 			}
-			return feed.feedUser.name + ' قام ' + action + ' القضية ، ' + feed.feedDesc;	
+			return feed.feedUser.name + ' قام ب' + localize(action) + ' القضية ( ' + feed.feedDesc + ')';
 		}
 	},
 	'cases.update.docs': {
@@ -133,7 +146,7 @@ var timeLineBuilder = {
 				default:
 				action = 'uploaded'
 			}
-			return feed.feedUser.name + ' قام ' + action + ' المستند ' + feed.feedDesc;	
+			return feed.feedUser.name + ' ' + localize(action) + ' المستند (' + feed.feedDesc + ')';
 		}
 	},
 	'cases.update.docs.update': {
@@ -157,7 +170,7 @@ var timeLineBuilder = {
 				default:
 				action = 'uploaded'
 			}
-			return feed.feedUser.name + ' قام ' + action + ' المستند ' + feed.feedDesc;	
+			return feed.feedUser.name + ' قام ب' + localize(action) + ' المستند (' + feed.feedDesc + ')';
 		}
 	},
 	'memos.add': {
@@ -173,7 +186,7 @@ var timeLineBuilder = {
 			return feed;
 		},
 		read: function (feed) {
-			return feed.feedUser.name + ' قام بإضافة المذكرة ' + feed.feedDesc;
+			return feed.feedUser.name + ' قام بإضافة المذكرة (' + feed.feedDesc + ')';
 		}
 	},
 	'memos.update': {
@@ -197,7 +210,7 @@ var timeLineBuilder = {
 				default:
 				action = 'updated'
 			}
-			return feed.feedUser.name + ' قام ' + action + ' المذكرة ' + feed.feedDesc;	
+			return feed.feedUser.name + ' قام ب' + localize(action) + ' المذكرة (' + feed.feedDesc + ')';
 		}
 	},
 	'memos.update.consultant': {
@@ -214,7 +227,7 @@ var timeLineBuilder = {
 			return feed;
 		},
 		read: function (feed) {
-			return feed.feedUser.name + ' أوكل مذكرة ' + feed.feedDesc + ' إلى ' + feed.feedToUser.name;	
+			return feed.feedUser.name + ' أوكل مذكرة (' + feed.feedDesc + ') إلى ' + feed.feedToUser.name;
 		}
 	},
 	'sessions.add': {
@@ -230,7 +243,7 @@ var timeLineBuilder = {
 			return feed;
 		},
 		read: function (feed) {
-			return feed.feedUser.name + ' قام بإضافة جلسة في  ' + feed.feedDesc;
+			return feed.feedUser.name + ' قام بإضافة جلسة  (' + feed.feedDesc + ') ';
 		}
 	},
 	'sessions.update': {
@@ -255,7 +268,7 @@ var timeLineBuilder = {
 				default:
 				action = 'updated'
 			}
-			return feed.feedUser.name + ' قام ' + action + ' جلسة ' + feed.feedDesc;	
+			return feed.feedUser.name + ' قام ' + localize(action) + ' جلسة ' + feed.feedDesc;
 		}
 	},
 	'sessions.update.tasks': {
@@ -269,7 +282,7 @@ var timeLineBuilder = {
 			return feed;
 		},
 		read: function (feed) {
-			return feed.feedUser.name + 'قام بتحديث المهام';	
+			return feed.feedUser.name + 'قام بتحديث المهام';
 		}
 	},
 	'user.add': {
@@ -285,7 +298,7 @@ var timeLineBuilder = {
 			return feed;
 		},
 		read: function (feed) {
-			return feed.feedUser.name + ' قام بإضافة ' + feed.feedDesc;	
+			return feed.feedUser.name + ' قام بإضافة ' + localize(feed.feedDesc);
 		}
 	},
 	'user.update': {
@@ -309,7 +322,7 @@ var timeLineBuilder = {
 				default:
 				action = 'updated'
 			}
-			return feed.feedUser.name + ' قام ' + action + ' ' + feed.feedDesc;	
+			return feed.feedUser.name + ' قام ' + localize(action) + 'ب  ' + feed.feedDesc;
 		}
 	},
 	'defendant.add': {
@@ -333,7 +346,7 @@ var timeLineBuilder = {
 				default:
 				action = 'added'
 			}
-			return feed.feedUser.name + ' قام ' + action + ' الخصم : ' + feed.feedDesc;	
+			return feed.feedUser.name + ' قام ب' + localize(action) + ' الخصم ' + feed.feedDesc;
 		}
 	}
 }
