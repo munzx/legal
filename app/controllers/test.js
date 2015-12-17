@@ -8,5 +8,11 @@ var fs = require("fs"),
 
 module.exports.index = function (req, res, next) {
 	// Use it however you wish
-	res.status(200).jsonp('Bism Allah');
+	req.feeds.reader(function (err, result) {
+		if(err){
+			res.status(500).jsonp(err);
+		} else {
+			res.status(200).jsonp(result);
+		}
+	});
 }

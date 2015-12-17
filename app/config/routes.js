@@ -267,7 +267,7 @@ module.exports = function (app, express, io) {
 	.post('/calendar/:id/reject', ensureAuthenticated, isUserNotClient, calendar.rejectTask)
 	.post('/calendar/:id/softRemove', ensureAuthenticated, isUserNotClient, calendar.softRemove)
 	//timeline
-	.get('/timeline', ensureAuthenticated, isUserNotClient, timeline.index)
+	.get('/timeline', timeline.index)
 );
 
 //404 Route/Page has not been found

@@ -32,6 +32,7 @@ var sessionInfoTemplate = function (session, caseInfo) {
 		sessionInfo.sessionUpdateId = session.updateId;
 		sessionInfo.sessionUser = session.user;
 		sessionInfo.sessionRemoved = session.removed;
+		sessionInfo.sessionId = session._id;
 		return sessionInfo;
 	} else {
 		return false;
@@ -230,7 +231,7 @@ module.exports.insertCaseUpdate = function(req, res){
 									//if new memo was etered then broadcast the event
 									if(updateInfo.memoRequired){
 										//this is used to hold info to be sent to users through socket.io
-										//as the front-end app needs this info in certain form provided by 'memoInfoTemplate'
+										//as the front-end app needs this info in certain form which is provided  by 'memoInfoTemplate'
 										var memoTemplate = memoInfoTemplate(updatedResult.updates[updatedResult.updates.length - 1], caseInfo);
 										//we are using the 'isOld' check to know id the memo is 'previous' or 'upcoming'
 										var isOld = moment(memoTemplate.deadline).isBefore(moment(new Date())); 
@@ -300,11 +301,13 @@ module.exports.softRemoveCaseUpdate = function (req, res) {
 											console.log(err);
 										}
 									}, true);
-									req.feeds.insert('memos.update', req.user, {'info': memoTemplate, 'isOld': isOld}, function (err, result) {
-										if(err){
-											console.log(err);
-										}
-									}, true);
+									if(updateInfo.memoRequired){
+										req.feeds.insert('memos.update', req.user, {'info': memoTemplate, 'isOld': isOld}, function (err, result) {
+											if(err){
+												console.log(err);
+											}
+										}, true, 'removed');
+									}
 								});
 							}
 						});
@@ -595,13 +598,13 @@ module.exports.insertMemoConsultant = function(req, res){
 						res.status(500).jsonp({message: err});
 					} else {
 						res.status(200).jsonp(info);
-						console.log(memoUpdateInfo);
-						req.feeds.insert('memos.update.consultant', req.user, memoUpdateInfo, function (err, result) {
+						var memoTemplate = memoInfoTemplate(memoUpdateInfo, info);
+						req.feeds.insert('memos.update.consultant', req.user, memoTemplate, function (err, result) {
 							if(err){
 								console.log(err);
 							}
 						}, true);
-						req.feeds.send('memos.update', info);
+						req.feeds.send('memos.update', memoTemplate);
 					}
 				});
 			} else {
@@ -1000,7 +1003,7 @@ module.exports.uploadDoc = function(req, res){
 									res.status(500).jsonp({message: err});
 								} else {
 									res.status(200).jsonp(docInfo.docs[docInfo.docs.length -1]);
-									req.feeds.insert('cases.update.docs', req.user, docInfo.docs[docInfo.docs.length -1], function (err, result) {
+									req.feeds.insert('cases.update.docs', req.user, {'caseId': docInfo._id, 'info': docInfo.docs[docInfo.docs.length -1]}, function (err, result) {
 										if(err){
 											console.log(err);
 										}
@@ -1054,7 +1057,7 @@ module.exports.removeDoc = function(req, res){
 									res.status(500).jsonp({message: err});
 								} else {
 									res.status(200).jsonp({'docs': docInfo.docs});
-									req.feeds.insert('cases.update.docs.update', req.user, docInfo.docs[docInfo.docs.length -1], function (err, result) {
+									req.feeds.insert('cases.update.docs.update', req.user, {'caseId': docInfo._id, 'info': docInfo.docs[docInfo.docs.length -1]}, function (err, result) {
 										if(err){
 											console.log(err);
 										}
