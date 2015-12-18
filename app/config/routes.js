@@ -30,7 +30,7 @@ authLocal = require('./auth/local.strategy'),
 timeline = require('../controllers/timeline');
 
 
-module.exports = function (app, express, io) {
+module.exports = function (app, express) {
 	//Assign variable to rename the PASSPORT local authentication strategy
 	var Auth = passport.authenticate('local');
 	//check if the user is authinticated
@@ -267,7 +267,7 @@ module.exports = function (app, express, io) {
 	.post('/calendar/:id/reject', ensureAuthenticated, isUserNotClient, calendar.rejectTask)
 	.post('/calendar/:id/softRemove', ensureAuthenticated, isUserNotClient, calendar.softRemove)
 	//timeline
-	.get('/timeline', timeline.index)
+	.get('/timeline', ensureAuthenticated, isUserNotClient, timeline.index)
 );
 
 //404 Route/Page has not been found

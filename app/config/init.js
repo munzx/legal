@@ -13,6 +13,7 @@ var logger = require('express-logger'),
 	passport = require('passport'),
 	passportLocal = require('passport-local'),
 	favicon = require('serve-favicon'),
+	i18n = require('i18n-2'),
 	env = process.env.NODE_ENV,
 	envConfig = require('./env/' + process.env.NODE_ENV) || {};
 
@@ -65,6 +66,18 @@ module.exports = function (app, express) {
 	app.use(methodOverride()); //read about this
 	app.use(passport.initialize()); //initialize passport
 	app.use(passport.session()); // persistent login sessions
+
+	//Translation
+	i18n.expressBind(app, {
+		locales: ['ar', 'en'],
+		defaultLocale: 'ar'
+	});
+
+	//set the default lanugnage
+	app.use(function(req, res, next) {
+	    req.i18n.setLocale('ar');
+	    next();
+	});
 
 	//Publically accessable folders
 	app.use('/asset', express.static('./bower_components/'));
