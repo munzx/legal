@@ -5,6 +5,7 @@ angular.module('yousufalsharif').factory('arLang', [function () {
 		'admin': 'إداري',
 		'pending': 'معلقة',
 		'close': 'مغلقة',
+		'closed': 'مغلقة',
 		'client': 'موكل',
 		'defendant': 'خصم',
 		'case': 'قضية',

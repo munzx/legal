@@ -231,8 +231,11 @@ function init (req, res, next, io) {
 						case 'removed':
 								return req.i18n.__('memos.update.removed', feed.user.name, subInfo.memoType, subInfo.memoId);
 							break;
+						case "closed":
+							return req.i18n.__('memos.update.closed', req.i18n.__(feed.user.role), feed.user.name, subInfo.memoType, subInfo.memoId, subInfo.memoConsultant[subInfo.memoConsultant.length - 1].name);
+							break;
 						default:
-								return req.i18n.__('memos.update.updated', feed.user.name, subInfo.memoType, subInfo.memoId);
+								return req.i18n.__('memos.update.updated', req.i18n.__(feed.user.role), feed.user.name, subInfo.memoType, subInfo.memoId);
 					}
 				} else {
 					return false;
@@ -253,8 +256,14 @@ function init (req, res, next, io) {
 				return feed;
 			},
 			read: function (feed, subInfo) {
-				if(feed){
-					return req.i18n.__('memos.update.consultant', feed.user.name, subInfo.memoType, subInfo.memoId, subInfo.memoConsultant[subInfo.memoConsultant.length - 1].name);
+				if(feed && subInfo){
+					switch(feed.action){
+						case "add":
+							return req.i18n.__('memos.update.consultant.updated', feed.user.name, subInfo.memoType, subInfo.memoId, subInfo.memoConsultant[subInfo.memoConsultant.length - 1].name);
+							break;
+						default:
+							return false;
+					}
 				} else {
 					return false;
 				}
@@ -441,8 +450,8 @@ function init (req, res, next, io) {
 							var timeLine = [];
 							result.forEach(function (feed) {
 								//get and populate case subDocs if required and aviliable
+								var subInfo = '';
 								if(feed.subRef && feed.group){
-									var subInfo = '';
 									switch(feed.group){
 										case "memos":
 											if(feed.caseRef.updates){

@@ -11,8 +11,9 @@
 	"cases.update.docs.update.updated": "%s قام/ت بتحديث المستند %s",
 	"memos.add": "قام/ت %s بطلب مذكرة (%s %s)",
 	"memos.update.removed": "%s قام/ت بحذف طلب المذكرة (%s %s)",
-	"memos.update.updated": "%s قام/ت بتحديث طلب المذكرة (%s %s)",
-	"memos.update.consultant": "قام/ت %s بإكال المذكرة (%s %s) إلى %s",
+	"memos.update.updated": "%s %s قام/ت بتحديث طلب المذكرة (%s %s)",
+	"memos.update.closed": "قام/ت %s %s بالإنتهاء من  طلب المذكرة (%s %s)",
+	"memos.update.consultant.updated": "قام/ت %s بإكال المذكرة (%s %s) إلى %s",
 	"sessions.add": "قام/ت %s بتحديد جلسة قادمة في القضية (%s %s , %s)",
 	"sessions.update.removed": "%s قام/ت بحذف الجلسة (%s %s, %s)",
 	"sessions.update.updated": "قام/ت %s بتحديث الجلسة (%s %s, %s)",
@@ -24,5 +25,5 @@
 	"client": "الموكل",
 	"employee": "الموظف",
 	"consultant": "المستشار",
-	"admin": "الأدمن"
+	"admin": "الإد"
 }

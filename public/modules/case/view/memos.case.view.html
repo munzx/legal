@@ -62,8 +62,15 @@
 									<p ng-hide="memo.deadline">----</p>
 								</td>
 								<td class="text-center">
-									<a href="" ng-show="isAdmin" ng-click="showUpdateConsultantForm($index)">{{fullName(memo.memoConsultant) || 'empty'}}</a>
-									<span ng-hide="isAdmin">{{fullName(memo.memoConsultant) || 'empty'}}</span>
+									<a href="" ng-show="isAdmin" ng-click="showUpdateConsultantForm($index)">
+										{{fullName(memo.memoConsultant) || '-------'}}
+									</a>
+									<a href="" ng-show="isCaseConsultant(memo.memoConsultant)" ng-click="showUploadedMemos($index)">
+										{{fullName(memo.memoConsultant) || '-------'}}
+									</a>
+									<span ng-hide="isAdmin || isCaseConsultant(memo.memoConsultant)">
+										{{fullName(memo.memoConsultant) || '-------'}}
+									</span>
 								</td>
 								<td class="text-center">{{memo.court[0].name}}</td>
 								<td class="text-center">

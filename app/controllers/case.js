@@ -60,6 +60,7 @@ var memoInfoTemplate = function (update, caseInfo) {
 		updateInfo.updateCreated = update.created;
 		updateInfo.updateId = update._id;
 		updateInfo.updateUser = update.user;
+		updateInfo.memosUploaded = update.memosUploaded;
 		return updateInfo;
 	} else {
 		return false;
@@ -484,11 +485,17 @@ module.exports.memosPending = function(req, res){
 				if(caseInfo.updates.length > 0){
 					var updates = caseInfo.updates;
 					updates.forEach(function(info){
-						//get last update
 						update = info;
 						if(update.memoRequired && update.memoStatus == 'pending'){
+							//populate memosUploaded
+							if(update.memosUploaded){
+								var memosUploaded = [];
+								update.memosUploaded.forEach(function (docRef) {
+									memosUploaded.push(caseInfo.docs.id(docRef._id));
+								});
+								update.memosUploaded = memosUploaded;
+							}
 							updateInfo = memoInfoTemplate(update, caseInfo);
-							//get last update info and case info
 							upcomingupdates.push(updateInfo);
 							//clear updateInfo
 							updateInfo = {};
@@ -520,6 +527,14 @@ module.exports.memosClosed = function(req, res){
 						//get last update
 						update = info;
 						if(update.memoRequired && update.memoStatus == 'closed'){
+							//populate memosUploaded
+							if(update.memosUploaded){
+								var memosUploaded = [];
+								update.memosUploaded.forEach(function (docRef) {
+									memosUploaded.push(caseInfo.docs.id(docRef._id));
+								});
+								update.memosUploaded = memosUploaded;
+							}
 							updateInfo = memoInfoTemplate(update, caseInfo);
 							//get last update info and case info
 							upcomingupdates.push(updateInfo);
@@ -599,11 +614,11 @@ module.exports.insertMemoConsultant = function(req, res){
 					} else {
 						res.status(200).jsonp(info);
 						var memoTemplate = memoInfoTemplate(memoUpdateInfo, info);
-						req.feeds.insert('memos.update.consultant', req.user, memoTemplate, function (err, result) {
+						req.feeds.insert('memos.update.consultant', req.user, {'info': memoTemplate}, function (err, result) {
 							if(err){
 								console.log(err);
 							}
-						}, true);
+						}, true, 'add');
 						req.feeds.send('memos.update', memoTemplate);
 					}
 				});
@@ -977,6 +992,29 @@ module.exports.docs = function(req, res){
 	}
 }
 
+module.exports.getSingleMemo = function (req, res, next) {
+	if(req.params.memoId && req.params.caseId){
+		cases.findById(req.params.caseId).populate('updates.user').populate('updates.memoConsultant').populate('court').populate('user').exec(function (err, result) {
+			if(err){
+				res.status(500).jsonp({message: err});
+			} else {
+				var memo = result.updates.id(req.params.memoId);
+				if(memo.memosUploaded.length > 0){
+					var memosUploaded = [];
+					memo.memosUploaded.forEach(function (docRef) {
+						memosUploaded.push(result.docs.id(docRef._id));
+					});
+					memo.memosUploaded = memosUploaded;
+					var memoTemplate = memoInfoTemplate(memo, result);
+				}
+				res.status(200).jsonp(memoTemplate);
+			}
+		});
+	} else {
+		res.status(500).jsonp({message: 'case id or memo id not provided'});
+	}
+}
+
 module.exports.uploadDoc = function(req, res){
 	if(req.file){
 		if(req.params.caseID){
@@ -985,33 +1023,73 @@ module.exports.uploadDoc = function(req, res){
 					fs.unlink(req.file.path);
 					res.status(500).jsonp({message: err});
 				} else {
+					var isValid = true;
 					var info = {
 						'description': req.body.description,
 						'name': req.body.name,
 						'path': req.file.path,
-						'user': req.user._id
+						'user': req.user._id,
+						'memoRequestID': req.params.memoRequestID
 					}
 
-					caseInfo.docs.push(info);
-					caseInfo.save(function(err, result){
-						if(err){
-							fs.unlink(req.file.path);
-							res.status(500).jsonp({message: err});
+					if(info.memoRequestID){
+						var memoRequest = caseInfo.updates.id(req.params.memoRequestID);
+						if(memoRequest){
+							info.name = memoRequest.updateType;
+							info.description =  memoRequest.memoType + ' ' + memoRequest.memoId;
+							memoRequest.memoStatus = 'closed';
 						} else {
-							cases.populate(result, [{path: 'docs.user'}], function (err, docInfo) {
-								if(err){
-									res.status(500).jsonp({message: err});
-								} else {
-									res.status(200).jsonp(docInfo.docs[docInfo.docs.length -1]);
-									req.feeds.insert('cases.update.docs', req.user, {'caseId': docInfo._id, 'info': docInfo.docs[docInfo.docs.length -1]}, function (err, result) {
-										if(err){
-											console.log(err);
-										}
-									}, true);
-								}
-							});
+							isValid = false;
 						}
-					});
+					}
+
+					if(isValid){
+						caseInfo.docs.push(info);
+						caseInfo.save(function(err, result){
+							if(err){
+								fs.unlink(req.file.path);
+								res.status(500).jsonp({message: err});
+							} else {
+								cases.populate(result, [{path: 'docs.user'}], function (err, docInfo) {
+									if(err){
+										res.status(500).jsonp({message: err});
+									} else {
+										if(memoRequest){
+											memoRequest.status = 'closed';
+											memoRequest.memosUploaded.push(docInfo.docs[docInfo.docs.length -1]._id);
+											caseInfo.save(function (err, result) {
+												if(err){
+													console.log(err);
+												} else {
+													var updatedMemo = caseInfo.updates.id(req.params.memoRequestID);
+													var memoTemplate = memoInfoTemplate(updatedMemo, result);
+													var actionType;
+													if(result.updates.length == 1){
+														actionType = 'closed';
+													} else {
+														actionType = 'updated';
+													}
+													req.feeds.insert('memos.update', req.user, {'info': memoTemplate}, function (err, result) {
+														if(err){
+															console.log(err);
+														}
+													}, true, actionType);
+												}
+											});
+										}
+										res.status(200).jsonp(docInfo.docs[docInfo.docs.length -1]);
+										req.feeds.insert('cases.update.docs', req.user, {'caseId': docInfo._id, 'info': docInfo.docs[docInfo.docs.length -1]}, function (err, result) {
+											if(err){
+												console.log(err);
+											}
+										}, true);
+									}
+								});
+							}
+						});
+					} else {
+						res.status(500).jsonp({message: 'The memo request has not been found'}); //if the user has uploaded a memo and we could not find the memo request
+					}
 				}
 			});
 		} else {

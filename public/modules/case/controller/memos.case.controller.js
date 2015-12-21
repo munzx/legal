@@ -6,8 +6,7 @@ angular.module('caseModule').controller('memosCaseController', ['$scope', 'conne
 	$scope.isAdmin = ($scope.user.role === 'admin')? true: false;
 	$scope.searchInfo = {};
 
-
-	//listen to session add
+	//listen to memo add
 	socketConfigFactory.on('memos.add', function (memo) {
 		if($scope.activePending == 'active' && memo.isOld == false){
 			$scope.memos.unshift(memo.info);
@@ -16,7 +15,7 @@ angular.module('caseModule').controller('memosCaseController', ['$scope', 'conne
 		}
 	});
 
-	//listen to session update
+	//listen to memo update
 	socketConfigFactory.on('memos.update', function (caseInfo) {
 		if($scope.activePending == 'active'){
 			$scope.memosPending();
@@ -48,10 +47,25 @@ angular.module('caseModule').controller('memosCaseController', ['$scope', 'conne
 	//init with the pending memos
 	$scope.memosPending();
 
+	//case consultants is an array that contains all consultant that have been assigned to the case
+	//as we can only assign one consultant to a case at a time then this means that we need the last one
+	//to know the one is currently assigned to the case
+	var getCaseLastConsultant = function (consultants) {
+		if(consultants.length == 0) return false;
+		return consultants[consultants.length - 1];		
+	}
+
 	$scope.fullName = function(consultants){
-		if(consultants.length == 0) return '';
-		var info = consultants[consultants.length - 1];
+		var info = getCaseLastConsultant(consultants);
+		if(!info) return '';
 		return info.firstName + ' ' + info.lastName;
+	}
+
+	//check if the user is the consultant which the memo is assigned to
+	$scope.isCaseConsultant = function (consultants) {
+		var info = getCaseLastConsultant(consultants);
+		if(!info) return '';
+		return ($scope.user._id === info._id)? true: false;
 	}
 
 	$scope.showUpdateConsultantForm = function(index){
@@ -67,8 +81,17 @@ angular.module('caseModule').controller('memosCaseController', ['$scope', 'conne
 		});
 	}
 
-	$scope.showMemoDetails = function(index){
-
+	$scope.showUploadedMemos = function(index){
+		$modal.open({
+			templateUrl: 'public/modules/case/view/memos.consultant.case.view.html',
+			controller: 'memoConsultantCaseController',
+			backdrop: 'static',
+			resolve: {
+				memoInfo: function(){
+					return $scope.memos[index];
+				}
+			}
+		});
 	}
 
 }]);

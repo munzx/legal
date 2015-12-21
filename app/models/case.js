@@ -124,18 +124,18 @@ var caseSchema = mongoose.Schema({
 			type: Boolean,
 			default: false
 		},
-		memoId: {
+		memoId: { //for which "case update", for example "appealing" so the get the "appealing" ID, if not for any of the "case updates" then it should be for the case ID
 			type: String,
 			default: ''
 		},
-		memoType: {
+		memoType: { // similar to memoID , the type should get "case update -> updateType" or the case type
 			type: String,
 			default: ''
 		},
 		memoStatus: {
 			type: String,
 			default: 'pending',
-			enum: ['closed', 'pending', 'done'],
+			enum: ['closed', 'pending'],
 			lowercase: true
 		},
 		deadline: {
@@ -145,6 +145,10 @@ var caseSchema = mongoose.Schema({
 		memoConsultant: [{
 			type: Schema.Types.ObjectId,
 			ref: 'user'
+		}],
+		memosUploaded: [{
+			doc: Schema.Types.ObjectId,
+			created: { type: Date, default: Date.now }
 		}],
 		user: {
 			type: Schema.Types.ObjectId,

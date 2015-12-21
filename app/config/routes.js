@@ -215,6 +215,7 @@ module.exports = function (app, express) {
 	.get('/case/memos/pending', ensureAuthenticated, isUserNotClient, courtCase.memosPending)
 	.get('/case/memos/closed', ensureAuthenticated, isUserNotClient, courtCase.memosClosed)
 	.post('/case/memos/insertconsultant', ensureAuthenticated, isAdmin, courtCase.insertMemoConsultant)
+	.get('/case/:caseId?/memos/:memoId?', ensureAuthenticated, isUserNotClient, courtCase.getSingleMemo)
 	.get('/case/consultant/:id/memos', ensureAuthenticated, isConsultant, courtCase.consultantMemos)
 	.get('/case/client', ensureAuthenticated, isClient, courtCase.getCase)
 	.post('/case/client', ensureAuthenticated, isUserNotClient, courtCase.insertClient)
@@ -226,7 +227,7 @@ module.exports = function (app, express) {
 	.post('/case/search', ensureAuthenticated, isUserNotClient, courtCase.search)
 	.get('/case/:caseID/docs', ensureAuthenticated, isUser, courtCase.docs)
 	.get('/case/:caseID/download/:docID', ensureAuthenticated, isUser, courtCase.downloadDoc)
-	.post('/case/:caseID/upload', ensureAuthenticated, isUserNotClient, upload.single('doc') , courtCase.uploadDoc)
+	.post('/case/:caseID?/upload/:memoRequestID?', ensureAuthenticated, isUserNotClient, upload.single('doc') , courtCase.uploadDoc)
 	.delete('/case/:caseID/upload/:docID', ensureAuthenticated, isUserNotClient, courtCase.removeDoc)
 	//caseType
 	.get('/casetype', ensureAuthenticated, isUser, caseType.index)
