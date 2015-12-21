@@ -999,14 +999,14 @@ module.exports.getSingleMemo = function (req, res, next) {
 				res.status(500).jsonp({message: err});
 			} else {
 				var memo = result.updates.id(req.params.memoId);
+				var memosUploaded = [];
 				if(memo.memosUploaded.length > 0){
-					var memosUploaded = [];
 					memo.memosUploaded.forEach(function (docRef) {
 						memosUploaded.push(result.docs.id(docRef._id));
 					});
-					memo.memosUploaded = memosUploaded;
-					var memoTemplate = memoInfoTemplate(memo, result);
 				}
+				memo.memosUploaded = memosUploaded;
+				var memoTemplate = memoInfoTemplate(memo, result);
 				res.status(200).jsonp(memoTemplate);
 			}
 		});
@@ -1064,7 +1064,7 @@ module.exports.uploadDoc = function(req, res){
 													var updatedMemo = caseInfo.updates.id(req.params.memoRequestID);
 													var memoTemplate = memoInfoTemplate(updatedMemo, result);
 													var actionType;
-													if(result.updates.length == 1){
+													if(updatedMemo.memosUploaded.length == 1){
 														actionType = 'closed';
 													} else {
 														actionType = 'updated';

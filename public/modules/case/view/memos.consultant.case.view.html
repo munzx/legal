@@ -56,7 +56,10 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-if="docs" ng-repeat="doc in docs" class="no-animate">
+								<tr>
+									<td colspan="3" class="text-center" ng-if="!docs.length"><h4 class="alert alert-danger no-animate">لم يتم رفع مذكرة</h4></td>
+								</tr>
+								<tr ng-if="docs.length" ng-repeat="doc in docs" class="no-animate">
 									<td class="text-center">{{doc.created | date: 'dd-MM-yyyy HH:mm'}}</td>
 									<td class="text-center">{{doc.description}}</td>
 									<td class="text-center"><a target="_blank" href="{{downloadDoc(doc._id)}}">{{doc.name}}</a></td>
