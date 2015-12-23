@@ -41,8 +41,8 @@ gulp.task('inspect', function () {
 gulp.task('test', function () {
 	gulp.src(paths.server.specs)
 	.pipe(plumber())
-	.pipe(mocha({reporter: 'spec'}))
-	.pipe(notify({message: 'test specs completed'}));
+	.pipe(mocha({reporter: 'spec'}));
+	//.pipe(notify({message: 'test specs completed'}));
 });
 
 // reload html files
@@ -93,8 +93,8 @@ gulp.task('serve', function() {
 	nodemon({	
 		script: paths.server.index,
 		ext: 'js html ejs',
-		ignore: ['public/*'], // Ignore any files in the public folder
-		env: { 'NODE_ENV': 'development' }
+		ignore: ['public/*', 'tests/*'] // Ignore any files in the public folder
+		// env: { 'NODE_ENV': 'development' }
 	});
     connect.server({
         root: 'public',

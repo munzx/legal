@@ -88,7 +88,7 @@ module.exports.create = function(req, res){
 
 // get user by name
 module.exports.getByName = function (req, res){
-	users.findOne({role: 'user', name: req.params.name}, {password: 0}, function(err, user) {
+	users.findOne({name: req.params.name}, {password: 0}, function(err, user) {
 		if(err){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else if(user){
@@ -145,26 +145,6 @@ module.exports.update = function(req, res){
 			req.feeds.send('user.available.update', userInfo);
 		} else {
 			res.status(500).jsonp({message: 'User not found'});
-		}
-	});
-}
-
-//update the user password
-module.exports.changePassword = function(req, res){
-	users.findOne({_id: req.user._id, password: req.body.currentPassowrd},function(err, user){
-		if(err){
-			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-		} else if(user){
-			user.password = req.body.newPassword;
-			user.save(function (err, userInfo) {
-				if(err){
-					res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
-				} else {
-					res.status(200).jsonp(user);
-				}
-			});
-		} else {
-			res.status(401).json({message: 'Current password is not correct'});
 		}
 	});
 }

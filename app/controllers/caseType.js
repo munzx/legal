@@ -35,8 +35,8 @@ module.exports.create = function(req, res){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {
 			res.status(200).jsonp(result);
-			req.io.emit('caseType.add', result);
-			req.io.emit('caseType.available.add', result);
+			req.feeds.send('caseType.add', result);
+			req.feeds.send('caseType.available.add', result);
 		}
 	});
 }
@@ -54,8 +54,8 @@ module.exports.softRemove = function(req, res){
 						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 					} else {
 						res.status(200).jsonp(result);
-						req.io.emit('caseType.update', result);
-						req.io.emit('caseType.available.update', result);
+						req.feeds.send('caseType.update', result);
+						req.feeds.send('caseType.available.update', result);
 					}
 				});
 			} else {

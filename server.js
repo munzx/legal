@@ -16,14 +16,14 @@ process.env.PWD = process.cwd();
 // Initilize with config file
 require('./app/config/init')(app, express);
 
-//initilize feeds , this expects i18n2 to be installed in binded to expressJS
+//initilize feeds , this expects i18n2 to be installed and binded to expressJS (look at the init file)
 require('./app/helpers/feed.builder.js')(app, io);
 
 //initilize routes
 require('./app/config/routes')(app, express);
 
 
-//Create server in listen on default port if exists or 3000
+//Create server and listen on default port if exists or port 3000 if not
 http.listen(port, function () {
 	console.log('Bism Allah , Server runs on port ' + port);
 });

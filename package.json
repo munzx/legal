@@ -61,7 +61,8 @@
     "zuul": "^3.8.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "./node_modules/gulp/bin/gulp.js",
+    "test": "NODE_ENV='test' ./node_modules/mocha/bin/_mocha ./tests/**/**"
   },
   "main": "gulpfile.js",
   "repository": {

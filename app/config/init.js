@@ -15,11 +15,11 @@ var logger = require('express-logger'),
 	favicon = require('serve-favicon'),
 	i18n = require('i18n-2'),
 	env = process.env.NODE_ENV,
-	envConfig = require('./env/' + process.env.NODE_ENV) || {};
+	envConfig = require('./env/' + env) || {};
 
 module.exports = function (app, express) {
-	//Environment
-	console.log(envConfig.app.title + ' Environment');
+	//Out out environment name to the console
+	console.log(envConfig.app.title);
 
 	//Connect to mongoDB
 	mongoose.connect(envConfig.db || process.env.MONGO_URL);

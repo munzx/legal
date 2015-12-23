@@ -35,8 +35,8 @@ module.exports.create = function (req, res) {
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else {
 			res.status(200).jsonp(result);
-			req.io.emit('updateType.update.add', result);
-			req.io.emit('updateType.availableUpdate.add', result);
+			req.feeds.send('updateType.update.add', result);
+			req.feeds.send('updateType.availableUpdate.add', result);
 		}
 	});
 }
@@ -54,8 +54,8 @@ module.exports.softRemove = function (req, res) {
 						res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 					} else {
 						res.status(200).jsonp(updatetypeInfo);
-						req.io.emit('updateType.update.update', updatetypeInfo);
-						req.io.emit('updateType.availableUpdate.update', updatetypeInfo);
+						req.feeds.send('updateType.update.update', updatetypeInfo);
+						req.feeds.send('updateType.availableUpdate.update', updatetypeInfo);
 					}
 				});
 			} else {

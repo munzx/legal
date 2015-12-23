@@ -255,7 +255,6 @@ module.exports = function (app, express) {
 	.get('/user/available', ensureAuthenticated, isUserNotClient, users.available)
 	.post('/user', ensureAuthenticated, isAdmin, users.create) //create a new user
 	.put('/user', ensureAuthenticated, isUser, users.update) //update user info
-	.put('/user/password', ensureAuthenticated, isUser, users.changePassword) //update the user password
 	.delete('/user/:id', ensureAuthenticated, isAdmin, users.softRemove) //delete user
 	.get('/user/:name', ensureAuthenticated, isUserNotClient, users.getByName) //get a user by name
 	.get('/user/search/:phrase', ensureAuthenticated, isUserNotClient, users.search)

@@ -19,7 +19,7 @@ module.exports.createFirst = function (req, res) {
 		if(err){
 			res.status(500).jsonp({message: errorHandler.getErrorMessage(err)});
 		} else if(user.length > 0){
-			res.status(200).jsonp('Admin Exists');
+			res.status(500).jsonp('Admin Exists');
 		} else {
 			var countryInfo = lookup.countries({name: 'United Arab Emirates'})[0];
 			var country = [{
