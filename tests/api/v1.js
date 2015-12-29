@@ -6,12 +6,14 @@ var expect = require('expect.js');
 var superagent = require('superagent');
 
 //Models
+var feeds = require('./../../app/models/feed');
 var users = require('./../../app/models/user');
 var courts = require('./../../app/models/court');
 var caseTypes = require('./../../app/models/caseType');
 var caseRoles = require('./../../app/models/caseRole');
 var updateTypes = require('./../../app/models/updateType');
 var defendants = require('./../../app/models/defendant');
+var cases = require('./../../app/models/case');
 
 //start agent
 var agent = superagent.agent();
@@ -24,6 +26,8 @@ var IDs = {};
 
 //to delete anythng in the DB before and after running tests
 var cleanDB = function () {
+	feeds.remove().exec();
+	cases.remove().exec();
 	defendants.remove().exec();
 	updateTypes.remove().exec();
 	caseRoles.remove().exec();
@@ -362,7 +366,7 @@ describe('Manage case updates', function () {
 			done(err);
 		});
 	});
-	it('Shoudl create "session" case update', function (done) {
+	it('Should create "session" case update', function (done) {
 		agent.post(api + 'updatetype')
 		.send({updatetypesInfo: {
 			name: 'session',
@@ -613,7 +617,7 @@ describe('Manage Users', function () {
 });
 
 
-describe('Clients', function () {
+describe('Manage Clients', function () {
 	it('Should login as admin', function (done) {
 		agent.post(prefix + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
@@ -651,7 +655,7 @@ describe('Clients', function () {
 });
 
 
-describe('Consultant', function () {
+describe('Manage Consultants', function () {
 	it('Should login as admin', function (done) {
 		agent.post(prefix + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
@@ -689,7 +693,7 @@ describe('Consultant', function () {
 });
 
 
-describe('Employee', function () {
+describe('Manage Employees', function () {
 	it('Should login as admin', function (done) {
 		agent.post(prefix + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
@@ -761,7 +765,7 @@ describe('Manage Defendants', function () {
 		.end(function (err, res) {
 			expect(res.body.firstName).to.be('defendantFirstName');
 			expect(res.status).to.be(200);
-			IDs.defendantID = res.body._id;
+			IDs.toBeRenovedDefendantId = res.body._id;
 			done(err);
 		});
 	});
@@ -776,6 +780,7 @@ describe('Manage Defendants', function () {
 		.end(function (err, res) {
 			expect(res.body.firstName).to.be('defendantFirstName2');
 			expect(res.status).to.be(200);
+			IDs.defendantID = res.body._id;
 			done(err);
 		});
 	});
@@ -793,7 +798,7 @@ describe('Manage Defendants', function () {
 		});
 	});
 	it('Should soft remove a defendant', function (done) {
-		agent.del(api + 'defendant/' + IDs.defendantID)
+		agent.del(api + 'defendant/' + IDs.toBeRenovedDefendantId)
 		.end(function (err, res) {
 			expect(res.body.firstName).to.be('defendantFirstName');
 			expect(res.status).to.be(200);
@@ -808,6 +813,306 @@ describe('Manage Defendants', function () {
 			done(err);
 		});
 	});
+	it('Should logout', function (done) {
+		agent.get(prefix + 'logout')
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body).to.be('logged out');
+			done(err);
+		});
+	});
+});
+
+
+describe('Manage Cases', function () {
+	it('Should login as admin', function (done) {
+		agent.post(prefix + 'login')
+		.send({ username: 'admin', password: 'Dubai@123'})
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.role).to.be('admin');
+			agent.saveCookies(res);
+			done(err);
+		});
+	});
+	it('Shoud Create a new case', function (done) {
+		agent.post(api + 'case')
+		.send({caseInfo: {
+			defendant: { user: IDs.defendantID, role: 'someRole'},
+			client: {user: IDs.clientID, role: 'someRole'},
+			caseType: 'someCaseType',
+			caseDate: new Date(),
+			caseNumber: '1231413',
+			subject: 'Bism Allah',
+			facts: 'Here is the new case test',
+			court: IDs.courtID,
+			consultant: IDs.consultantID
+		}})
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			IDs.caseID = res.body._id;
+			done(err);
+		});
+	});
+	it('Should insert a new case update, the update type is memo', function (done) {
+		agent.post(api + 'case/caseupdate/' + IDs.caseID)
+		.send({update: {
+			name: 'someUpdateType',
+			updateId: '123',
+			updateInfo: 'update info or remarks',
+			memoRequired: true,
+			memoId: 'memo123',
+			memoType: 'memoType',
+			memoStatus: 'memoStatus',
+			deadline: new Date(),
+			memoConsultant: IDs.consultantID
+		}})
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			IDs.firstCaseuUpdateID = res.body.updates[res.body.updates.length - 1]._id;
+			done(err);
+		});
+	});
+	it('Should get the updates', function (done) {
+		agent.get(api + 'case/updates/'+ IDs.caseID)
+		.end(function (err, res) {
+			expect(res.body[0].updateType).to.be('someUpdateType');
+			expect(res.status).to.be(200);
+			done();
+		});
+	});
+	it('Should get the available updates ', function (done) {
+		agent.get(api + 'case/updates/'+ IDs.caseID + '/available')
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.length).to.be(1);
+			done();
+		});
+	});
+	it('Should soft remove the update', function (done) {
+		agent.del(api + 'case/caseupdate/' + IDs.caseID + '/' + IDs.firstCaseuUpdateID)
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			done();
+		});
+	});
+	it('Should get no update in the available updates ', function (done) {
+		agent.get(api + 'case/updates/'+ IDs.caseID + '/available')
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.length).to.be(0);
+			done();
+		});
+	});
+	it('Should create a new memo', function (done) {
+		agent.post(api + 'case/caseupdate/' + IDs.caseID)
+		.send({update: {
+			name: 'someUpdateType',
+			updateId: '123',
+			updateInfo: 'update info or remarks',
+			memoRequired: true,
+			memoId: 'memo123',
+			memoType: 'memoType',
+			memoStatus: 'memoStatus',
+			deadline: new Date(),
+			memoConsultant: IDs.consultantID
+		}})
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			IDs.caseuUpdateMemoID = res.body.updates[res.body.updates.length - 1]._id;
+			done(err);
+		});
+	});
+	it('Should create a new session', function (done) {
+		agent.post(api + 'case/caseupdate/' + IDs.caseID)
+		.send({update: {
+			sessionRequired: true,
+			session: {
+				newDate: new Date(),
+				newTime: new Date()
+			},
+			name: 'someSession',
+			updateId: '123',
+			updateInfo: 'update info or remarks',
+			deadline: new Date()
+		}})
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			IDs.secondUpdateSessionID = res.body.updates[res.body.updates.length - 1]._id;
+			done(err);
+		});
+	});
+	it('Should get all cases with sessions', function (done) {
+		agent.get(api + 'case/sessions')
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.length).to.be(1);
+			done();
+		});
+	});
+	it('Should get upcoming sessions', function (done) {
+		agent.get(api + 'case/sessions/upcoming')
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.length).to.be(1);
+			done();
+		});
+	});
+	it('Should get previous sessions', function (done) {
+		agent.get(api + 'case/sessions/previous')
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.length).to.be(0);
+			done();
+		});
+	});
+	it('Should update case tasks by date', function (done) {
+		agent.post(api + 'case/tasks/updatebydate')
+		.send({
+			info: {
+				lawyerID: IDs.consultantID,
+				courtID: IDs.courtID,
+				dateFrom: new Date(),
+				dateTo: new Date()
+			}
+		})
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			done();
+		});
+	});
+	it('Should update case tasks by case', function (done) {
+		agent.post(api + 'case/tasks/updatebycase')
+		.send({
+			info: {
+				lawyerID: IDs.consultantID,
+				caseID: IDs.caseID,
+				dateFrom: new Date(),
+				dateTo: new Date()
+			}
+		})
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			done();
+		});
+	});
+	it('Should get pendding memos', function (done) {
+		agent.get(api + 'case/memos/pending')
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.length).to.be(2);
+			done();
+		});
+	});
+	it('Should assign a memo to a consultant', function (done) {
+		agent.post(api + 'case/memos/insertconsultant')
+		.send({
+			update: {
+				caseId: IDs.caseID,
+				memoId: IDs.caseuUpdateMemoID,
+				memoConsultantId: IDs.consultantID
+			}
+		})
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			done();
+		});
+	});
+	it('Should get closed memos', function (done) {
+		agent.get(api + 'case/memos/closed')
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.length).to.be(0);
+			done();
+		});
+	});
+	it('Should get pending memos', function (done) {
+		agent.get(api + 'case/memos/pending')
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.length).to.be(2);
+			done();
+		});
+	})
+	it('Should get a single memo', function (done) {
+		agent.get(api + 'case/' + IDs.caseID + '/memos/' + IDs.caseuUpdateMemoID)
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.caseId).to.be(IDs.caseID);
+			done();
+		});
+	});
+	it('Should insert a new client to a case', function (done) {
+		agent.post(api + 'case/client/new')
+		.send({
+			caseId: IDs.caseID,
+			userInfo: {
+				firstName: 'someone',
+				lastName: 'alsoSomeone',
+				name: 'newclient',
+				email: 'newclient@user.com',
+				role: 'client',
+				mobilePhone: '07827348738478',
+				address: 'Dubai . somewhere in the city',
+				password: 'somePassword'
+			}
+		})
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			IDs.newClientID = res.body.client[res.body.client.length - 1]._id;
+			done();
+		});
+	});
+	it('Should get client cases , no case yet', function (done) {
+		agent.get(api + 'case/client')
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.length).to.be(0);
+			done();
+		});
+	});
+	it('Should insert a new case defendant', function (done) {
+		agent.post(api + 'case/defendant/new')
+		.send({
+			caseId: IDs.caseID,
+			userInfo: {
+				firstName: 'asdasd',
+				lastName: 'asdasd',
+				address: 'asdadad',
+				mobilePhone: '8738343874'
+			}
+		})
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			IDs.newDefendantID = res.body.defendant[res.body.defendant.length - 1]._id;
+			done();
+		});
+	});
+	it('Should soft remove case client', function (done) {
+		agent.del(api + 'case/' + IDs.caseID + '/client/' + IDs.newClientID)
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			done();
+		});
+	});
+	it('should soft remove case defendant', function (done) {
+		agent.del(api + 'case/' + IDs.caseID + '/defendant/' + IDs.newDefendantID)
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			done();
+		});
+	});
+	it('Should get consultant memos', function (done) {
+		agent.get(api + 'case/consultant/' + IDs.consultantID + '/memos')
+		.end(function (err, res) {
+			expect(res.status).to.be(200);
+			expect(res.body.length).to.be(1);
+			done();
+		});
+	});
+	//Should close a memo which will require uploading test
+	//Should write test for uploading docs and search
+
 	it('Should logout', function (done) {
 		agent.get(prefix + 'logout')
 		.end(function (err, res) {

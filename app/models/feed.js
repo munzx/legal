@@ -26,8 +26,16 @@ var feedSchema = new Schema({
 	caseRef: {type: Schema.Types.ObjectId, ref: 'case'},
 	defendantRef: {type: Schema.Types.ObjectId, ref: 'defendant'},
 	userRef: {type: Schema.Types.ObjectId, ref: 'user'},
-	reader: [{type: Schema.Types.ObjectId, required: 'please provide the reader info', ref: 'user'}],
-	user: {type: Schema.Types.ObjectId,required: 'user is required', ref: 'user'},//user that the feed belongs to
+	reader: [{
+		type: Schema.Types.ObjectId,
+		required: 'please provide the reader info',
+		ref: 'user'
+	}],
+	user: { //user that the feed belongs to
+		type: Schema.Types.ObjectId,
+		required: 'user is required',
+		ref: 'user'
+	},
 	created: {type: Date, default: Date.now}
 });
 

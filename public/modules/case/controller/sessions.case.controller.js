@@ -24,6 +24,19 @@ angular.module('caseModule').controller('sessionsCaseController', ['$scope', 'co
 	});
 
 
+	$scope.highlight = function (sessionDate) {
+		var today = new Date();
+		var date = new Date(sessionDate);
+		today.setHours(0,0,0,0);
+		date.setHours(0,0,0,0);
+		if(today.getTime() == date.getTime()){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
 	$scope.upcoming = function(){
 		connectCaseFactory.query({'action': 'sessions', 'subaction': 'upcoming'}, function(response){
 			$scope.activePrevious = '';

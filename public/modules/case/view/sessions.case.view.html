@@ -70,7 +70,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="session in sessions | dateRangeConfigFilter:'sessionDate':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey" class="no-animate">
+								<tr ng-repeat="session in sessions | dateRangeConfigFilter:'sessionDate':searchInfo.searchDateFrom: searchInfo.searchDateTo | filter:searchKey" class="no-animate" ng-class="{'danger': highlight(session.sessionDate)}">
 									<td class="text-center">{{session.sessionDate | date: 'yyyy-MM-dd'}}</td>
 									<td class="text-center">
 										{{session.lawyer[session.lawyer.length - 1].firstName || '-----------'}}
@@ -111,7 +111,7 @@
 							<tr ng-repeat="session in sessions" class="cursor no-animate" ng-click="showSessionDetails($index)">
 								<td class="text-center">{{session.sessionCreated | date: 'yyyy-MM-dd'}}</td>
 								<td class="text-center">{{session.sessionUser.firstName}} {{session.sessionUser.lastName}}</td>
-								<td class="text-center">{{session.sessionDate | date: 'yyyy-MM-dd'}} - {{session.sessionTime | date: 'HH:mm'}} </td>
+								<td class="text-center">{{session.sessionDate | date: 'yyyy-MM-dd'}} - {{session.sessionTime | date: 'HH:mm'}}</td>
 								<td class="text-center">{{session.refNumber}}</td>
 							</tr>
 						</tbody>
