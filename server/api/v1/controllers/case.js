@@ -158,7 +158,7 @@ module.exports.insertCaseUpdate = function(req, res){
 				res.status(500).jsonp({message: err});
 			} else if(caseInfo) {
 
-				function getUpdaetInfo(cb){
+				var getUpdaetInfo = function (cb){
 					//to protect
 					req.body.update.session = req.body.update.session || {};
 
@@ -174,7 +174,7 @@ module.exports.insertCaseUpdate = function(req, res){
 					cb(null, caseInfo, updateInfo);
 				}
 
-				function hasSession(caseInfo, updateInfo, cb){
+				var hasSession = function (caseInfo, updateInfo, cb){
 					if(updateInfo.sessionRequired && req.body.update.session){
 						//if the session has a response to a "case update" like "appealing/hearing" for example
 						//then make the updateID equals to the id of that "case update" 
@@ -196,7 +196,7 @@ module.exports.insertCaseUpdate = function(req, res){
 					cb(null, caseInfo, updateInfo);
 				}
 
-				function hasMemo(caseInfo, updateInfo, cb){
+				var hasMemo = function (caseInfo, updateInfo, cb){
 					//if the memo is required then make sure "deadline" is defined
 					if(updateInfo.memoRequired){
 						//the memo should be related to a "case update" , if not then the "case number" will be the memo id
@@ -212,7 +212,7 @@ module.exports.insertCaseUpdate = function(req, res){
 					cb(null, caseInfo, updateInfo);
 				}
 
-				function hasClient(caseInfo, updateInfo, cb){
+				var hasClient = function (caseInfo, updateInfo, cb){
 					var updateClientsInfo = req.body.update.clientInfo || [];
 					caseInfo.client = [];
 					updateClientsInfo.forEach(function(info){
@@ -222,7 +222,7 @@ module.exports.insertCaseUpdate = function(req, res){
 					cb(null, caseInfo, updateInfo);
 				}
 
-				function hasDefendant(caseInfo, updateInfo, cb){
+				var hasDefendant = function (caseInfo, updateInfo, cb){
 					var updateDefendantsInfo = req.body.update.defendantInfo || [];
 					caseInfo.defendant = [];
 					updateDefendantsInfo.forEach(function(info){
@@ -232,7 +232,7 @@ module.exports.insertCaseUpdate = function(req, res){
 					cb(null, caseInfo, updateInfo);
 				}
 
-				function save(caseInfo, updateInfo, cb){
+				var save = function (caseInfo, updateInfo, cb){
 					caseInfo.updates.push(updateInfo);
 					caseInfo.save(function(error, updatedResult){
 						if(error){
