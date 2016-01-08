@@ -1,6 +1,6 @@
 'user strict';
 
-angular.module('yousufalsharif').filter('unique', [function () {
+angular.module('legality').filter('unique', [function () {
     return function(input) {
     	if(typeof input == 'undefined'){return;}
         var uniqueList = [];

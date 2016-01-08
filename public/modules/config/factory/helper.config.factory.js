@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yousufalsharif').factory('helperConfigFactory', [function () {
+angular.module('legality').factory('helperConfigFactory', [function () {
 	return {
 		'map': function (arr, fn) {
 			for(var i=0; i <= arr.length; i++){

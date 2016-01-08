@@ -16,7 +16,7 @@ module.exports.sendMsg = function (userMobilePhone) {
 			client.sms.messages.create({
 				to: number, //test number: +15005550006
 				from:'+12019031427',
-				body:'CongratulationsYou!!! you have recieved a new order! , visit yousufalsharif.com to view the order details.'
+				body:'CongratulationsYou!!! you have recieved a new order! , visit legality.com to view the order details.'
 			}, function(error, message) {
 			    // The HTTP request to Twilio will run asynchronously. This callback
 			    // function will be called when a response is received from Twilio

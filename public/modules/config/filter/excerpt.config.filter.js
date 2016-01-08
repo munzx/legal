@@ -1,7 +1,7 @@
 'use strict';
 
 //excerpt text
-angular.module('yousufalsharif').filter('excerpt', [function () {
+angular.module('legality').filter('excerpt', [function () {
 	return function (text, max) {
 		//the result to be returned
 		var result='';

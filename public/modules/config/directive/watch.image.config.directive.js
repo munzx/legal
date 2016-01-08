@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yousufalsharif').directive('watchImageConfigDirective', ['$modal', '$rootScope', function ($modal, $rootScope) {
+angular.module('legality').directive('watchImageConfigDirective', ['$modal', '$rootScope', function ($modal, $rootScope) {
 	return {
 		require: '?ngModel',
 		restrict: 'A',
@@ -128,7 +128,7 @@ angular.module('yousufalsharif').directive('watchImageConfigDirective', ['$modal
 
 			} else {
 				$modal.open({
-					template: '<h4 class="alert alert-danger">Please use a modern browser to browse yousufalsharif!!!</h4>'
+					template: '<h4 class="alert alert-danger">Please use a modern browser to browse legality!!!</h4>'
 				});
 			}
 		}

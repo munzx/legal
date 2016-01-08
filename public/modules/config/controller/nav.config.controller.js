@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yousufalsharif').controller('navConfig', ['$rootScope', '$scope', 'registerUserConfigFactory', '$state', function ($rootScope, $scope, registerUserConfigFactory, $state) {
+angular.module('legality').controller('navConfig', ['$rootScope', '$scope', 'registerUserConfigFactory', '$state', function ($rootScope, $scope, registerUserConfigFactory, $state) {
 	//initiate the nav with the defult nav 'user'
 	$scope.nav = 'public/modules/config/view/user.nav.html';
 	//initiate the menu in mobile and tables in no collapse status

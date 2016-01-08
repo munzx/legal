@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yousufalsharif').filter('localize', ['arLang', function (arLang) {
+angular.module('legality').filter('localize', ['arLang', function (arLang) {
 	return function (text, lang) {
 		text = (text === true)? 'true': text;
 		text = (text === false)? 'false': text;
