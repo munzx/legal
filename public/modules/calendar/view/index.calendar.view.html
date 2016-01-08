@@ -65,6 +65,7 @@
 								<th class="text-center">المدخل</th>
 								<th class="text-center">الوصف</th>
 								<th class="text-center">المهمة</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -82,7 +83,10 @@
 							<td class="text-center">{{info.responsibility.firstName}} {{info.responsibility.lastName}}</td>
 							<td class="text-center">{{info.user.firstName}} {{info.user.lastName}}</td>
 							<td class="text-center">{{info.description}}</td>
-							<td class="text-center">{{info.task}}
+							<td class="text-center">
+								{{info.task}}
+							</td>
+							<td class="text-center">
 								<label class="label label-danger" ng-show="info.removed">محذوفة </label>
 								<label class="label label-info" ng-show="info.rejected">مرفوضة </label>
 							</td>
