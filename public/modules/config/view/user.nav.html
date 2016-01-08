@@ -18,20 +18,6 @@
 				<li  ui-sref-active="active" ng-show="notLoggedLink">
 					<a ui-sref="home"><b>الرئيسية</b></a>
 				</li>
-				<li class="dropdown" dropdown ng-show="loggedLink" >
-					<a href class="dropdown-toggle" dropdown-toggle data-toggle="dropdown" is-open="status.isopen" dropdown-toggle ng-disabled="disabled">
-						<span  class="glyphicon glyphicon-cog" style="font-size:20px;"></span>
-					</a>
-					<ul class="dropdown-menu" role="menu">
-						<li><a ui-sref="profile.setting"><span class="glyphicon glyphicon-user"></span> Account</a></li>
-						<li class="divider"></li>
-						<li><a ui-sref="profile.social"><span class="glyphicon glyphicon-bullhorn"></span> Social Media</a></li>
-						<li class="divider"></li>
-						<li><a ui-sref="profile.userPassword"><span class="glyphicon glyphicon-asterisk"></span> Change Password</a></li>
-						<li class="divider"></li>
-						<li><a ui-sref="signout"><span class="glyphicon glyphicon-stop"></span> SignOut</a></li>
-					</ul>
-				</li>
 			</ul>
 		</div><!-- /.navbar-collapse -->
 	</div><!-- /.container-fluid -->

@@ -46,6 +46,7 @@ angular.module('yousufalsharif').controller('navConfig', ['$rootScope', '$scope'
 			$scope.loggedLink = true;
 			$scope.notLoggedLink = false;
 		} else {
+			$scope.nav = 'public/modules/config/view/user.nav.html';
 			$scope.loggedLink = false;
 			$scope.notLoggedLink = true;
 		}

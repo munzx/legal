@@ -268,7 +268,7 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 
 		$locationProvider.html5Mode(true).hashPrefix('!');
 }])
-.run(['$rootScope', '$location', '$state', function ($rootScope, $location, $state) {
+.run(['$rootScope', '$location', '$state', 'registerUserConfigFactory', function ($rootScope, $location, $state, registerUserConfigFactory) {
 	//remove the extra sympoles that is inserted by facebook redirect "when facebook redirect to the success login pagein server side"
 	//when  a user try to sign up through facebook
 	if ($location.hash() === '_=_'){
@@ -287,6 +287,13 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 		}
 		//add query to the site url so it can be read by the concerned page
 		$location.search(query.key, query.value);
+	}
+
+
+	//if the user is not logged in then redirect to the home/login page
+	var user = registerUserConfigFactory.getUser();
+	if(!user){
+		$state.go('home', {}, {reload: true});
 	}
 
 	$rootScope.logged = false;

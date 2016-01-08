@@ -11,17 +11,7 @@ angular.module('calendarModule').controller('actionsCalendarController', ['$scop
 	$scope.isAuthor = (user._id == task.user._id)? true: false;
 	$scope.isResponsibility = (user._id == task.responsibility._id)? true: false;
 
-	var inlineConfirmMsg = '<div class="row">
-							<div class="col-md-12">
-								<h5 ng-bind="msg"></h5>
-							</div>
-							<div class="col-md-12">
-								<button class="btn btn-sm btn-block" ng-class="{\'btn-danger\': isWarning == true, \'btn-success\': isWarning == false }" ng-click="confrimYes()">نعم</button>
-							</div>
-							<div class="col-md-12">
-								<button class="btn btn-sm btn-block" ng-class="{\'btn-success\': isWarning == true, \'btn-danger\': isWarning == false }" ng-click="confrimNo()">لا</button>
-							</div>
-						</div>';
+	var inlineConfirmMsg = '<div class="row"><div class="col-md-12"><h5 ng-bind="msg"></h5></div><div class="col-md-12"><button class="btn btn-sm btn-block" ng-class="{\'btn-danger\': isWarning == true, \'btn-success\': isWarning == false }" ng-click="confrimYes()">نعم</button></div><div class="col-md-12"><button class="btn btn-sm btn-block" ng-class="{\'btn-success\': isWarning == true, \'btn-danger\': isWarning == false }" ng-click="confrimNo()">لا</button></div></div>';
 
 
 	$scope.markDoneConfirm = function(){

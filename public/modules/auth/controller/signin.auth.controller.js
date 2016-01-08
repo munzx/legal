@@ -2,7 +2,7 @@
 
 angular.module('authModule').controller('signinAuthController', ['registerUserConfigFactory', '$scope', '$http', '$location', '$rootScope', function (registerUserConfigFactory, $scope, $http, $location, $rootScope) {
 	$scope.signIn = function () {
-		$http.post('/login', $scope.credentials)
+		$http.post('/api/v1/login', $scope.credentials)
 		.success(function (data, success) {
 			registerUserConfigFactory.setUser(data);
 			if($rootScope.lastPage){
