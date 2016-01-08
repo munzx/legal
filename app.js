@@ -59,7 +59,6 @@ module.exports = function (app, io) {
 
 	// Translation
 	i18n.expressBind(app, {
-		cookieName: 'locale',
 		directory: __dirname + '/server/locales/',
 		locales: ['ar', 'en'],
 		defaultLocale: 'ar'
@@ -70,7 +69,6 @@ module.exports = function (app, io) {
 		req.i18n.setLocale('ar');
 		next();
 	});
-
 
 	//Publically accessable folders
 	app.use('/public', express.static(path.join(__dirname, 'public')));
