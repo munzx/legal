@@ -3,30 +3,21 @@
 angular.module('adminModule', []);
 'use strict';
 
-angular.module('authModule', []);
+angular.module('calendarModule', []);
 'use strict';
 
 angular.module('caseModule', []);
 'use strict';
 
-angular.module('calendarModule', []);
-'use strict';
-
-angular.module('caseRoleModule', []);
-'use strict';
-
-angular.module('caseTypeModule', []);
-'use strict';
-
-angular.module('clientModule', []);
+angular.module('authModule', []);
 'use strict';
 
 // intitiate the app and Inject all of the app module dependencies
 //configure the routes
-var yousufalsharif = angular.module('yousufalsharif', ['btford.socket-io', 'ngAnimate', 'adminModule', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'updateTypesModule', 'consultantModule', 'chart.js', 'AngularPrint', 'employeeModule', 'calendarModule', 'uploadModule', 'caseTypeModule', 'reportModule', 'timelineModule']);
+var legality = angular.module('legality', ['btford.socket-io', 'ngAnimate', 'adminModule', 'ui.bootstrap', 'ui.router','ngResource', 'authModule', 'homeModule', 'userModule', 'defendantModule', 'clientModule', 'courtModule', 'caseModule', 'caseRoleModule', 'updateTypesModule', 'consultantModule', 'chart.js', 'AngularPrint', 'employeeModule', 'calendarModule', 'uploadModule', 'caseTypeModule', 'reportModule', 'timelineModule']);
 
 //RouteScopes & Routes Configurations 
-yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'ChartJsProvider', function ($urlRouterProvider, $stateProvider, $locationProvider, ChartJsProvider) {
+legality.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'ChartJsProvider', function ($urlRouterProvider, $stateProvider, $locationProvider, ChartJsProvider) {
     // Configure all charts
     ChartJsProvider.setOptions({
     	responsive: true
@@ -325,7 +316,16 @@ yousufalsharif.config(['$urlRouterProvider', '$stateProvider', '$locationProvide
 angular.module('consultantModule', []);
 'use strict';
 
+angular.module('clientModule', []);
+'use strict';
+
+angular.module('caseRoleModule', []);
+'use strict';
+
 angular.module('courtModule', []);
+'use strict';
+
+angular.module('caseTypeModule', []);
 'use strict';
 
 angular.module('defendantModule', []);
@@ -340,10 +340,10 @@ angular.module('homeModule', []);
 angular.module('reportModule', []);
 'use strict';
 
-angular.module('timelineModule', []);
+angular.module('updateTypesModule', []);
 'use strict';
 
-angular.module('updateTypesModule', []);
+angular.module('timelineModule', []);
 'use strict';
 
 angular.module('uploadModule', []);
@@ -1065,70 +1065,308 @@ angular.module('adminModule').factory('connectAdminFactory', ['$resource', funct
 		'update': { method:'PUT' }
 	});
 }]);
-'user strict';
-
-angular.module('authModule').controller('signinAuthController', ['registerUserConfigFactory', '$scope', '$http', '$location', '$rootScope', function (registerUserConfigFactory, $scope, $http, $location, $rootScope) {
-	$scope.signIn = function () {
-		$http.post('/api/v1/login', $scope.credentials)
-		.success(function (data, success) {
-			registerUserConfigFactory.setUser(data);
-			if($rootScope.lastPage){
-				$location.path($rootScope.lastPage);
-			} else {
-				if(data.role == 'admin'){
-					$location.path('/admin/report');
-				} else if(data.role == 'client') {
-					$location.path('/client');
-				} else if(data.role == 'employee'){
-					$location.path('/employee');
-				} else if(data.role == 'consultant'){
-					$location.path('/consultant');
-				}
-			}
-		})
-		.error(function (data, error) {
-			$scope.error = data;
-		});
-	};
-}]);
 'use strict';
 
-angular.module('authModule').controller('signInProviderAuthController', ['$scope', '$http', '$location', 'connectAccountAuthFactory', '$stateParams', 'countryListConfigFactory', function ($scope, $http, $location, connectAccountAuthFactory, $stateParams, countryListConfigFactory) {
-	$scope.countryList = countryListConfigFactory;
+angular.module('calendarModule').controller('actionsCalendarController', ['$scope', '$modalInstance', 'user', 'task', '$modal', 'remarks', function ($scope, $modalInstance, user, task, $modal, remarks) {
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
 
-	connectAccountAuthFactory.get({id: $stateParams.id}, function (response) {
-		$scope.credentials = response;
-	});
+	$scope.task = task;
+	$scope.user = user;
 
-	$scope.signUp = function () {
-		connectAccountAuthFactory.save({id: $stateParams.id}, $scope.credentials, function (data, res) {
-			$location.path('/signin');
-		},
-		function (err) {
-			$scope.error = err.data.message;
-		});
+	$scope.isAuthor = (user._id == task.user._id)? true: false;
+	$scope.isResponsibility = (user._id == task.responsibility._id)? true: false;
+
+	var inlineConfirmMsg = '<div class="row"><div class="col-md-12"><h5 ng-bind="msg"></h5></div><div class="col-md-12"><button class="btn btn-sm btn-block" ng-class="{\'btn-danger\': isWarning == true, \'btn-success\': isWarning == false }" ng-click="confrimYes()">نعم</button></div><div class="col-md-12"><button class="btn btn-sm btn-block" ng-class="{\'btn-success\': isWarning == true, \'btn-danger\': isWarning == false }" ng-click="confrimNo()">لا</button></div></div>';
+
+
+	$scope.markDoneConfirm = function(){
+		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending') && ($scope.remarks)){
+			$modal.open({
+				template: inlineConfirmMsg,
+				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', 'remarks', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance, remarks){
+					$scope.isWarning = false;
+					$scope.msg = 'هل ترغب بتأكيد الإنتهاء من المهمة';
+
+					$scope.confrimYes = function(){
+						connectCalendarFactory.save({'id': task._id, 'subaction': 'done'}, {'remarks': remarks}, function(response){
+							$modalInstance.dismiss('cancel');
+							parentModalInstance.dismiss('cancel');
+						}, function(error){
+							$scope.error = error.data.message;
+						});
+					}
+
+					$scope.confrimNo = function(){
+						$modalInstance.dismiss('cancel');
+					}
+				}],
+				size: 'sm',
+				backdrop: 'static',
+				resolve: {
+					task: function(){
+						return $scope.task;
+					},
+					parentModalInstance: function(){
+						return $modalInstance;
+					},
+					remarks: function () {
+						return $scope.remarks;
+					}
+				}
+			});
+		}
+	}
+
+	$scope.softRemoveConfirm = function(){
+		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending') && ($scope.remarks)){
+			$modal.open({
+				template: inlineConfirmMsg,
+				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', 'remarks', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance, remarks){
+					$scope.isWarning = true;
+					$scope.msg = 'هل ترغب بحذف المهمة';
+
+					$scope.confrimYes = function(){
+						connectCalendarFactory.save({'id': task._id, 'subaction': 'softRemove'}, {'remarks': remarks}, function(response){
+							$modalInstance.dismiss('cancel');
+							parentModalInstance.dismiss('cancel');
+						}, function(error){
+							$scope.error = error.data.message;
+						});
+					}
+
+					$scope.confrimNo = function(){
+						$modalInstance.dismiss('cancel');
+					}
+				}],
+				size: 'sm',
+				backdrop: 'static',
+				resolve: {
+					task: function(){
+						return $scope.task;
+					},
+					parentModalInstance: function(){
+						return $modalInstance;
+					},
+					remarks: function () {
+						return $scope.remarks;
+					}
+				}
+			});
+		}
+	}
+
+	$scope.markRejectedConfirm = function(){
+		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending') && ($scope.remarks)){
+			$modal.open({
+				template: inlineConfirmMsg,
+				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', 'remarks', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance, remarks){
+					$scope.isWarning = true;
+					$scope.msg = 'هل ترغب بتأكيد رفض المهمة';
+
+					$scope.confrimYes = function(){
+						connectCalendarFactory.save({'id': task._id, 'subaction': 'reject'}, {'remarks': remarks}, function(response){
+							$modalInstance.dismiss('cancel');
+							parentModalInstance.dismiss('cancel');
+						}, function(error){
+							$scope.error = error.data.message;
+						});
+					}
+
+					$scope.confrimNo = function(){
+						$modalInstance.dismiss('cancel');
+					}
+				}],
+				size: 'sm',
+				backdrop: 'static',
+				resolve: {
+					task: function(){
+						return $scope.task;
+					},
+					parentModalInstance: function(){
+						return $modalInstance;
+					},
+					remarks: function () {
+						return $scope.remarks;
+					}
+				}
+			});
+		}
 	}
 
 
 }]);
-'user strict';
+'use strict';
 
-angular.module('authModule').controller('signoutAuthController', ['registerUserConfigFactory', '$http', '$state', function (registerUserConfigFactory, $http, $state) {
-	$http.get('/api/v1/logout')
-	.success(function (data, success) {
-		registerUserConfigFactory.clearUserInfo();
-		$state.go('home', {}, {reload: true});
+angular.module('calendarModule').controller('createTaskCalendarController', ['$scope', '$modalInstance', 'connectCalendarFactory', 'connectUserFactory', 'tasks', 'user', function ($scope, $modalInstance, connectCalendarFactory, connectUserFactory, tasks, user) {
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
+
+	connectUserFactory.query({'action': 'available'}, function(response){
+		//only the admin can assign tasks to other users and him/her self
+		//other users can only assign tasks to themselves
+		if(user.role !== 'admin'){
+			$scope.users = [user];
+		} else {
+			$scope.users = response;
+			$scope.users.push(user);
+		}
 	});
+
+	$scope.createNewTask = function(){
+		//get the selected user from users by index
+		$scope.info.responsibility = $scope.users[$scope.info.responsibilityIndex]._id;
+		connectCalendarFactory.save({}, {'info': $scope.info}, function(response){
+			$modalInstance.dismiss('cancel');
+		}, function(error){
+			console.log(error);
+		});
+	}
 }]);
 'use strict';
 
-angular.module('authModule').factory('connectAccountAuthFactory', ['$resource', function ($resource) {
-	return $resource('api/v1/account/:action/:id');
+angular.module('calendarModule').controller('indexCalendarController', ['$scope', 'connectCalendarFactory', '$modal', 'registerUserConfigFactory', '$filter', 'socketConfigFactory', 'helperConfigFactory', function ($scope, connectCalendarFactory, $modal, registerUserConfigFactory, $filter, socketConfigFactory, helperConfigFactory) {
+	//init scope, for some reason if we update the tasks later and if we did not init this it wont update!
+	$scope.tasks = [];
+
+	connectCalendarFactory.query({}, function(response){
+		$scope.tasks = response;
+	});
+
+	//listen to tasks
+	socketConfigFactory.on('tasks.add', function (task) {
+		var activeStatus = getActiveStatus();
+		if(activeStatus == 'pending'){
+			$scope.memosPending();
+		} else if(activeStatus == 'close'){
+			$scope.memosClosed();
+		} else {
+			$scope.memosAll();
+		}
+	});
+
+	//listen to tasks
+	socketConfigFactory.on('tasks.update', function (task) {
+		var activeStatus = getActiveStatus();
+		if(activeStatus == 'pending'){
+			$scope.memosPending();
+		} else if(activeStatus == 'close'){
+			$scope.memosClosed();
+		} else {
+			$scope.memosAll();
+		}
+	});
+
+
+	$scope.user = registerUserConfigFactory.getUser();
+
+	$scope.isTodayOrMissed = function (deadline) {
+		var deadline = new Date(deadline);
+		var today = new Date();
+		deadline.setHours(0,0,0,0);
+		today.setHours(0,0,0,0);
+		var check = (deadline.getTime() <= today.getTime())? true: false;
+		return check;
+	}
+
+	$scope.memosAll = function () {
+		connectCalendarFactory.query({}, function(response){
+			$scope.tasks = response;
+		});
+		activeStatus('all');
+	}
+
+	$scope.memosClosed = function () {
+		connectCalendarFactory.query({'action': 'close'}, function(response){
+			$scope.tasks = response;
+		});
+		activeStatus('close');
+	}
+
+	$scope.memosPending = function () {
+		connectCalendarFactory.query({'action': 'pending'}, function(response){
+			$scope.tasks = response;
+		});
+		activeStatus('pending');
+	}
+
+	var activeStatus = function (value) {
+		switch(value){
+			case 'close':
+				$scope.activeClosed = 'active';
+				$scope.activePending = '';
+				$scope.activeAll = '';
+				break;
+			case 'pending':
+				$scope.activeClosed = '';
+				$scope.activePending = 'active';
+				$scope.activeAll = '';
+				break;
+			case 'all':
+			case 'default':
+				$scope.activeClosed = '';
+				$scope.activePending = '';
+				$scope.activeAll = 'active';
+		}
+	}
+
+	var getActiveStatus = function () {
+		if($scope.activeClosed == 'active'){
+			return 'close';
+		} else if($scope.activePending == 'active'){
+			return 'pending';
+		} else {
+			return 'all';
+		}
+	}
+
+	//init active status
+	activeStatus('all');
+
+	$scope.showNewTaskForm = function(){
+		$modal.open({
+			templateUrl: 'public/modules/calendar/view/create.task.calendar.view.html',
+			controller: 'createTaskCalendarController',
+			backdrop: 'static',
+			resolve: {
+				tasks: function(){
+					return $scope.tasks;
+				},
+				user: function () {
+					return $scope.user;
+				}
+			}
+		});
+	}
+
+	$scope.showTaskActions = function(index){
+		if(($scope.tasks[index].removed === false) && ($scope.tasks[index].rejected === false) && ($scope.tasks[index].status == 'pending') && (($scope.tasks[index].responsibility._id == $scope.user._id) ||  ($scope.tasks[index].user._id == $scope.user._id))){
+			$modal.open({
+				templateUrl: 'public/modules/calendar/view/actions.calander.view.html',
+				controller: 'actionsCalendarController',
+				backdrop: 'static',
+				size: 'sm',
+				resolve: {
+					task: function(){
+						return $scope.tasks[index];
+					},
+					user: function(){
+						return $scope.user;
+					},
+					remarks: function () {
+						return $scope.remarks;
+					}
+				}
+			});
+		}
+	}
 }]);
 'use strict';
 
-angular.module('authModule').factory('connectAuthFactory', ['$resource', function ($resource) {
-		return $resource('/api/v1/user/:id');
+angular.module('calendarModule').factory('connectCalendarFactory', ['$resource', function ($resource) {
+	return $resource('/api/v1/calendar/:action/:id/:subaction');
 }]);
 'use strict';
 
@@ -2271,467 +2509,86 @@ angular.module('caseModule').controller('uploadMemoConsultantCaseController', ['
 angular.module('caseModule').factory('connectCaseFactory', ['$resource', function ($resource) {
 	return $resource('api/v1/case/:caseId/:action/:actionId/:subaction/:id');
 }])
-'use strict';
+'user strict';
 
-angular.module('calendarModule').controller('actionsCalendarController', ['$scope', '$modalInstance', 'user', 'task', '$modal', 'remarks', function ($scope, $modalInstance, user, task, $modal, remarks) {
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-
-	$scope.task = task;
-	$scope.user = user;
-
-	$scope.isAuthor = (user._id == task.user._id)? true: false;
-	$scope.isResponsibility = (user._id == task.responsibility._id)? true: false;
-
-	var inlineConfirmMsg = '<div class="row"><div class="col-md-12"><h5 ng-bind="msg"></h5></div><div class="col-md-12"><button class="btn btn-sm btn-block" ng-class="{\'btn-danger\': isWarning == true, \'btn-success\': isWarning == false }" ng-click="confrimYes()">نعم</button></div><div class="col-md-12"><button class="btn btn-sm btn-block" ng-class="{\'btn-success\': isWarning == true, \'btn-danger\': isWarning == false }" ng-click="confrimNo()">لا</button></div></div>';
-
-
-	$scope.markDoneConfirm = function(){
-		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending') && ($scope.remarks)){
-			$modal.open({
-				template: inlineConfirmMsg,
-				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', 'remarks', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance, remarks){
-					$scope.isWarning = false;
-					$scope.msg = 'هل ترغب بتأكيد الإنتهاء من المهمة';
-
-					$scope.confrimYes = function(){
-						connectCalendarFactory.save({'id': task._id, 'subaction': 'done'}, {'remarks': remarks}, function(response){
-							$modalInstance.dismiss('cancel');
-							parentModalInstance.dismiss('cancel');
-						}, function(error){
-							$scope.error = error.data.message;
-						});
-					}
-
-					$scope.confrimNo = function(){
-						$modalInstance.dismiss('cancel');
-					}
-				}],
-				size: 'sm',
-				backdrop: 'static',
-				resolve: {
-					task: function(){
-						return $scope.task;
-					},
-					parentModalInstance: function(){
-						return $modalInstance;
-					},
-					remarks: function () {
-						return $scope.remarks;
-					}
-				}
-			});
-		}
-	}
-
-	$scope.softRemoveConfirm = function(){
-		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending') && ($scope.remarks)){
-			$modal.open({
-				template: inlineConfirmMsg,
-				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', 'remarks', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance, remarks){
-					$scope.isWarning = true;
-					$scope.msg = 'هل ترغب بحذف المهمة';
-
-					$scope.confrimYes = function(){
-						connectCalendarFactory.save({'id': task._id, 'subaction': 'softRemove'}, {'remarks': remarks}, function(response){
-							$modalInstance.dismiss('cancel');
-							parentModalInstance.dismiss('cancel');
-						}, function(error){
-							$scope.error = error.data.message;
-						});
-					}
-
-					$scope.confrimNo = function(){
-						$modalInstance.dismiss('cancel');
-					}
-				}],
-				size: 'sm',
-				backdrop: 'static',
-				resolve: {
-					task: function(){
-						return $scope.task;
-					},
-					parentModalInstance: function(){
-						return $modalInstance;
-					},
-					remarks: function () {
-						return $scope.remarks;
-					}
-				}
-			});
-		}
-	}
-
-	$scope.markRejectedConfirm = function(){
-		if(($scope.task.removed === false) && ($scope.task.rejected === false) && ($scope.task.status == 'pending') && ($scope.remarks)){
-			$modal.open({
-				template: inlineConfirmMsg,
-				controller: ['$scope', '$modalInstance', 'connectCalendarFactory', 'task', 'parentModalInstance', 'remarks', function($scope, $modalInstance, connectCalendarFactory, task, parentModalInstance, remarks){
-					$scope.isWarning = true;
-					$scope.msg = 'هل ترغب بتأكيد رفض المهمة';
-
-					$scope.confrimYes = function(){
-						connectCalendarFactory.save({'id': task._id, 'subaction': 'reject'}, {'remarks': remarks}, function(response){
-							$modalInstance.dismiss('cancel');
-							parentModalInstance.dismiss('cancel');
-						}, function(error){
-							$scope.error = error.data.message;
-						});
-					}
-
-					$scope.confrimNo = function(){
-						$modalInstance.dismiss('cancel');
-					}
-				}],
-				size: 'sm',
-				backdrop: 'static',
-				resolve: {
-					task: function(){
-						return $scope.task;
-					},
-					parentModalInstance: function(){
-						return $modalInstance;
-					},
-					remarks: function () {
-						return $scope.remarks;
-					}
-				}
-			});
-		}
-	}
-
-
-}]);
-'use strict';
-
-angular.module('calendarModule').controller('createTaskCalendarController', ['$scope', '$modalInstance', 'connectCalendarFactory', 'connectUserFactory', 'tasks', 'user', function ($scope, $modalInstance, connectCalendarFactory, connectUserFactory, tasks, user) {
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-
-	connectUserFactory.query({'action': 'available'}, function(response){
-		//only the admin can assign tasks to other users and him/her self
-		//other users can only assign tasks to themselves
-		if(user.role !== 'admin'){
-			$scope.users = [user];
-		} else {
-			$scope.users = response;
-			$scope.users.push(user);
-		}
-	});
-
-	$scope.createNewTask = function(){
-		//get the selected user from users by index
-		$scope.info.responsibility = $scope.users[$scope.info.responsibilityIndex]._id;
-		connectCalendarFactory.save({}, {'info': $scope.info}, function(response){
-			$modalInstance.dismiss('cancel');
-		}, function(error){
-			console.log(error);
-		});
-	}
-}]);
-'use strict';
-
-angular.module('calendarModule').controller('indexCalendarController', ['$scope', 'connectCalendarFactory', '$modal', 'registerUserConfigFactory', '$filter', 'socketConfigFactory', 'helperConfigFactory', function ($scope, connectCalendarFactory, $modal, registerUserConfigFactory, $filter, socketConfigFactory, helperConfigFactory) {
-	//init scope, for some reason if we update the tasks later and if we did not init this it wont update!
-	$scope.tasks = [];
-
-	connectCalendarFactory.query({}, function(response){
-		$scope.tasks = response;
-	});
-
-	//listen to tasks
-	socketConfigFactory.on('tasks.add', function (task) {
-		var activeStatus = getActiveStatus();
-		if(activeStatus == 'pending'){
-			$scope.memosPending();
-		} else if(activeStatus == 'close'){
-			$scope.memosClosed();
-		} else {
-			$scope.memosAll();
-		}
-	});
-
-	//listen to tasks
-	socketConfigFactory.on('tasks.update', function (task) {
-		var activeStatus = getActiveStatus();
-		if(activeStatus == 'pending'){
-			$scope.memosPending();
-		} else if(activeStatus == 'close'){
-			$scope.memosClosed();
-		} else {
-			$scope.memosAll();
-		}
-	});
-
-
-	$scope.user = registerUserConfigFactory.getUser();
-
-	$scope.isTodayOrMissed = function (deadline) {
-		var deadline = new Date(deadline);
-		var today = new Date();
-		deadline.setHours(0,0,0,0);
-		today.setHours(0,0,0,0);
-		var check = (deadline.getTime() <= today.getTime())? true: false;
-		return check;
-	}
-
-	$scope.memosAll = function () {
-		connectCalendarFactory.query({}, function(response){
-			$scope.tasks = response;
-		});
-		activeStatus('all');
-	}
-
-	$scope.memosClosed = function () {
-		connectCalendarFactory.query({'action': 'close'}, function(response){
-			$scope.tasks = response;
-		});
-		activeStatus('close');
-	}
-
-	$scope.memosPending = function () {
-		connectCalendarFactory.query({'action': 'pending'}, function(response){
-			$scope.tasks = response;
-		});
-		activeStatus('pending');
-	}
-
-	var activeStatus = function (value) {
-		switch(value){
-			case 'close':
-				$scope.activeClosed = 'active';
-				$scope.activePending = '';
-				$scope.activeAll = '';
-				break;
-			case 'pending':
-				$scope.activeClosed = '';
-				$scope.activePending = 'active';
-				$scope.activeAll = '';
-				break;
-			case 'all':
-			case 'default':
-				$scope.activeClosed = '';
-				$scope.activePending = '';
-				$scope.activeAll = 'active';
-		}
-	}
-
-	var getActiveStatus = function () {
-		if($scope.activeClosed == 'active'){
-			return 'close';
-		} else if($scope.activePending == 'active'){
-			return 'pending';
-		} else {
-			return 'all';
-		}
-	}
-
-	//init active status
-	activeStatus('all');
-
-	$scope.showNewTaskForm = function(){
-		$modal.open({
-			templateUrl: 'public/modules/calendar/view/create.task.calendar.view.html',
-			controller: 'createTaskCalendarController',
-			backdrop: 'static',
-			resolve: {
-				tasks: function(){
-					return $scope.tasks;
-				},
-				user: function () {
-					return $scope.user;
+angular.module('authModule').controller('signinAuthController', ['registerUserConfigFactory', '$scope', '$http', '$location', '$rootScope', function (registerUserConfigFactory, $scope, $http, $location, $rootScope) {
+	$scope.signIn = function () {
+		$http.post('/api/v1/login', $scope.credentials)
+		.success(function (data, success) {
+			registerUserConfigFactory.setUser(data);
+			if($rootScope.lastPage){
+				$location.path($rootScope.lastPage);
+			} else {
+				if(data.role == 'admin'){
+					$location.path('/admin/report');
+				} else if(data.role == 'client') {
+					$location.path('/client');
+				} else if(data.role == 'employee'){
+					$location.path('/employee');
+				} else if(data.role == 'consultant'){
+					$location.path('/consultant');
 				}
 			}
+		})
+		.error(function (data, error) {
+			$scope.error = data;
 		});
-	}
-
-	$scope.showTaskActions = function(index){
-		if(($scope.tasks[index].removed === false) && ($scope.tasks[index].rejected === false) && ($scope.tasks[index].status == 'pending') && (($scope.tasks[index].responsibility._id == $scope.user._id) ||  ($scope.tasks[index].user._id == $scope.user._id))){
-			$modal.open({
-				templateUrl: 'public/modules/calendar/view/actions.calander.view.html',
-				controller: 'actionsCalendarController',
-				backdrop: 'static',
-				size: 'sm',
-				resolve: {
-					task: function(){
-						return $scope.tasks[index];
-					},
-					user: function(){
-						return $scope.user;
-					},
-					remarks: function () {
-						return $scope.remarks;
-					}
-				}
-			});
-		}
-	}
+	};
 }]);
 'use strict';
 
-angular.module('calendarModule').factory('connectCalendarFactory', ['$resource', function ($resource) {
-	return $resource('/api/v1/calendar/:action/:id/:subaction');
-}]);
-'use strict';
+angular.module('authModule').controller('signInProviderAuthController', ['$scope', '$http', '$location', 'connectAccountAuthFactory', '$stateParams', 'countryListConfigFactory', function ($scope, $http, $location, connectAccountAuthFactory, $stateParams, countryListConfigFactory) {
+	$scope.countryList = countryListConfigFactory;
 
-angular.module('caseRoleModule').controller('indexCaseRoleController', ['$scope', '$modalInstance', 'caseRoles', 'connectCaseRoleFactory', function ($scope, $modalInstance, caseRoles, connectCaseRoleFactory) {
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-
-	$scope.createNewCaseRole = function(){
-		connectCaseRoleFactory.save({}, {'caseRoleInfo': $scope.newCaseRole}, function(response){
-			$modalInstance.dismiss('cancel');
-		}, function(error){
-			$scope.error = error.data.message;
-		});
-	}
-
-}]);
-'use strict';
-
-angular.module('caseRoleModule').factory('connectCaseRoleFactory', ['$resource', function ($resource) {
-	return $resource('api/v1/caserole/:id/:action');
-}]);
-'use strict';
-
-angular.module('caseTypeModule').controller('indexCaseTypeController', ['$scope', '$modalInstance', 'connectCaseTypeFactory', 'caseTypes', function ($scope, $modalInstance, connectCaseTypeFactory, caseTypes) {
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-
-	$scope.createNewCaseType = function(){
-		connectCaseTypeFactory.save({}, {'caseTypeInfo': $scope.newCaseType}, function(response){
-			$modalInstance.dismiss('cancel');
-		}, function(error){
-			$scope.error = error.data.message;
-		});
-	}
-
-}]);
-'use strict';
-
-angular.module('caseTypeModule').factory('connectCaseTypeFactory', ['$resource', function ($resource) {
-	return $resource('api/v1/casetype/:id/:action');
-}]);
-'use strict';
-
-angular.module('clientModule').controller('addClientController', ['$scope', '$modalInstance', 'connectCaseFactory', 'selectedCase', 'closeParentModal', 'connectCaseRoleFactory', function ($scope, $modalInstance, connectCaseFactory, selectedCase, closeParentModal, connectCaseRoleFactory) {
-	connectCaseRoleFactory.query({action: 'available'}, function(response){
-		$scope.caseRoles = response;
+	connectAccountAuthFactory.get({id: $stateParams.id}, function (response) {
+		$scope.credentials = response;
 	});
 
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-
-	$scope.createNewClient = function(){
-		$scope.error = false;
-		$scope.userInfo.role = 'client';
-		connectCaseFactory.save({'action': 'client', 'subaction': 'new'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
-			$modalInstance.dismiss('cancel');
-			closeParentModal();
-		}, function(error){
-			$scope.error = error.data.message;
+	$scope.signUp = function () {
+		connectAccountAuthFactory.save({id: $stateParams.id}, $scope.credentials, function (data, res) {
+			$location.path('/signin');
+		},
+		function (err) {
+			$scope.error = err.data.message;
 		});
 	}
 
 
 }]);
-'use strict';
+'user strict';
 
-angular.module('clientModule').controller('dashboardClientController', ['$scope', 'registerUserConfigFactory', '$state', function ($scope, registerUserConfigFactory, $state) {
-	$scope.user = registerUserConfigFactory.getUser();
-	if($scope.user === false) $state.go('signin');
-	if($scope.user.role !== 'client') $state.go('signin');
-
-	$state.go('client.case');
-}]);
-'use strict';
-
-angular.module('clientModule').controller('indexClientController', ['$scope', '$modalInstance', 'connectUserFactory', 'clients', 'selectedClients', 'caseRoles', function ($scope, $modalInstance, connectUserFactory, clients, selectedClients, caseRoles) {
-	//init the client info
-	$scope.userInfo = {};
-	$scope.userInfo.role = 'client';
-
-	$scope.createNewClient = function(){
-		$scope.error = false;
-		connectUserFactory.save({}, {'userInfo': $scope.userInfo}, function(response){
-			selectedClients.push(response);
-			$modalInstance.dismiss('cancel');
-		}, function(error){
-			$scope.error = error.data.message;
-		});
-	}
-
-	$scope.caseRoles = caseRoles;
-
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-}]);
-'use strict';
-
-angular.module('clientModule').controller('switchClientController', ['$scope', 'connectAdminFactory', '$modalInstance', '$modal', 'selectedCase', 'connectCaseRoleFactory', 'connectCaseFactory', function ($scope, connectAdminFactory, $modalInstance, $modal, selectedCase, connectCaseRoleFactory, connectCaseFactory) {
-	$scope.selectedCase = selectedCase;
-
-	connectAdminFactory.query({page: 'client', action: 'available'}, function(response){
-		$scope.clients = response;
+angular.module('authModule').controller('signoutAuthController', ['registerUserConfigFactory', '$http', '$state', function (registerUserConfigFactory, $http, $state) {
+	$http.get('/api/v1/logout')
+	.success(function (data, success) {
+		registerUserConfigFactory.clearUserInfo();
+		$state.go('home', {}, {reload: true});
 	});
-
-	connectCaseRoleFactory.query({action: 'available'}, function(response){
-		$scope.caseRoles = response;
-	});
-
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-
-	$scope.creatClient = function(){
-		$scope.error = false;
-		$scope.userInfo.userId = $scope.clients[$scope.userIndex]._id;
-		connectCaseFactory.save({'action': 'client'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
-			$modalInstance.dismiss('cancel');
-		}, function(error){
-			$scope.error = error.data.message;
-		});
-	}
-
-	$scope.showCreateClientForm = function(){
-		$modal.open({
-			templateUrl: 'public/modules/client/view/add.client.view.html',
-			controller: 'addClientController',
-			backdrop: 'static',
-			resolve: {
-				selectedCase: function(){
-					return $scope.selectedCase;
-				},
-				closeParentModal: function(){
-					return $scope.closeModal;
-				}
-			}
-		});
-	}
-
-
 }]);
 'use strict';
 
-angular.module('yousufalsharif').controller('ModalInstanceConfigController', ['$scope', '$rootScope', '$modalInstance', function ($scope, $rootScope, $modalInstance) {
+angular.module('authModule').factory('connectAccountAuthFactory', ['$resource', function ($resource) {
+	return $resource('api/v1/account/:action/:id');
+}]);
+'use strict';
+
+angular.module('authModule').factory('connectAuthFactory', ['$resource', function ($resource) {
+		return $resource('/api/v1/user/:id');
+}]);
+'use strict';
+
+angular.module('legality').controller('ModalInstanceConfigController', ['$scope', '$rootScope', '$modalInstance', function ($scope, $rootScope, $modalInstance) {
 	$scope.cancel = function () {
 		$modalInstance.dismiss('cancel');
 	}
 }]);
 'use strict';
 
-angular.module('yousufalsharif').controller('errorConfigController', ['$scope', function ($scope) {
+angular.module('legality').controller('errorConfigController', ['$scope', function ($scope) {
 	
 }]);
 'use strict';
 
-angular.module('yousufalsharif').controller('navConfig', ['$rootScope', '$scope', 'registerUserConfigFactory', '$state', function ($rootScope, $scope, registerUserConfigFactory, $state) {
+angular.module('legality').controller('navConfig', ['$rootScope', '$scope', 'registerUserConfigFactory', '$state', function ($rootScope, $scope, registerUserConfigFactory, $state) {
 	//initiate the nav with the defult nav 'user'
 	$scope.nav = 'public/modules/config/view/user.nav.html';
 	//initiate the menu in mobile and tables in no collapse status
@@ -2801,7 +2658,7 @@ angular.module('yousufalsharif').controller('navConfig', ['$rootScope', '$scope'
 
 'use strict';
 
-angular.module('yousufalsharif').directive('spinnerOnLoadConfigDirective', [function () {
+angular.module('legality').directive('spinnerOnLoadConfigDirective', [function () {
     return {
         restrict: 'A',
         link: function(scope, element) {
@@ -2821,7 +2678,7 @@ angular.module('yousufalsharif').directive('spinnerOnLoadConfigDirective', [func
 }]);
 'use strict';
 
-angular.module('yousufalsharif').directive('styleImageConfigDirective', ['$modal', '$rootScope', function ($modal, $rootScope) {
+angular.module('legality').directive('styleImageConfigDirective', ['$modal', '$rootScope', function ($modal, $rootScope) {
 	return {
 		require: '?ngModel',
 		restrict: 'A',
@@ -2967,7 +2824,7 @@ angular.module('yousufalsharif').directive('styleImageConfigDirective', ['$modal
 }]);
 'use strict';
 
-angular.module('yousufalsharif').directive('typeConfigDirective', ['$interval', '$timeout', function ($interval, $timeout) {
+angular.module('legality').directive('typeConfigDirective', ['$interval', '$timeout', function ($interval, $timeout) {
 	return {
 		require: '?ngModel',
 		restrict: 'A',
@@ -3022,7 +2879,7 @@ angular.module('yousufalsharif').directive('typeConfigDirective', ['$interval', 
 }]);
 'use strict';
 
-angular.module('yousufalsharif').directive('watchImageConfigDirective', ['$modal', '$rootScope', function ($modal, $rootScope) {
+angular.module('legality').directive('watchImageConfigDirective', ['$modal', '$rootScope', function ($modal, $rootScope) {
 	return {
 		require: '?ngModel',
 		restrict: 'A',
@@ -3150,7 +3007,7 @@ angular.module('yousufalsharif').directive('watchImageConfigDirective', ['$modal
 
 			} else {
 				$modal.open({
-					template: '<h4 class="alert alert-danger">Please use a modern browser to browse yousufalsharif!!!</h4>'
+					template: '<h4 class="alert alert-danger">Please use a modern browser to browse legality!!!</h4>'
 				});
 			}
 		}
@@ -3158,7 +3015,7 @@ angular.module('yousufalsharif').directive('watchImageConfigDirective', ['$modal
 }]);
 'user strict';
 
-angular.module('yousufalsharif').factory('countryListConfigFactory' ,function () {
+angular.module('legality').factory('countryListConfigFactory' ,function () {
 	return [ 
 		  {name: 'Afghanistan', code: 'AF'}, 
 		  {name: 'Åland Islands', code: 'AX'}, 
@@ -3407,7 +3264,7 @@ angular.module('yousufalsharif').factory('countryListConfigFactory' ,function ()
 });
 'use strict';
 
-angular.module('yousufalsharif').factory('helperConfigFactory', [function () {
+angular.module('legality').factory('helperConfigFactory', [function () {
 	return {
 		'map': function (arr, fn) {
 			for(var i=0; i <= arr.length; i++){
@@ -3421,7 +3278,7 @@ angular.module('yousufalsharif').factory('helperConfigFactory', [function () {
 }]);
 'use strict';
 
-angular.module('yousufalsharif').factory('registerUserConfigFactory', ['$window', '$rootScope', '$q', function ($window, $rootScope, $q) {
+angular.module('legality').factory('registerUserConfigFactory', ['$window', '$rootScope', '$q', function ($window, $rootScope, $q) {
 	//Get the user info from the window element that has been injected in the index page on the server side
 	var _this = {};
 
@@ -3467,7 +3324,7 @@ angular.module('yousufalsharif').factory('registerUserConfigFactory', ['$window'
 }]);
 'use strict';
 
-angular.module('yousufalsharif').factory('requreLoginConfigFactory', ['$modal', '$rootScope', '$location', function ($modal, $rootScope, $location) {
+angular.module('legality').factory('requreLoginConfigFactory', ['$modal', '$rootScope', '$location', function ($modal, $rootScope, $location) {
 	return {
 		open: function (service) {
 			$rootScope.lastPage = $location.path();
@@ -3486,12 +3343,12 @@ angular.module('yousufalsharif').factory('requreLoginConfigFactory', ['$modal', 
 }]);
 'use strict';
 
-angular.module('yousufalsharif').factory('socketConfigFactory', ['socketFactory', function (socketFactory) {
+angular.module('legality').factory('socketConfigFactory', ['socketFactory', function (socketFactory) {
 	return socketFactory();
 }]);
 'use strict';
 
-angular.module('yousufalsharif').filter('dateRangeConfigFilter', [function () {
+angular.module('legality').filter('dateRangeConfigFilter', [function () {
 	return function(dataArray, dateFieldName, from, to){
 		if(!dataArray || !dateFieldName) return;
 		if(Object.prototype.toString.call(dataArray) !== '[object Array]') return;
@@ -3539,7 +3396,7 @@ angular.module('yousufalsharif').filter('dateRangeConfigFilter', [function () {
 'use strict';
 
 //excerpt text
-angular.module('yousufalsharif').filter('excerpt', [function () {
+angular.module('legality').filter('excerpt', [function () {
 	return function (text, max) {
 		//the result to be returned
 		var result='';
@@ -3572,7 +3429,7 @@ angular.module('yousufalsharif').filter('excerpt', [function () {
 }]);
 'use strict';
 
-angular.module('yousufalsharif').filter('localize', ['arLang', function (arLang) {
+angular.module('legality').filter('localize', ['arLang', function (arLang) {
 	return function (text, lang) {
 		text = (text === true)? 'true': text;
 		text = (text === false)? 'false': text;
@@ -3594,7 +3451,7 @@ angular.module('yousufalsharif').filter('localize', ['arLang', function (arLang)
 }]);
 'user strict';
 
-angular.module('yousufalsharif').filter('unique', [function () {
+angular.module('legality').filter('unique', [function () {
     return function(input) {
     	if(typeof input == 'undefined'){return;}
         var uniqueList = [];
@@ -3610,7 +3467,7 @@ angular.module('yousufalsharif').filter('unique', [function () {
 }]);
 'use strict';
 
-angular.module('yousufalsharif').factory('arLang', [function () {
+angular.module('legality').factory('arLang', [function () {
 	return {
 		'admin': 'إداري',
 		'pending': 'معلقة',
@@ -3646,6 +3503,128 @@ angular.module('consultantModule').controller('indexConsultantController', ['$sc
 }]);
 'use strict';
 
+angular.module('clientModule').controller('addClientController', ['$scope', '$modalInstance', 'connectCaseFactory', 'selectedCase', 'closeParentModal', 'connectCaseRoleFactory', function ($scope, $modalInstance, connectCaseFactory, selectedCase, closeParentModal, connectCaseRoleFactory) {
+	connectCaseRoleFactory.query({action: 'available'}, function(response){
+		$scope.caseRoles = response;
+	});
+
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
+
+	$scope.createNewClient = function(){
+		$scope.error = false;
+		$scope.userInfo.role = 'client';
+		connectCaseFactory.save({'action': 'client', 'subaction': 'new'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
+			$modalInstance.dismiss('cancel');
+			closeParentModal();
+		}, function(error){
+			$scope.error = error.data.message;
+		});
+	}
+
+
+}]);
+'use strict';
+
+angular.module('clientModule').controller('dashboardClientController', ['$scope', 'registerUserConfigFactory', '$state', function ($scope, registerUserConfigFactory, $state) {
+	$scope.user = registerUserConfigFactory.getUser();
+	if($scope.user === false) $state.go('signin');
+	if($scope.user.role !== 'client') $state.go('signin');
+
+	$state.go('client.case');
+}]);
+'use strict';
+
+angular.module('clientModule').controller('indexClientController', ['$scope', '$modalInstance', 'connectUserFactory', 'clients', 'selectedClients', 'caseRoles', function ($scope, $modalInstance, connectUserFactory, clients, selectedClients, caseRoles) {
+	//init the client info
+	$scope.userInfo = {};
+	$scope.userInfo.role = 'client';
+
+	$scope.createNewClient = function(){
+		$scope.error = false;
+		connectUserFactory.save({}, {'userInfo': $scope.userInfo}, function(response){
+			selectedClients.push(response);
+			$modalInstance.dismiss('cancel');
+		}, function(error){
+			$scope.error = error.data.message;
+		});
+	}
+
+	$scope.caseRoles = caseRoles;
+
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
+}]);
+'use strict';
+
+angular.module('clientModule').controller('switchClientController', ['$scope', 'connectAdminFactory', '$modalInstance', '$modal', 'selectedCase', 'connectCaseRoleFactory', 'connectCaseFactory', function ($scope, connectAdminFactory, $modalInstance, $modal, selectedCase, connectCaseRoleFactory, connectCaseFactory) {
+	$scope.selectedCase = selectedCase;
+
+	connectAdminFactory.query({page: 'client', action: 'available'}, function(response){
+		$scope.clients = response;
+	});
+
+	connectCaseRoleFactory.query({action: 'available'}, function(response){
+		$scope.caseRoles = response;
+	});
+
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
+
+	$scope.creatClient = function(){
+		$scope.error = false;
+		$scope.userInfo.userId = $scope.clients[$scope.userIndex]._id;
+		connectCaseFactory.save({'action': 'client'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
+			$modalInstance.dismiss('cancel');
+		}, function(error){
+			$scope.error = error.data.message;
+		});
+	}
+
+	$scope.showCreateClientForm = function(){
+		$modal.open({
+			templateUrl: 'public/modules/client/view/add.client.view.html',
+			controller: 'addClientController',
+			backdrop: 'static',
+			resolve: {
+				selectedCase: function(){
+					return $scope.selectedCase;
+				},
+				closeParentModal: function(){
+					return $scope.closeModal;
+				}
+			}
+		});
+	}
+
+
+}]);
+'use strict';
+
+angular.module('caseRoleModule').factory('connectCaseRoleFactory', ['$resource', function ($resource) {
+	return $resource('api/v1/caserole/:id/:action');
+}]);
+'use strict';
+
+angular.module('caseRoleModule').controller('indexCaseRoleController', ['$scope', '$modalInstance', 'caseRoles', 'connectCaseRoleFactory', function ($scope, $modalInstance, caseRoles, connectCaseRoleFactory) {
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
+
+	$scope.createNewCaseRole = function(){
+		connectCaseRoleFactory.save({}, {'caseRoleInfo': $scope.newCaseRole}, function(response){
+			$modalInstance.dismiss('cancel');
+		}, function(error){
+			$scope.error = error.data.message;
+		});
+	}
+
+}]);
+'use strict';
+
 angular.module('courtModule').controller('indexCourtController', ['$scope', '$modalInstance', 'connectAdminFactory', 'courts', function ($scope, $modalInstance, connectAdminFactory, courts) {
 	//init
 	$scope.courtInfo = {};
@@ -3665,6 +3644,27 @@ angular.module('courtModule').controller('indexCourtController', ['$scope', '$mo
 		$modalInstance.dismiss('cancel');
 	}
 
+}]);
+'use strict';
+
+angular.module('caseTypeModule').controller('indexCaseTypeController', ['$scope', '$modalInstance', 'connectCaseTypeFactory', 'caseTypes', function ($scope, $modalInstance, connectCaseTypeFactory, caseTypes) {
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
+
+	$scope.createNewCaseType = function(){
+		connectCaseTypeFactory.save({}, {'caseTypeInfo': $scope.newCaseType}, function(response){
+			$modalInstance.dismiss('cancel');
+		}, function(error){
+			$scope.error = error.data.message;
+		});
+	}
+
+}]);
+'use strict';
+
+angular.module('caseTypeModule').factory('connectCaseTypeFactory', ['$resource', function ($resource) {
+	return $resource('api/v1/casetype/:id/:action');
 }]);
 'use strict';
 
@@ -3779,7 +3779,7 @@ angular.module('homeModule').controller('indexHomeController', ['registerUserCon
 }]);
 'user strict';
 
-angular.module('yousufalsharif').factory('connectContactHomeFactory', ['$resource', function ($resource) {
+angular.module('legality').factory('connectContactHomeFactory', ['$resource', function ($resource) {
 	return $resource('/api/v1/cms/contact');
 }]);
 'use strict';
@@ -3889,26 +3889,6 @@ angular.module('reportModule').controller('indexReportController', ['$scope', '$
 }]);
 'use strict';
 
-angular.module('timelineModule').controller('indexTimelineController', ['$scope', 'connectTimelineFactory', 'socketConfigFactory', function ($scope, connectTimelineFactory, socketConfigFactory) {
-	//listen to add
-	socketConfigFactory.on('timeline', function (feeds) {
-		getFeeds();
-	});
-	var getFeeds = function () {
-		connectTimelineFactory.query(function (response) {
-			$scope.feeds = response;
-		});
-	}
-	//init the feeds
-	getFeeds();
-}]);
-'use strict';
-
-angular.module('timelineModule').factory('connectTimelineFactory', ['$resource', function ($resource) {
-	return $resource('api/v1/timeline');
-}]);
-'use strict';
-
 angular.module('updateTypesModule').controller('indexUpdateTypesController', ['$scope', 'connectUpdateTypeFactory', 'updatetypes', '$modalInstance', function($scope, connectUpdateTypeFactory, updatetypes, $modalInstance){
 	$scope.closeModal = function(){
 		$modalInstance.dismiss('cancel');
@@ -3937,6 +3917,26 @@ angular.module('updateTypesModule').controller('indexUpdateTypesController', ['$
 angular.module('updateTypesModule').factory('connectUpdateTypeFactory', ['$resource', function ($resource) {
 	return $resource('api/v1/updatetype/:id/:action');
 }])
+'use strict';
+
+angular.module('timelineModule').controller('indexTimelineController', ['$scope', 'connectTimelineFactory', 'socketConfigFactory', function ($scope, connectTimelineFactory, socketConfigFactory) {
+	//listen to add
+	socketConfigFactory.on('timeline', function (feeds) {
+		getFeeds();
+	});
+	var getFeeds = function () {
+		connectTimelineFactory.query(function (response) {
+			$scope.feeds = response;
+		});
+	}
+	//init the feeds
+	getFeeds();
+}]);
+'use strict';
+
+angular.module('timelineModule').factory('connectTimelineFactory', ['$resource', function ($resource) {
+	return $resource('api/v1/timeline');
+}]);
 'use strict';
 
 angular.module('uploadModule').controller('addUploadController', ['$scope', '$modalInstance', 'selectedCase', '$http', 'docs', '$modal', function ($scope, $modalInstance, selectedCase, $http, docs, $modal) {

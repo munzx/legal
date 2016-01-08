@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yousufalsharif').factory('registerUserConfigFactory', ['$window', '$rootScope', '$q', function ($window, $rootScope, $q) {
+angular.module('legality').factory('registerUserConfigFactory', ['$window', '$rootScope', '$q', function ($window, $rootScope, $q) {
 	//Get the user info from the window element that has been injected in the index page on the server side
 	var _this = {};
 

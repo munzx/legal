@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = {
-	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || process.env.MONGO_URL  || 'mongodb://localhost/yousufalsharif',
+	db: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || process.env.MONGO_URL  || 'mongodb://localhost/legality',
 	app: {
-		title: 'yousufalsharifApp - Production Environment'
+		title: 'legalityApp - Production Environment'
 	},
 	assets: {
 		css: 'public/dist/app.min.css',

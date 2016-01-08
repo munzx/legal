@@ -1,6 +1,6 @@
 'user strict';
 
-angular.module('yousufalsharif').factory('countryListConfigFactory' ,function () {
+angular.module('legality').factory('countryListConfigFactory' ,function () {
 	return [ 
 		  {name: 'Afghanistan', code: 'AF'}, 
 		  {name: 'Åland Islands', code: 'AX'}, 

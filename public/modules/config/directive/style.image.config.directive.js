@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yousufalsharif').directive('styleImageConfigDirective', ['$modal', '$rootScope', function ($modal, $rootScope) {
+angular.module('legality').directive('styleImageConfigDirective', ['$modal', '$rootScope', function ($modal, $rootScope) {
 	return {
 		require: '?ngModel',
 		restrict: 'A',

@@ -14,8 +14,8 @@ module.exports.sendEmail = function (recipients) {
 		//emails sender
 		var sender = function (data) {
 			var info = {
-				template_name: "yousufalsharifOrder",
-				name: "yousufalsharif Team",
+				template_name: "legalityOrder",
+				name: "legality Team",
 				subject: 'New Order',
 				to: data
 			}
@@ -24,7 +24,7 @@ module.exports.sendEmail = function (recipients) {
 				"html": "<p>Example HTML content</p>",
 				"text": "Example text content",
 				"subject": info.subject,
-				"from_email": "info@yousufalsharif.com",
+				"from_email": "info@legality.com",
 				"from_name": info.name,
 				"to": info.to,
 				"headers": {

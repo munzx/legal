@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yousufalsharif').filter('dateRangeConfigFilter', [function () {
+angular.module('legality').filter('dateRangeConfigFilter', [function () {
 	return function(dataArray, dateFieldName, from, to){
 		if(!dataArray || !dateFieldName) return;
 		if(Object.prototype.toString.call(dataArray) !== '[object Array]') return;

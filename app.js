@@ -52,7 +52,7 @@ module.exports = function (app, io) {
 	//use middlewears
 	app.use(bodyParser.json({limit: '50mb'}));
 	app.use(bodyParser.urlencoded({extended: true, limit: '50mb'}));
-	app.use(cookieSession({ secret: process.env.SESSION_SECRET || '112jhsd8a783eh1jqjdhwe', name: 'yousufalsharif'})); //use sessions for Auth
+	app.use(cookieSession({ secret: process.env.SESSION_SECRET || '112jhsd8a783eh1jqjdhwe', name: 'legality'})); //use sessions for Auth
 	app.use(methodOverride()); //read about this
 	app.use(passport.initialize()); //initialize passport
 	app.use(passport.session()); // persistent login sessions

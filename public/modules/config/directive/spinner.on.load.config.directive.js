@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yousufalsharif').directive('spinnerOnLoadConfigDirective', [function () {
+angular.module('legality').directive('spinnerOnLoadConfigDirective', [function () {
     return {
         restrict: 'A',
         link: function(scope, element) {

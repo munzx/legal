@@ -1,14 +1,14 @@
 {
-  "name": "yousufalsharif",
+  "name": "legality",
   "version": "0.0.0",
   "authors": [
     "munzir <munzir.suliman@outlook.com>"
   ],
-  "description": "An app to connect yousufalsharif community",
+  "description": "An app to connect legality community",
   "keywords": [
     "connect"
   ],
-  "license": "yousufalsharif",
+  "license": "legality",
   "private": true,
   "ignore": [
     "**/.*",

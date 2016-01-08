@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yousufalsharif').directive('typeConfigDirective', ['$interval', '$timeout', function ($interval, $timeout) {
+angular.module('legality').directive('typeConfigDirective', ['$interval', '$timeout', function ($interval, $timeout) {
 	return {
 		require: '?ngModel',
 		restrict: 'A',

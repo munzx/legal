@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yousufalsharif').factory('requreLoginConfigFactory', ['$modal', '$rootScope', '$location', function ($modal, $rootScope, $location) {
+angular.module('legality').factory('requreLoginConfigFactory', ['$modal', '$rootScope', '$location', function ($modal, $rootScope, $location) {
 	return {
 		open: function (service) {
 			$rootScope.lastPage = $location.path();

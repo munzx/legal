@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yousufalsharif').factory('arLang', [function () {
+angular.module('legality').factory('arLang', [function () {
 	return {
 		'admin': 'إداري',
 		'pending': 'معلقة',
