@@ -1,5 +1,8 @@
 'use strict';
 
+angular.module('authModule', []);
+'use strict';
+
 angular.module('adminModule', []);
 'use strict';
 
@@ -9,7 +12,13 @@ angular.module('calendarModule', []);
 angular.module('caseModule', []);
 'use strict';
 
-angular.module('authModule', []);
+angular.module('caseRoleModule', []);
+'use strict';
+
+angular.module('clientModule', []);
+'use strict';
+
+angular.module('caseTypeModule', []);
 'use strict';
 
 // intitiate the app and Inject all of the app module dependencies
@@ -316,16 +325,7 @@ legality.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'C
 angular.module('consultantModule', []);
 'use strict';
 
-angular.module('clientModule', []);
-'use strict';
-
-angular.module('caseRoleModule', []);
-'use strict';
-
 angular.module('courtModule', []);
-'use strict';
-
-angular.module('caseTypeModule', []);
 'use strict';
 
 angular.module('defendantModule', []);
@@ -340,16 +340,235 @@ angular.module('homeModule', []);
 angular.module('reportModule', []);
 'use strict';
 
-angular.module('updateTypesModule', []);
+angular.module('timelineModule', []);
 'use strict';
 
-angular.module('timelineModule', []);
+angular.module('updateTypesModule', []);
 'use strict';
 
 angular.module('uploadModule', []);
 'user strict';
 
 angular.module('userModule', []);
+'user strict';
+
+angular.module('authModule').controller('signinAuthController', ['registerUserConfigFactory', '$scope', '$http', '$location', '$rootScope', function (registerUserConfigFactory, $scope, $http, $location, $rootScope) {
+	$scope.signIn = function () {
+		$http.post('/api/v1/login', $scope.credentials)
+		.success(function (data, success) {
+			registerUserConfigFactory.setUser(data);
+			if($rootScope.lastPage){
+				$location.path($rootScope.lastPage);
+			} else {
+				if(data.role == 'admin'){
+					$location.path('/admin/report');
+				} else if(data.role == 'client') {
+					$location.path('/client');
+				} else if(data.role == 'employee'){
+					$location.path('/employee');
+				} else if(data.role == 'consultant'){
+					$location.path('/consultant');
+				}
+			}
+		})
+		.error(function (data, error) {
+			$scope.error = data;
+		});
+	};
+}]);
+'use strict';
+
+angular.module('authModule').controller('signInProviderAuthController', ['$scope', '$http', '$location', 'connectAccountAuthFactory', '$stateParams', 'countryListConfigFactory', function ($scope, $http, $location, connectAccountAuthFactory, $stateParams, countryListConfigFactory) {
+	$scope.countryList = countryListConfigFactory;
+
+	connectAccountAuthFactory.get({id: $stateParams.id}, function (response) {
+		$scope.credentials = response;
+	});
+
+	$scope.signUp = function () {
+		connectAccountAuthFactory.save({id: $stateParams.id}, $scope.credentials, function (data, res) {
+			$location.path('/signin');
+		},
+		function (err) {
+			$scope.error = err.data.message;
+		});
+	}
+
+
+}]);
+'user strict';
+
+angular.module('authModule').controller('signoutAuthController', ['registerUserConfigFactory', '$http', '$state', function (registerUserConfigFactory, $http, $state) {
+	$http.get('/api/v1/logout')
+	.success(function (data, success) {
+		registerUserConfigFactory.clearUserInfo();
+		$state.go('home', {}, {reload: true});
+	});
+}]);
+'use strict';
+
+angular.module('authModule').factory('connectAccountAuthFactory', ['$resource', function ($resource) {
+	return $resource('api/v1/account/:action/:id');
+}]);
+'use strict';
+
+angular.module('authModule').factory('connectAuthFactory', ['$resource', function ($resource) {
+		return $resource('/api/v1/user/:id');
+}]);
+'use strict';
+
+angular.module('adminModule').directive('lineChartAdminDirective', ['$q', '$modal', 'connectAdminFactory', function ($q, $modal, connectAdminFactory) {
+	 return {
+		require: '?ngModel',
+		restrict: 'A',
+		templateUrl: '/public/modules/admin/view/linechart/linechart.admin.directive.view.html',
+		replace: true,
+		link: function (scope, elem, attrs, ngModel) {
+			function getLineChartAnalysis (dateFrom) {
+				$q.all([
+					connectAdminFactory.get({page: 'analysis', action: 'products', param: dateFrom}).$promise,
+					connectAdminFactory.get({page: 'analysis', action: 'comments', param: dateFrom}).$promise,
+					connectAdminFactory.get({page: 'analysis', action: 'hearts', param: dateFrom}).$promise,
+					connectAdminFactory.get({page: 'analysis', action: 'orders', param: dateFrom}).$promise,
+					connectAdminFactory.get({page: 'analysis', action: 'carts', param: dateFrom}).$promise,
+					connectAdminFactory.get({page: 'analysis', action: 'users', param: dateFrom}).$promise
+				]).then(function (result) {
+					scope.lineData = [
+						result[0].dataPoints,
+						result[1].dataPoints,
+						result[2].dataPoints,
+						result[3].dataPoints,
+						result[4].dataPoints,
+						result[5].dataPoints
+					]
+
+					scope.data = [
+						result[0].data,
+						result[1].data,
+						result[2].data,
+						result[3].data,
+						result[4].data,
+						result[5].data
+					]
+
+					scope.lineLabels = result[0].fullDate;
+					scope.dateFrom = new Date(scope.lineLabels[0]);
+				}, function (err) {
+					console.log(err);
+				});
+
+				scope.lineLabels = ["January", "February", "March", "April", "May", "June", "July"];
+				scope.lineSeries = ['Products', 'Comments', 'Hearts', 'Orders', 'Carts', 'Users'];
+				scope.lineData = [
+					[],
+					[],
+					[],
+					[],
+					[],
+					[]
+				];
+			}
+
+			scope.getPointInfo = function (points, evt) {
+				var pointer = scope.lineLabels.indexOf(points[0].label);
+				scope.pointerInfo = {
+					'date': points[0].label,
+					'Products': scope.data[0][pointer],
+					'ProductsColor': points[0].strokeColor,
+					'Comments': scope.data[1][pointer],
+					'CommentsColor': points[1].strokeColor,
+					'Hearts': scope.data[2][pointer],
+					'HeartsColor': points[2].strokeColor,
+					'Orders': scope.data[3][pointer],
+					'OrdersColor': points[3].strokeColor,
+					'Carts': scope.data[4][pointer],
+					'CartsColor': points[4].strokeColor,
+					'Users': scope.data[5][pointer],
+					'UsersColor': points[5].strokeColor
+				}
+			}
+
+			scope.showProducts = function (point) {
+				$modal.open({
+					templateUrl: '/public/modules/admin/view/linechart/products.linechart.admin.directive.view.html',
+					size: 'lg',
+					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+						$scope.info = scope.pointerInfo.Products;
+					}]
+				});	
+			}
+			scope.showComments = function (point) {
+				$modal.open({
+					templateUrl: '/public/modules/admin/view/linechart/comments.linechart.admin.directive.view.html',
+					size: 'lg',
+					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+						$scope.info = scope.pointerInfo.Comments;
+					}]
+				});	
+			}
+			scope.showHearts = function (point) {
+				$modal.open({
+					templateUrl: '/public/modules/admin/view/linechart/hearts.linechart.admin.directive.view.html',
+					size: 'lg',
+					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+						$scope.info = scope.pointerInfo.Hearts;
+					}]
+				});	
+			}
+			scope.showOrders = function (point) {
+				$modal.open({
+					templateUrl: '/public/modules/admin/view/linechart/orders.linechart.admin.directive.view.html',
+					size: 'md',
+					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+						$scope.info = scope.pointerInfo.Orders;
+						console.log($scope.info);
+					}]
+				});	
+			}
+			scope.showCarts = function (point) {
+				$modal.open({
+					templateUrl: '/public/modules/admin/view/linechart/carts.linechart.admin.directive.view.html',
+					size: 'md',
+					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+						$scope.info = scope.pointerInfo.Carts;
+					}]
+				});	
+			}
+			scope.showUsers = function (point) {
+				$modal.open({
+					templateUrl: '/public/modules/admin/view/linechart/users.linechart.admin.directive.view.html',
+					size: 'sm',
+					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+						$scope.info = scope.pointerInfo.Users;
+					}]
+				});	
+			}
+
+			//initilize the line chart
+			getLineChartAnalysis();
+
+			scope.getAnalysisButtton = function () {
+				getLineChartAnalysis(scope.dateFrom);
+			}
+		}
+	}
+}]);
+'user strict';
+
+angular.module('adminModule').directive('userInteractionAdminDirective', ['connectAdminFactory', function (connectAdminFactory) {
+	return {
+		require: '?ngModel',
+		restrict: 'A',
+		templateUrl: '/public/modules/admin/view/user.interaction.admin.directive.view.html',
+		replace: true,
+		link: function (scope, elem, attrs, ngModel) {
+			connectAdminFactory.get({page: 'analysis', action: 'indepthanalysis'}, function (response) {
+				scope.pieLabels = ["User has order", "User has product", "User has cart", "User has comment", "User has heart", "User with no product or order"];
+				scope.pieData = [response.hasOrderCount, response.hasProductCount, response.userHasCartCount, response.userHasCommentCount, response.userHasHeartCount, response.hasNoProductOrOrderCount];
+			});
+		}
+	}
+}]);
 'use strict';
 
 angular.module('adminModule').controller('caseRoleAdminController', ['$scope', 'connectCaseRoleFactory', '$modal', 'socketConfigFactory', function ($scope, connectCaseRoleFactory, $modal, socketConfigFactory) {
@@ -896,160 +1115,6 @@ angular.module('adminModule').controller('usersAdminController', ['$scope', '$st
 }]);
 'use strict';
 
-angular.module('adminModule').directive('lineChartAdminDirective', ['$q', '$modal', 'connectAdminFactory', function ($q, $modal, connectAdminFactory) {
-	 return {
-		require: '?ngModel',
-		restrict: 'A',
-		templateUrl: '/public/modules/admin/view/linechart/linechart.admin.directive.view.html',
-		replace: true,
-		link: function (scope, elem, attrs, ngModel) {
-			function getLineChartAnalysis (dateFrom) {
-				$q.all([
-					connectAdminFactory.get({page: 'analysis', action: 'products', param: dateFrom}).$promise,
-					connectAdminFactory.get({page: 'analysis', action: 'comments', param: dateFrom}).$promise,
-					connectAdminFactory.get({page: 'analysis', action: 'hearts', param: dateFrom}).$promise,
-					connectAdminFactory.get({page: 'analysis', action: 'orders', param: dateFrom}).$promise,
-					connectAdminFactory.get({page: 'analysis', action: 'carts', param: dateFrom}).$promise,
-					connectAdminFactory.get({page: 'analysis', action: 'users', param: dateFrom}).$promise
-				]).then(function (result) {
-					scope.lineData = [
-						result[0].dataPoints,
-						result[1].dataPoints,
-						result[2].dataPoints,
-						result[3].dataPoints,
-						result[4].dataPoints,
-						result[5].dataPoints
-					]
-
-					scope.data = [
-						result[0].data,
-						result[1].data,
-						result[2].data,
-						result[3].data,
-						result[4].data,
-						result[5].data
-					]
-
-					scope.lineLabels = result[0].fullDate;
-					scope.dateFrom = new Date(scope.lineLabels[0]);
-				}, function (err) {
-					console.log(err);
-				});
-
-				scope.lineLabels = ["January", "February", "March", "April", "May", "June", "July"];
-				scope.lineSeries = ['Products', 'Comments', 'Hearts', 'Orders', 'Carts', 'Users'];
-				scope.lineData = [
-					[],
-					[],
-					[],
-					[],
-					[],
-					[]
-				];
-			}
-
-			scope.getPointInfo = function (points, evt) {
-				var pointer = scope.lineLabels.indexOf(points[0].label);
-				scope.pointerInfo = {
-					'date': points[0].label,
-					'Products': scope.data[0][pointer],
-					'ProductsColor': points[0].strokeColor,
-					'Comments': scope.data[1][pointer],
-					'CommentsColor': points[1].strokeColor,
-					'Hearts': scope.data[2][pointer],
-					'HeartsColor': points[2].strokeColor,
-					'Orders': scope.data[3][pointer],
-					'OrdersColor': points[3].strokeColor,
-					'Carts': scope.data[4][pointer],
-					'CartsColor': points[4].strokeColor,
-					'Users': scope.data[5][pointer],
-					'UsersColor': points[5].strokeColor
-				}
-			}
-
-			scope.showProducts = function (point) {
-				$modal.open({
-					templateUrl: '/public/modules/admin/view/linechart/products.linechart.admin.directive.view.html',
-					size: 'lg',
-					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-						$scope.info = scope.pointerInfo.Products;
-					}]
-				});	
-			}
-			scope.showComments = function (point) {
-				$modal.open({
-					templateUrl: '/public/modules/admin/view/linechart/comments.linechart.admin.directive.view.html',
-					size: 'lg',
-					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-						$scope.info = scope.pointerInfo.Comments;
-					}]
-				});	
-			}
-			scope.showHearts = function (point) {
-				$modal.open({
-					templateUrl: '/public/modules/admin/view/linechart/hearts.linechart.admin.directive.view.html',
-					size: 'lg',
-					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-						$scope.info = scope.pointerInfo.Hearts;
-					}]
-				});	
-			}
-			scope.showOrders = function (point) {
-				$modal.open({
-					templateUrl: '/public/modules/admin/view/linechart/orders.linechart.admin.directive.view.html',
-					size: 'md',
-					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-						$scope.info = scope.pointerInfo.Orders;
-						console.log($scope.info);
-					}]
-				});	
-			}
-			scope.showCarts = function (point) {
-				$modal.open({
-					templateUrl: '/public/modules/admin/view/linechart/carts.linechart.admin.directive.view.html',
-					size: 'md',
-					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-						$scope.info = scope.pointerInfo.Carts;
-					}]
-				});	
-			}
-			scope.showUsers = function (point) {
-				$modal.open({
-					templateUrl: '/public/modules/admin/view/linechart/users.linechart.admin.directive.view.html',
-					size: 'sm',
-					controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-						$scope.info = scope.pointerInfo.Users;
-					}]
-				});	
-			}
-
-			//initilize the line chart
-			getLineChartAnalysis();
-
-			scope.getAnalysisButtton = function () {
-				getLineChartAnalysis(scope.dateFrom);
-			}
-		}
-	}
-}]);
-'user strict';
-
-angular.module('adminModule').directive('userInteractionAdminDirective', ['connectAdminFactory', function (connectAdminFactory) {
-	return {
-		require: '?ngModel',
-		restrict: 'A',
-		templateUrl: '/public/modules/admin/view/user.interaction.admin.directive.view.html',
-		replace: true,
-		link: function (scope, elem, attrs, ngModel) {
-			connectAdminFactory.get({page: 'analysis', action: 'indepthanalysis'}, function (response) {
-				scope.pieLabels = ["User has order", "User has product", "User has cart", "User has comment", "User has heart", "User with no product or order"];
-				scope.pieData = [response.hasOrderCount, response.hasProductCount, response.userHasCartCount, response.userHasCommentCount, response.userHasHeartCount, response.hasNoProductOrOrderCount];
-			});
-		}
-	}
-}]);
-'use strict';
-
 angular.module('adminModule').factory('connectAdminFactory', ['$resource', function ($resource) {
 	return $resource('api/v1/admin/:page/:action/:id/:param/:limit/:skip/:from/:to', 
 		{
@@ -1368,6 +1433,11 @@ angular.module('calendarModule').controller('indexCalendarController', ['$scope'
 angular.module('calendarModule').factory('connectCalendarFactory', ['$resource', function ($resource) {
 	return $resource('/api/v1/calendar/:action/:id/:subaction');
 }]);
+'use strict';
+
+angular.module('caseModule').factory('connectCaseFactory', ['$resource', function ($resource) {
+	return $resource('api/v1/case/:caseId/:action/:actionId/:subaction/:id');
+}])
 'use strict';
 
 angular.module('caseModule').controller('createCaseController', ['$scope', 'cases', 'connectAdminFactory', '$modal', '$modalInstance', 'connectDefendantFactory', 'connectCaseRoleFactory', 'connectCaseFactory', 'connectCaseTypeFactory', 'socketConfigFactory', function ($scope, cases, connectAdminFactory, $modal, $modalInstance, connectDefendantFactory, connectCaseRoleFactory, connectCaseFactory, connectCaseTypeFactory, socketConfigFactory) {
@@ -2506,73 +2576,146 @@ angular.module('caseModule').controller('uploadMemoConsultantCaseController', ['
 }]);
 'use strict';
 
-angular.module('caseModule').factory('connectCaseFactory', ['$resource', function ($resource) {
-	return $resource('api/v1/case/:caseId/:action/:actionId/:subaction/:id');
-}])
-'user strict';
+angular.module('caseRoleModule').controller('indexCaseRoleController', ['$scope', '$modalInstance', 'caseRoles', 'connectCaseRoleFactory', function ($scope, $modalInstance, caseRoles, connectCaseRoleFactory) {
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
 
-angular.module('authModule').controller('signinAuthController', ['registerUserConfigFactory', '$scope', '$http', '$location', '$rootScope', function (registerUserConfigFactory, $scope, $http, $location, $rootScope) {
-	$scope.signIn = function () {
-		$http.post('/api/v1/login', $scope.credentials)
-		.success(function (data, success) {
-			registerUserConfigFactory.setUser(data);
-			if($rootScope.lastPage){
-				$location.path($rootScope.lastPage);
-			} else {
-				if(data.role == 'admin'){
-					$location.path('/admin/report');
-				} else if(data.role == 'client') {
-					$location.path('/client');
-				} else if(data.role == 'employee'){
-					$location.path('/employee');
-				} else if(data.role == 'consultant'){
-					$location.path('/consultant');
-				}
-			}
-		})
-		.error(function (data, error) {
-			$scope.error = data;
+	$scope.createNewCaseRole = function(){
+		connectCaseRoleFactory.save({}, {'caseRoleInfo': $scope.newCaseRole}, function(response){
+			$modalInstance.dismiss('cancel');
+		}, function(error){
+			$scope.error = error.data.message;
 		});
-	};
+	}
+
 }]);
 'use strict';
 
-angular.module('authModule').controller('signInProviderAuthController', ['$scope', '$http', '$location', 'connectAccountAuthFactory', '$stateParams', 'countryListConfigFactory', function ($scope, $http, $location, connectAccountAuthFactory, $stateParams, countryListConfigFactory) {
-	$scope.countryList = countryListConfigFactory;
+angular.module('caseRoleModule').factory('connectCaseRoleFactory', ['$resource', function ($resource) {
+	return $resource('api/v1/caserole/:id/:action');
+}]);
+'use strict';
 
-	connectAccountAuthFactory.get({id: $stateParams.id}, function (response) {
-		$scope.credentials = response;
+angular.module('clientModule').controller('addClientController', ['$scope', '$modalInstance', 'connectCaseFactory', 'selectedCase', 'closeParentModal', 'connectCaseRoleFactory', function ($scope, $modalInstance, connectCaseFactory, selectedCase, closeParentModal, connectCaseRoleFactory) {
+	connectCaseRoleFactory.query({action: 'available'}, function(response){
+		$scope.caseRoles = response;
 	});
 
-	$scope.signUp = function () {
-		connectAccountAuthFactory.save({id: $stateParams.id}, $scope.credentials, function (data, res) {
-			$location.path('/signin');
-		},
-		function (err) {
-			$scope.error = err.data.message;
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
+
+	$scope.createNewClient = function(){
+		$scope.error = false;
+		$scope.userInfo.role = 'client';
+		connectCaseFactory.save({'action': 'client', 'subaction': 'new'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
+			$modalInstance.dismiss('cancel');
+			closeParentModal();
+		}, function(error){
+			$scope.error = error.data.message;
 		});
 	}
 
 
 }]);
-'user strict';
+'use strict';
 
-angular.module('authModule').controller('signoutAuthController', ['registerUserConfigFactory', '$http', '$state', function (registerUserConfigFactory, $http, $state) {
-	$http.get('/api/v1/logout')
-	.success(function (data, success) {
-		registerUserConfigFactory.clearUserInfo();
-		$state.go('home', {}, {reload: true});
+angular.module('clientModule').controller('dashboardClientController', ['$scope', 'registerUserConfigFactory', '$state', function ($scope, registerUserConfigFactory, $state) {
+	$scope.user = registerUserConfigFactory.getUser();
+	if($scope.user === false) $state.go('signin');
+	if($scope.user.role !== 'client') $state.go('signin');
+
+	$state.go('client.case');
+}]);
+'use strict';
+
+angular.module('clientModule').controller('indexClientController', ['$scope', '$modalInstance', 'connectUserFactory', 'clients', 'selectedClients', 'caseRoles', function ($scope, $modalInstance, connectUserFactory, clients, selectedClients, caseRoles) {
+	//init the client info
+	$scope.userInfo = {};
+	$scope.userInfo.role = 'client';
+
+	$scope.createNewClient = function(){
+		$scope.error = false;
+		connectUserFactory.save({}, {'userInfo': $scope.userInfo}, function(response){
+			selectedClients.push(response);
+			$modalInstance.dismiss('cancel');
+		}, function(error){
+			$scope.error = error.data.message;
+		});
+	}
+
+	$scope.caseRoles = caseRoles;
+
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
+}]);
+'use strict';
+
+angular.module('clientModule').controller('switchClientController', ['$scope', 'connectAdminFactory', '$modalInstance', '$modal', 'selectedCase', 'connectCaseRoleFactory', 'connectCaseFactory', function ($scope, connectAdminFactory, $modalInstance, $modal, selectedCase, connectCaseRoleFactory, connectCaseFactory) {
+	$scope.selectedCase = selectedCase;
+
+	connectAdminFactory.query({page: 'client', action: 'available'}, function(response){
+		$scope.clients = response;
 	});
+
+	connectCaseRoleFactory.query({action: 'available'}, function(response){
+		$scope.caseRoles = response;
+	});
+
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
+
+	$scope.creatClient = function(){
+		$scope.error = false;
+		$scope.userInfo.userId = $scope.clients[$scope.userIndex]._id;
+		connectCaseFactory.save({'action': 'client'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
+			$modalInstance.dismiss('cancel');
+		}, function(error){
+			$scope.error = error.data.message;
+		});
+	}
+
+	$scope.showCreateClientForm = function(){
+		$modal.open({
+			templateUrl: 'public/modules/client/view/add.client.view.html',
+			controller: 'addClientController',
+			backdrop: 'static',
+			resolve: {
+				selectedCase: function(){
+					return $scope.selectedCase;
+				},
+				closeParentModal: function(){
+					return $scope.closeModal;
+				}
+			}
+		});
+	}
+
+
 }]);
 'use strict';
 
-angular.module('authModule').factory('connectAccountAuthFactory', ['$resource', function ($resource) {
-	return $resource('api/v1/account/:action/:id');
+angular.module('caseTypeModule').controller('indexCaseTypeController', ['$scope', '$modalInstance', 'connectCaseTypeFactory', 'caseTypes', function ($scope, $modalInstance, connectCaseTypeFactory, caseTypes) {
+	$scope.closeModal = function(){
+		$modalInstance.dismiss('cancel');
+	}
+
+	$scope.createNewCaseType = function(){
+		connectCaseTypeFactory.save({}, {'caseTypeInfo': $scope.newCaseType}, function(response){
+			$modalInstance.dismiss('cancel');
+		}, function(error){
+			$scope.error = error.data.message;
+		});
+	}
+
 }]);
 'use strict';
 
-angular.module('authModule').factory('connectAuthFactory', ['$resource', function ($resource) {
-		return $resource('/api/v1/user/:id');
+angular.module('caseTypeModule').factory('connectCaseTypeFactory', ['$resource', function ($resource) {
+	return $resource('api/v1/casetype/:id/:action');
 }]);
 'use strict';
 
@@ -3503,128 +3646,6 @@ angular.module('consultantModule').controller('indexConsultantController', ['$sc
 }]);
 'use strict';
 
-angular.module('clientModule').controller('addClientController', ['$scope', '$modalInstance', 'connectCaseFactory', 'selectedCase', 'closeParentModal', 'connectCaseRoleFactory', function ($scope, $modalInstance, connectCaseFactory, selectedCase, closeParentModal, connectCaseRoleFactory) {
-	connectCaseRoleFactory.query({action: 'available'}, function(response){
-		$scope.caseRoles = response;
-	});
-
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-
-	$scope.createNewClient = function(){
-		$scope.error = false;
-		$scope.userInfo.role = 'client';
-		connectCaseFactory.save({'action': 'client', 'subaction': 'new'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
-			$modalInstance.dismiss('cancel');
-			closeParentModal();
-		}, function(error){
-			$scope.error = error.data.message;
-		});
-	}
-
-
-}]);
-'use strict';
-
-angular.module('clientModule').controller('dashboardClientController', ['$scope', 'registerUserConfigFactory', '$state', function ($scope, registerUserConfigFactory, $state) {
-	$scope.user = registerUserConfigFactory.getUser();
-	if($scope.user === false) $state.go('signin');
-	if($scope.user.role !== 'client') $state.go('signin');
-
-	$state.go('client.case');
-}]);
-'use strict';
-
-angular.module('clientModule').controller('indexClientController', ['$scope', '$modalInstance', 'connectUserFactory', 'clients', 'selectedClients', 'caseRoles', function ($scope, $modalInstance, connectUserFactory, clients, selectedClients, caseRoles) {
-	//init the client info
-	$scope.userInfo = {};
-	$scope.userInfo.role = 'client';
-
-	$scope.createNewClient = function(){
-		$scope.error = false;
-		connectUserFactory.save({}, {'userInfo': $scope.userInfo}, function(response){
-			selectedClients.push(response);
-			$modalInstance.dismiss('cancel');
-		}, function(error){
-			$scope.error = error.data.message;
-		});
-	}
-
-	$scope.caseRoles = caseRoles;
-
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-}]);
-'use strict';
-
-angular.module('clientModule').controller('switchClientController', ['$scope', 'connectAdminFactory', '$modalInstance', '$modal', 'selectedCase', 'connectCaseRoleFactory', 'connectCaseFactory', function ($scope, connectAdminFactory, $modalInstance, $modal, selectedCase, connectCaseRoleFactory, connectCaseFactory) {
-	$scope.selectedCase = selectedCase;
-
-	connectAdminFactory.query({page: 'client', action: 'available'}, function(response){
-		$scope.clients = response;
-	});
-
-	connectCaseRoleFactory.query({action: 'available'}, function(response){
-		$scope.caseRoles = response;
-	});
-
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-
-	$scope.creatClient = function(){
-		$scope.error = false;
-		$scope.userInfo.userId = $scope.clients[$scope.userIndex]._id;
-		connectCaseFactory.save({'action': 'client'}, {'caseId': selectedCase._id, 'userInfo': $scope.userInfo}, function(response){
-			$modalInstance.dismiss('cancel');
-		}, function(error){
-			$scope.error = error.data.message;
-		});
-	}
-
-	$scope.showCreateClientForm = function(){
-		$modal.open({
-			templateUrl: 'public/modules/client/view/add.client.view.html',
-			controller: 'addClientController',
-			backdrop: 'static',
-			resolve: {
-				selectedCase: function(){
-					return $scope.selectedCase;
-				},
-				closeParentModal: function(){
-					return $scope.closeModal;
-				}
-			}
-		});
-	}
-
-
-}]);
-'use strict';
-
-angular.module('caseRoleModule').factory('connectCaseRoleFactory', ['$resource', function ($resource) {
-	return $resource('api/v1/caserole/:id/:action');
-}]);
-'use strict';
-
-angular.module('caseRoleModule').controller('indexCaseRoleController', ['$scope', '$modalInstance', 'caseRoles', 'connectCaseRoleFactory', function ($scope, $modalInstance, caseRoles, connectCaseRoleFactory) {
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-
-	$scope.createNewCaseRole = function(){
-		connectCaseRoleFactory.save({}, {'caseRoleInfo': $scope.newCaseRole}, function(response){
-			$modalInstance.dismiss('cancel');
-		}, function(error){
-			$scope.error = error.data.message;
-		});
-	}
-
-}]);
-'use strict';
-
 angular.module('courtModule').controller('indexCourtController', ['$scope', '$modalInstance', 'connectAdminFactory', 'courts', function ($scope, $modalInstance, connectAdminFactory, courts) {
 	//init
 	$scope.courtInfo = {};
@@ -3644,27 +3665,6 @@ angular.module('courtModule').controller('indexCourtController', ['$scope', '$mo
 		$modalInstance.dismiss('cancel');
 	}
 
-}]);
-'use strict';
-
-angular.module('caseTypeModule').controller('indexCaseTypeController', ['$scope', '$modalInstance', 'connectCaseTypeFactory', 'caseTypes', function ($scope, $modalInstance, connectCaseTypeFactory, caseTypes) {
-	$scope.closeModal = function(){
-		$modalInstance.dismiss('cancel');
-	}
-
-	$scope.createNewCaseType = function(){
-		connectCaseTypeFactory.save({}, {'caseTypeInfo': $scope.newCaseType}, function(response){
-			$modalInstance.dismiss('cancel');
-		}, function(error){
-			$scope.error = error.data.message;
-		});
-	}
-
-}]);
-'use strict';
-
-angular.module('caseTypeModule').factory('connectCaseTypeFactory', ['$resource', function ($resource) {
-	return $resource('api/v1/casetype/:id/:action');
 }]);
 'use strict';
 
@@ -3889,6 +3889,26 @@ angular.module('reportModule').controller('indexReportController', ['$scope', '$
 }]);
 'use strict';
 
+angular.module('timelineModule').controller('indexTimelineController', ['$scope', 'connectTimelineFactory', 'socketConfigFactory', function ($scope, connectTimelineFactory, socketConfigFactory) {
+	//listen to add
+	socketConfigFactory.on('timeline', function (feeds) {
+		getFeeds();
+	});
+	var getFeeds = function () {
+		connectTimelineFactory.query(function (response) {
+			$scope.feeds = response;
+		});
+	}
+	//init the feeds
+	getFeeds();
+}]);
+'use strict';
+
+angular.module('timelineModule').factory('connectTimelineFactory', ['$resource', function ($resource) {
+	return $resource('api/v1/timeline');
+}]);
+'use strict';
+
 angular.module('updateTypesModule').controller('indexUpdateTypesController', ['$scope', 'connectUpdateTypeFactory', 'updatetypes', '$modalInstance', function($scope, connectUpdateTypeFactory, updatetypes, $modalInstance){
 	$scope.closeModal = function(){
 		$modalInstance.dismiss('cancel');
@@ -3917,26 +3937,6 @@ angular.module('updateTypesModule').controller('indexUpdateTypesController', ['$
 angular.module('updateTypesModule').factory('connectUpdateTypeFactory', ['$resource', function ($resource) {
 	return $resource('api/v1/updatetype/:id/:action');
 }])
-'use strict';
-
-angular.module('timelineModule').controller('indexTimelineController', ['$scope', 'connectTimelineFactory', 'socketConfigFactory', function ($scope, connectTimelineFactory, socketConfigFactory) {
-	//listen to add
-	socketConfigFactory.on('timeline', function (feeds) {
-		getFeeds();
-	});
-	var getFeeds = function () {
-		connectTimelineFactory.query(function (response) {
-			$scope.feeds = response;
-		});
-	}
-	//init the feeds
-	getFeeds();
-}]);
-'use strict';
-
-angular.module('timelineModule').factory('connectTimelineFactory', ['$resource', function ($resource) {
-	return $resource('api/v1/timeline');
-}]);
 'use strict';
 
 angular.module('uploadModule').controller('addUploadController', ['$scope', '$modalInstance', 'selectedCase', '$http', 'docs', '$modal', function ($scope, $modalInstance, selectedCase, $http, docs, $modal) {
