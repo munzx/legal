@@ -6,14 +6,15 @@ var expect = require('expect.js');
 var superagent = require('superagent');
 
 //Models
-var feeds = require('./../../app/models/feed');
-var users = require('./../../app/models/user');
-var courts = require('./../../app/models/court');
-var caseTypes = require('./../../app/models/caseType');
-var caseRoles = require('./../../app/models/caseRole');
-var updateTypes = require('./../../app/models/updateType');
-var defendants = require('./../../app/models/defendant');
-var cases = require('./../../app/models/case');
+var calendar = require('./../models/calendar');
+var feeds = require('./../models/feed');
+var users = require('./../models/user');
+var courts = require('./../models/court');
+var caseTypes = require('./../models/caseType');
+var caseRoles = require('./../models/caseRole');
+var updateTypes = require('./../models/updateType');
+var defendants = require('./../models/defendant');
+var cases = require('./../models/case');
 
 //start agent
 var agent = superagent.agent();
@@ -26,6 +27,7 @@ var IDs = {};
 
 //to delete anythng in the DB before and after running tests
 var cleanDB = function () {
+	calendar.remove().exec();
 	feeds.remove().exec();
 	cases.remove().exec();
 	defendants.remove().exec();
@@ -53,31 +55,31 @@ describe('Manage First Admin', function () {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			agent.saveCookies(res);
-			done(err);
+			done();
 		});
 	});
 	it('Should fail double creating first admin', function (done) {
 		agent.get(api + 'admin/first')
 		.end(function (err, res) {
 			expect(res.status).to.be(500);
-			done(err);
+			done();
 		});
 	});
 	it('Should login as admin', function (done) {
-		agent.post(prefix + 'login')
+		agent.post(api + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
-			done(err);
+			done();
 		});
 	});
 	it('Should logout', function (done) {
-		agent.get(prefix + 'logout')
+		agent.get(api + 'logout')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body).to.be('logged out');
-			done(err);
+			done();
 		});
 	});
 });
@@ -85,13 +87,13 @@ describe('Manage First Admin', function () {
 
 describe('Manage Courts', function () {
 	it('Should login as admin', function (done) {
-		agent.post(prefix + 'login')
+		agent.post(api + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			agent.saveCookies(res);
-			done(err);
+			done();
 		});
 	});
 	it('Should create a new court', function (done) {
@@ -100,7 +102,7 @@ describe('Manage Courts', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			IDs.courtID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should fail to create a new court with same name', function (done) {
@@ -108,7 +110,7 @@ describe('Manage Courts', function () {
 		.send({courtInfo: {name:'Dubai Court', city:'Dubai', address: 'Dubai city'}})
 		.end(function (err, res) {
 			expect(res.status).to.be(500);
-			done(err);
+			done();
 		});
 	});
 	it('Should create another new court', function (done) {
@@ -116,7 +118,7 @@ describe('Manage Courts', function () {
 		.send({courtInfo: {name:'Dubai Traffic Court', city:'Dubai', address: 'Dubai city'}})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
-			done(err);
+			done();
 		});
 	});
 	it('Should get the courts', function (done) {
@@ -146,24 +148,24 @@ describe('Manage Courts', function () {
 		});
 	});
 	it('Should logout', function (done) {
-		agent.get(prefix + 'logout')
+		agent.get(api + 'logout')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body).to.be('logged out');
-			done(err);
+			done();
 		});
 	});
 });
 
 describe('Manage Case Types', function () {
 	it('Should login as admin', function (done) {
-		agent.post(prefix + 'login')
+		agent.post(api + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			agent.saveCookies(res);
-			done(err);
+			done();
 		});
 	});
 	it('Should create a new case type', function (done) {
@@ -173,7 +175,7 @@ describe('Manage Case Types', function () {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('initial');
 			IDs.casetypeID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should refuse to create a duplicated case type', function (done) {
@@ -181,7 +183,7 @@ describe('Manage Case Types', function () {
 		.send({caseTypeInfo: {name: 'initial'}})
 		.end(function (err, res) {
 			expect(res.status).to.be(500);
-			done(err);
+			done();
 		});
 	});
 	it('Should create a new case type', function (done) {
@@ -190,7 +192,7 @@ describe('Manage Case Types', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('trial');
-			done(err);
+			done();
 		});
 	});
 	it('Should soft remove the first case type', function (done) {
@@ -199,7 +201,7 @@ describe('Manage Case Types', function () {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('initial');
 			expect(res.body.removed).to.be(true);
-			done(err);
+			done();
 		});
 	});
 	it('Should get the available case Types i.e. not removed', function (done) {
@@ -207,15 +209,15 @@ describe('Manage Case Types', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body[0].name).to.be('trial');
-			done(err);
+			done();
 		});
 	});
 	it('Should logout', function (done) {
-		agent.get(prefix + 'logout')
+		agent.get(api + 'logout')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body).to.be('logged out');
-			done(err);
+			done();
 		});
 	});
 });
@@ -223,13 +225,13 @@ describe('Manage Case Types', function () {
 
 describe('Manage Case Roles', function () {
 	it('Should login as admin', function (done) {
-		agent.post(prefix + 'login')
+		agent.post(api + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			agent.saveCookies(res);
-			done(err);
+			done();
 		});
 	});
 	it('Should create a case role', function (done) {
@@ -239,7 +241,7 @@ describe('Manage Case Roles', function () {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('claimer');
 			IDs.caseroleID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should refuse to create a duplicated case role', function (done) {
@@ -247,7 +249,7 @@ describe('Manage Case Roles', function () {
 		.send({caseRoleInfo: {name: 'claimer'}})
 		.end(function (err, res) {
 			expect(res.status).to.be(500);
-			done(err);
+			done();
 		});
 	});
 	it('Should create another case role', function (done) {
@@ -256,7 +258,7 @@ describe('Manage Case Roles', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('claimed');
-			done(err);
+			done();
 		});
 	});
 	it('Should create a third case role', function (done) {
@@ -265,7 +267,7 @@ describe('Manage Case Roles', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('witeness');
-			done(err);
+			done();
 		});
 	});
 	it('Should get case roles', function (done) {
@@ -275,7 +277,7 @@ describe('Manage Case Roles', function () {
 			expect(res.body[0].name).to.be('claimer');
 			expect(res.body[1].name).to.be('claimed');
 			expect(res.body[2].name).to.be('witeness');
-			done(err);
+			done();
 		});
 	});
 	it('Should soft remove the first case role', function (done) {
@@ -284,7 +286,7 @@ describe('Manage Case Roles', function () {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('claimer');
 			expect(res.body.removed).to.be(true);
-			done(err);
+			done();
 		});
 	});
 	it('Should get available case role i.e. not removed', function (done) {
@@ -293,15 +295,15 @@ describe('Manage Case Roles', function () {
 			expect(res.status).to.be(200);
 			expect(res.body[0].name).to.be('claimed');
 			expect(res.body[1].name).to.be('witeness');
-			done(err);
+			done();
 		});
 	});
 	it('Should logout', function (done) {
-		agent.get(prefix + 'logout')
+		agent.get(api + 'logout')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body).to.be('logged out');
-			done(err);
+			done();
 		});
 	});
 });
@@ -309,13 +311,13 @@ describe('Manage Case Roles', function () {
 
 describe('Manage case updates', function () {
 	it('Should login as admin', function (done) {
-		agent.post(prefix + 'login')
+		agent.post(api + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			agent.saveCookies(res);
-			done(err);
+			done();
 		});
 	});
 	it('Should create a new case update with all updates options true', function (done) {
@@ -343,7 +345,7 @@ describe('Manage case updates', function () {
 			expect(res.body.requireDeadline).to.be(true);
 			expect(res.body.requireRemarks).to.be(true);
 			IDs.updateID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should create a "memo" case update', function (done) {
@@ -363,7 +365,7 @@ describe('Manage case updates', function () {
 			expect(res.body.requireDeadline).to.be(true);
 			expect(res.body.requireRemarks).to.be(true);
 			IDs.updateMemoID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should create "session" case update', function (done) {
@@ -381,7 +383,7 @@ describe('Manage case updates', function () {
 			expect(res.body.requireDeadline).to.be(true);
 			expect(res.body.requireRemarks).to.be(true);
 			IDs.updateSessionID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should soft remove the first case update type', function (done) {
@@ -390,15 +392,15 @@ describe('Manage case updates', function () {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('testUpdate');
 			expect(res.body.removed).to.be(true);
-			done(err);
+			done();
 		});
 	});
 	it('Should logout', function (done) {
-		agent.get(prefix + 'logout')
+		agent.get(api + 'logout')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body).to.be('logged out');
-			done(err);
+			done();
 		});
 	});
 });
@@ -406,13 +408,13 @@ describe('Manage case updates', function () {
 
 describe('Manage Users', function () {
 	it('Should login as admin', function (done) {
-		agent.post(prefix + 'login')
+		agent.post(api + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			agent.saveCookies(res);
-			done(err);
+			done();
 		});
 	});
 	it('Should create a new user with admin role', function (done) {
@@ -431,7 +433,7 @@ describe('Manage Users', function () {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('oneadmin');
 			IDs.adminID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should fail to create a duplicated user with admin role', function (done) {
@@ -448,7 +450,7 @@ describe('Manage Users', function () {
 		}})
 		.end(function (err, res) {
 			expect(res.status).to.be(500);
-			done(err);
+			done();
 		});
 	});
 	it('Should create a new user with employee role', function (done) {
@@ -467,7 +469,7 @@ describe('Manage Users', function () {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('oneemployee');
 			IDs.employeeID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should fail to create a duplicated user with employee role', function (done) {
@@ -484,7 +486,7 @@ describe('Manage Users', function () {
 		}})
 		.end(function (err, res) {
 			expect(res.status).to.be(500);
-			done(err);
+			done();
 		});
 	});
 	it('Should create a new user with client role', function (done) {
@@ -503,7 +505,7 @@ describe('Manage Users', function () {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('oneclient');
 			IDs.clientID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should fail to create a duplicated user with client role', function (done) {
@@ -520,7 +522,7 @@ describe('Manage Users', function () {
 		}})
 		.end(function (err, res) {
 			expect(res.status).to.be(500);
-			done(err);
+			done();
 		});
 	});
 	it('Should create a new user with consultant role', function (done) {
@@ -539,7 +541,7 @@ describe('Manage Users', function () {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('oneconsultant');
 			IDs.consultantID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should fail to create a duplicated user with consultant role', function (done) {
@@ -556,7 +558,7 @@ describe('Manage Users', function () {
 		}})
 		.end(function (err, res) {
 			expect(res.status).to.be(500);
-			done(err);
+			done();
 		});
 	});
 	it('Should soft remove the newly created admin', function (done) {
@@ -564,7 +566,7 @@ describe('Manage Users', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.name).to.be('oneadmin');
-			done(err);
+			done();
 		});
 	});
 	it('Should get all available users i.e not removed and name is not admin', function (done) {
@@ -575,7 +577,7 @@ describe('Manage Users', function () {
 			expect(res.body[1].role).to.be('client');
 			expect(res.body[2].role).to.be('consultant');
 			expect(res.body.length).to.be(3);
-			done(err);
+			done();
 		});
 	});
 	it('Should update the user password', function (done) {
@@ -585,7 +587,7 @@ describe('Manage Users', function () {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			expect(res.body.mobilePhone).to.be('3974637469837');
-			done(err);
+			done();
 		});
 	});
 	it('Should get user by name', function (done) {
@@ -594,7 +596,7 @@ describe('Manage Users', function () {
 			expect(res.body.role).to.be('admin');
 			expect(res.body.name).to.be('admin');
 			expect(res.status).to.be(200);
-			done(err);
+			done();
 		});
 	});
 	it('Should search and get the user name', function (done) {
@@ -603,15 +605,15 @@ describe('Manage Users', function () {
 			expect(res.status).to.be(200);
 			expect(res.body[0].name).to.be('admin');
 			expect(res.body[0].role).to.be('admin');
-			done(err);
+			done();
 		});
 	});
 	it('Should logout', function (done) {
-		agent.get(prefix + 'logout')
+		agent.get(api + 'logout')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body).to.be('logged out');
-			done(err);
+			done();
 		});
 	});
 });
@@ -619,13 +621,13 @@ describe('Manage Users', function () {
 
 describe('Manage Clients', function () {
 	it('Should login as admin', function (done) {
-		agent.post(prefix + 'login')
+		agent.post(api + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			agent.saveCookies(res);
-			done(err);
+			done();
 		});
 	});
 	it('Should get the client', function (done) {
@@ -633,7 +635,7 @@ describe('Manage Clients', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body[0].role).to.be('client');
-			done(err);
+			done();
 		});
 	});
 	it('Should get the available cients', function (done) {
@@ -641,15 +643,15 @@ describe('Manage Clients', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body[0].role).to.be('client');
-			done(err);
+			done();
 		});
 	});
 	it('Should logout', function (done) {
-		agent.get(prefix + 'logout')
+		agent.get(api + 'logout')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body).to.be('logged out');
-			done(err);
+			done();
 		});
 	});
 });
@@ -657,13 +659,13 @@ describe('Manage Clients', function () {
 
 describe('Manage Consultants', function () {
 	it('Should login as admin', function (done) {
-		agent.post(prefix + 'login')
+		agent.post(api + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			agent.saveCookies(res);
-			done(err);
+			done();
 		});
 	});
 	it('Should get the consultants', function (done) {
@@ -671,7 +673,7 @@ describe('Manage Consultants', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body[0].role).to.be('consultant');
-			done(err);
+			done();
 		});
 	});
 	it('Should get the available consultants', function (done) {
@@ -679,15 +681,15 @@ describe('Manage Consultants', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body[0].role).to.be('consultant');
-			done(err);
+			done();
 		});
 	});
 	it('Should logout', function (done) {
-		agent.get(prefix + 'logout')
+		agent.get(api + 'logout')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body).to.be('logged out');
-			done(err);
+			done();
 		});
 	});
 });
@@ -695,49 +697,49 @@ describe('Manage Consultants', function () {
 
 describe('Manage Employees', function () {
 	it('Should login as admin', function (done) {
-		agent.post(prefix + 'login')
+		agent.post(api + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			agent.saveCookies(res);
-			done(err);
+			done();
 		});
 	});
 	it('Should get the employees', function (done) {
 		agent.get(api + '/admin/employee')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
-			done(err);
+			done();
 		});
 	});
 	it('Should get the available employees', function (done) {
 		agent.get(api + '/admin/employee/available')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
-			done(err);
+			done();
 		});
 	});
 	it('Should get the employees non legal', function (done) {
 		agent.get(api + '/admin/employee/nonlegal')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
-			done(err);
+			done();
 		});
 	});
 	it('Should get the available employees non legal', function (done) {
 		agent.get(api + '/admin/employee/nonlegal/available')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
-			done(err);
+			done();
 		});
 	});
 	it('Should logout', function (done) {
-		agent.get(prefix + 'logout')
+		agent.get(api + 'logout')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body).to.be('logged out');
-			done(err);
+			done();
 		});
 	});
 });
@@ -745,13 +747,13 @@ describe('Manage Employees', function () {
 
 describe('Manage Defendants', function () {
 	it('Should login as admin', function (done) {
-		agent.post(prefix + 'login')
+		agent.post(api + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			agent.saveCookies(res);
-			done(err);
+			done();
 		});
 	});
 	it('Should create a defendant', function (done) {
@@ -766,7 +768,7 @@ describe('Manage Defendants', function () {
 			expect(res.body.firstName).to.be('defendantFirstName');
 			expect(res.status).to.be(200);
 			IDs.toBeRenovedDefendantId = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should create another new defendant', function (done) {
@@ -781,7 +783,7 @@ describe('Manage Defendants', function () {
 			expect(res.body.firstName).to.be('defendantFirstName2');
 			expect(res.status).to.be(200);
 			IDs.defendantID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should refuse create a duplicated defendant', function (done) {
@@ -794,7 +796,7 @@ describe('Manage Defendants', function () {
 		}})
 		.end(function (err, res) {
 			expect(res.status).to.be(500);
-			done(err);
+			done();
 		});
 	});
 	it('Should soft remove a defendant', function (done) {
@@ -802,7 +804,7 @@ describe('Manage Defendants', function () {
 		.end(function (err, res) {
 			expect(res.body.firstName).to.be('defendantFirstName');
 			expect(res.status).to.be(200);
-			done(err);
+			done();
 		});
 	});
 	it('Should get available defendant i.e. not removed defendants', function (done) {
@@ -810,15 +812,15 @@ describe('Manage Defendants', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body[0].firstName).to.be('defendantFirstName2');
-			done(err);
+			done();
 		});
 	});
 	it('Should logout', function (done) {
-		agent.get(prefix + 'logout')
+		agent.get(api + 'logout')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body).to.be('logged out');
-			done(err);
+			done();
 		});
 	});
 });
@@ -826,13 +828,13 @@ describe('Manage Defendants', function () {
 
 describe('Manage Cases', function () {
 	it('Should login as admin', function (done) {
-		agent.post(prefix + 'login')
+		agent.post(api + 'login')
 		.send({ username: 'admin', password: 'Dubai@123'})
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body.role).to.be('admin');
 			agent.saveCookies(res);
-			done(err);
+			done();
 		});
 	});
 	it('Shoud Create a new case', function (done) {
@@ -851,7 +853,7 @@ describe('Manage Cases', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			IDs.caseID = res.body._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should insert a new case update, the update type is memo', function (done) {
@@ -870,7 +872,7 @@ describe('Manage Cases', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			IDs.firstCaseuUpdateID = res.body.updates[res.body.updates.length - 1]._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should get the updates', function (done) {
@@ -920,7 +922,7 @@ describe('Manage Cases', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			IDs.caseuUpdateMemoID = res.body.updates[res.body.updates.length - 1]._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should create a new session', function (done) {
@@ -939,7 +941,7 @@ describe('Manage Cases', function () {
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			IDs.secondUpdateSessionID = res.body.updates[res.body.updates.length - 1]._id;
-			done(err);
+			done();
 		});
 	});
 	it('Should get all cases with sessions', function (done) {
@@ -1114,11 +1116,11 @@ describe('Manage Cases', function () {
 	//Should write test for uploading docs and search
 
 	it('Should logout', function (done) {
-		agent.get(prefix + 'logout')
+		agent.get(api + 'logout')
 		.end(function (err, res) {
 			expect(res.status).to.be(200);
 			expect(res.body).to.be('logged out');
-			done(err);
+			done();
 		});
 	});
 });

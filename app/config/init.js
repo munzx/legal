@@ -40,7 +40,7 @@ module.exports = function (app, express) {
 
 	//check if mongodb is connected otherwise throw an error
 	var db = mongoose.connection;
-	db.on('error',console.error.bind(console, 'connection Error:'));
+	db.on('error', console.error.bind(console, 'connection Error:'));
 
 	//gzip the server responses
 	app.use(compress());

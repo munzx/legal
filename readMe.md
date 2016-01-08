@@ -1,2 +1,2 @@
-yousufalsharif App ~
-Manage yousufalsharif Community 
+# ExpressDevSkeleton
+ExpressJS, gulp, browserSync, and nodemon .
