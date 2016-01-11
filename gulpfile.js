@@ -8,6 +8,7 @@ var gulp = require('gulp'),
   _browserSync = require('browser-sync'),
   _autoprefixer = require('gulp-autoprefixer'),
   _cssMinify = require('gulp-minify-css'),
+  _less = require('gulp-less'),
   _rename = require('gulp-rename'),
   _reload = _browserSync.reload;
 
