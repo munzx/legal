@@ -28,7 +28,7 @@ var path = {
   desFolder: 'public/dest/',
   devFolder: 'public/dev/',
   jsFiles: ['public/js/**.js', 'public/modules/**.js', 'public/modules/*/*.js', 'public/modules/*/*/*.js', 'public/modules/*/*/*.*.js'],
-  cssFiles: ['public/css/**.css', 'public/modules/*/*.css', 'public/modules/*/*/*.css'],
+  cssFiles: ['public/css/**.css', 'public/modules/*/*.css', 'public/modules/*/*/*.css', 'public/modules/*/*/*.less'],
   server: {
     baseDir: './',
     index: 'views/index.ejs',

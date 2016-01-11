@@ -5,5 +5,4 @@ angular.module('consultantModule').controller('indexConsultantController', ['$sc
 	if($scope.user === false) $state.go('signin');
 	if($scope.user.role !== 'consultant') $state.go('signin');
 
-	$state.go('consultant.memos');
 }]);

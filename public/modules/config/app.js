@@ -69,7 +69,8 @@ legality.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'C
 			url: '/admin',
 			cache: false,
 			abstract: true,
-			templateUrl: 'public/modules/admin/view/index.admin.view.html'
+			templateUrl: 'public/modules/admin/view/index.admin.view.html',
+			controller: 'indexAdminController'
 		})
 		.state('admin.report', {
 			url: '/report',
@@ -202,68 +203,104 @@ legality.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'C
 		})
 		.state('employee', {
 			url: '/employee',
+			cache: false,
+			abstract: true,
 			templateUrl: 'public/modules/employee/view/index.employee.view.html',
 			controller: 'indexEmployeeController'
 		})
 		.state('employee.sessions', {
 			url: '/sessions',
-			templateUrl: 'public/modules/case/view/sessions.case.view.html',
-			controller: 'sessionsCaseController',
-			cache: false
+			cache: false,
+			views: {
+				'employee': {
+					templateUrl: 'public/modules/case/view/sessions.case.view.html',
+					controller: 'sessionsCaseController'
+				}
+			}
 		})
 		.state('employee.cases', {
 			url: '/cases',
-			templateUrl: 'public/modules/case/view/index.case.view.html',
-			controller: 'indexCaseController',
-			cache: false
+			cache: false,
+			views: {
+				'employee': {
+					templateUrl: 'public/modules/case/view/index.case.view.html',
+					controller: 'indexCaseController'
+				}
+			}
 		})
 		.state('employee.tasks', {
 			url: '/tasks',
-			templateUrl: 'public/modules/calendar/view/index.calendar.view.html',
-			controller: 'indexCalendarController',
-			cache: false
+			cache: false,
+			views: {
+				'employee': {
+					templateUrl: 'public/modules/calendar/view/index.calendar.view.html',
+					controller: 'indexCalendarController'
+				}
+			}
 		})
 		.state('consultant', {
 			url: '/consultant',
+			cache: false,
+			abstract: true,
 			templateUrl: 'public/modules/consultant/view/index.consultant.view.html',
-			controller: 'indexConsultantController',
-			cache: false
+			controller: 'indexConsultantController'
 		})
 		.state('consultant.memos', {
 			url: '/memos',
-			templateUrl: 'public/modules/case/view/memos.case.view.html',
-			controller: 'memosCaseController',
-			cache: false
+			cache: false,
+			views: {
+				'consultant': {
+					templateUrl: 'public/modules/case/view/memos.case.view.html',
+					controller: 'memosCaseController'
+				}
+			}
 		})
 		.state('consultant.tasks', {
 			url: '/tasks',
-			templateUrl: 'public/modules/calendar/view/index.calendar.view.html',
-			controller: 'indexCalendarController',
-			cache: false
+			cache: false,
+			views: {
+				'consultant': {
+					templateUrl: 'public/modules/calendar/view/index.calendar.view.html',
+					controller: 'indexCalendarController'
+				}
+			}
 		})
 		.state('consultant.sessions', {
 			url: '/sessions',
-			templateUrl: 'public/modules/case/view/sessions.case.view.html',
-			controller: 'sessionsCaseController',
-			cache: false
+			cache: false,
+			views: {
+				'consultant': {
+					templateUrl: 'public/modules/case/view/sessions.case.view.html',
+					controller: 'sessionsCaseController'
+				}
+			}
 		})
 		.state('consultant.cases', {
 			url: '/cases',
-			templateUrl: 'public/modules/case/view/index.case.view.html',
-			controller: 'indexCaseController',
-			cache: false
+			cache: false,
+			views: {
+				'consultant': {
+					templateUrl: 'public/modules/case/view/index.case.view.html',
+					controller: 'indexCaseController'
+				}
+			}
 		})
 		.state('client', {
 			url: '/client',
+			cache: false,
+			abstract: true,
 			templateUrl: 'public/modules/client/view/dashboard.client.view.html',
-			controller: 'dashboardClientController',
-			cache: false
+			controller: 'dashboardClientController'
 		})
 		.state('client.case', {
 			url: '/case',
-			templateUrl: 'public/modules/case/view/index.case.view.html',
-			controller: 'indexCaseController',
-			cache: false
+			cache: false,
+			views: {
+				'client': {
+					templateUrl: 'public/modules/case/view/index.case.view.html',
+					controller: 'indexCaseController'
+				}
+			}
 		});
 
 		$locationProvider.html5Mode(true).hashPrefix('!');
@@ -293,7 +330,7 @@ legality.config(['$urlRouterProvider', '$stateProvider', '$locationProvider', 'C
 	//if the user is not logged in then redirect to the home/login page
 	var user = registerUserConfigFactory.getUser();
 	if(!user){
-		$state.go('home', {}, {reload: true});
+		$location.path('/');
 	}
 
 	$rootScope.logged = false;

@@ -5,7 +5,5 @@ angular.module('employeeModule').controller('indexEmployeeController', ['$scope'
 	if($scope.user === false) $state.go('signin');
 	if($scope.user.role !== 'employee') $state.go('signin');
 
-	$state.go('employee.sessions');
-
 
 }]);

@@ -1,6 +1,30 @@
 'user strict';
 
 angular.module('authModule').controller('signinAuthController', ['registerUserConfigFactory', '$scope', '$http', '$location', '$rootScope', function (registerUserConfigFactory, $scope, $http, $location, $rootScope) {
+	
+	var user = registerUserConfigFactory.getUser();
+	if(user){
+		page(user.role);
+	}
+
+	function page (role) {
+		if(!role){ return false; };
+		switch(role){
+			case "admin":
+				$location.path('/admin/report');
+				break;
+			case "consultant":
+				$location.path('/consultant/memos');
+				break;
+			case "employee":
+				$location.path('/employee/sessions');
+				break;
+			case "client":
+				$location.path('/client/case');
+				break;
+		}
+	}
+
 	$scope.signIn = function () {
 		$http.post('/api/v1/login', $scope.credentials)
 		.success(function (data, success) {
@@ -8,15 +32,7 @@ angular.module('authModule').controller('signinAuthController', ['registerUserCo
 			if($rootScope.lastPage){
 				$location.path($rootScope.lastPage);
 			} else {
-				if(data.role == 'admin'){
-					$location.path('/admin/report');
-				} else if(data.role == 'client') {
-					$location.path('/client');
-				} else if(data.role == 'employee'){
-					$location.path('/employee');
-				} else if(data.role == 'consultant'){
-					$location.path('/consultant');
-				}
+				page(data.role);
 			}
 		})
 		.error(function (data, error) {
