@@ -28,7 +28,7 @@ var path = {
   desFolder: 'public/dest/',
   devFolder: 'public/dev/',
   jsFiles: ['public/js/**.js', 'public/modules/**.js', 'public/modules/*/*.js', 'public/modules/*/*/*.js', 'public/modules/*/*/*.*.js'],
-  cssFiles: ['public/css/**.css', 'public/modules/*/*.css', 'public/modules/*/*/*.css', 'public/modules/*/*/*.less'],
+  cssFiles: ['public/css/**.css', 'public/modules/*/*.css', 'public/modules/*/*/*.css'],
   server: {
     baseDir: './',
     index: 'views/index.ejs',
@@ -67,6 +67,7 @@ gulp.task('minifyCSS', function () {
 	return gulp.src(path.cssFiles)
 			.pipe(_plumber())
 			.pipe(_autoprefixer('last 10 versions'))
+      .pipe(_concat('app.css'))
 			.pipe(_cssMinify())
 			.pipe(_rename('app.min.css'))
 			.pipe(gulp.dest(path.desFolder));
