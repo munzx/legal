@@ -114,4 +114,4 @@ gulp.task('serve', ['nodemon'], function(){
 });
 
 // Start the default task
-gulp.task('default', ['build']);
+gulp.task('default', ['build', 'nodemon']);
