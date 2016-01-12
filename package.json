@@ -8,6 +8,7 @@
     "npm": "3.x"
   },
   "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install",
     "start": "./node_modules/gulp/bin/gulp.js",
     "test": "NODE_ENV='test' ./node_modules/mocha/bin/_mocha ./server/api/v1/tests/**"
   },
@@ -15,6 +16,7 @@
     "async": "^1.5.0",
     "bcrypt": "^0.8.5",
     "body-parser": "~1.13.2",
+    "bower": "^1.7.2",
     "browser-sync": "^2.10.0",
     "compression": "^1.6.0",
     "cookie-session": "^1.2.0",
