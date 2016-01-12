@@ -30,7 +30,6 @@ var path = {
 	devFolder: 'public/dev/',
 	jsFiles: ['public/js/**.js', 'public/modules/**.js', 'public/modules/*/*.js', 'public/modules/*/*/*.js', 'public/modules/*/*/*.*.js'],
 	cssFiles: ['public/css/**.css', 'public/modules/*/*.css', 'public/modules/*/*/*.css'],
-	lessFiles: ['public/modules/*/*/*.less'],
 	server: {
 		baseDir: './',
 		index: 'views/index.ejs',
@@ -75,15 +74,8 @@ gulp.task('minifyCSS', function () {
 	.pipe(gulp.dest(path.desFolder));
 });
 
-gulp.task('lessToCSS', function () {
-	return gulp.src(path.lessFiles)
-	.pipe(_less())
-	.pipe(gulp.dest(path.devFolder));
-});
-
-
 // Build files
-gulp.task('build', ['inspect', 'lessToCSS', 'DevMinifyJS', 'minifyJS', 'minifyCSS'], _reload);
+gulp.task('build', ['inspect', 'DevMinifyJS', 'minifyJS', 'minifyCSS'], _reload);
 
 //HTML reload
 gulp.task('HtmlReload', _reload);
