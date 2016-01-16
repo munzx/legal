@@ -4,3 +4,4 @@ node_modules/
 public/dest/
 public/dev/
 logs/
+coverage/
