@@ -1,6 +1,5 @@
 // Dependencies
 var gulp = require('gulp'),
-_jshint = require('gulp-jshint'),
 _concat = require('gulp-concat'),
 _uglify = require('gulp-uglify'),
 _plumber = require('gulp-plumber'),
@@ -24,7 +23,7 @@ var BROWSER_SYNC_RELOAD_DELAY = 1000;
 // Path
 var path = {
 	htmlFiles: ['views/*.*'],
-	serverRoutes: ['routes/*.js'],
+	serverRoutes: ['server/api/*.js', 'server/api/*/*.js'],
 	serverApp: ['app.js'],
 	desFolder: 'public/dest/',
 	devFolder: 'public/dev/',
@@ -36,14 +35,6 @@ var path = {
 		specs: './app/tests/'
 	}
 }
-
-// Run _JShint against files to make sense of errors if existed
-gulp.task('inspect', function () {
-	return gulp.src(path.jsFiles)
-	.pipe(_plumber())
-	.pipe(_jshint())
-	.pipe(_jshint.reporter('default'));
-});
 
 // _Concat, _uglify, compact then save the minified JS files
 gulp.task('minifyJS', function () {
@@ -75,7 +66,7 @@ gulp.task('minifyCSS', function () {
 });
 
 // Build files
-gulp.task('build', ['inspect', 'DevMinifyJS', 'minifyJS', 'minifyCSS'], _reload);
+gulp.task('build', ['DevMinifyJS', 'minifyJS', 'minifyCSS'], _reload);
 
 //HTML reload
 gulp.task('HtmlReload', _reload);
@@ -114,4 +105,4 @@ gulp.task('serve', ['nodemon'], function(){
 });
 
 // Start the default task
-gulp.task('default', ['build', 'nodemon']);
+gulp.task('default', ['watch', 'serve']);

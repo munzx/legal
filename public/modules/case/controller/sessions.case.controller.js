@@ -5,6 +5,8 @@ angular.module('caseModule').controller('sessionsCaseController', ['$scope', 'co
 	if($scope.user === false) $state.go('signin');
 	$scope.isAdmin = ($scope.user.role === 'admin')? true: false;
 
+
+
 	//listen to session add
 	socketConfigFactory.on('sessions.add', function (session) {
 		if($scope.activeUpcoming == 'active' && session.isOld == false){

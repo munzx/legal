@@ -1,8 +1,8 @@
 {
-	"tasks.add": "قام %s بحذف المهمة %s",
+	"tasks.add": "قام %s بإضافة مهمة جديدة ( %s )",
 	"tasks.update.done": "قام/ت %s بإنهاء المهمة %s",
 	"tasks.update.rejected": "قام/ت %s برفض المهمة %s",
-	"tasks.update.removed": "قام/ت %s بتحديث المهمة %s",
+	"tasks.update.removed": "قام/ت %s بحذف المهمة %s",
 	"cases.add": "%s قام/ت بإضافة قضية جديدة (%s %s)",
 	"cases.update.updated": "%s قام/ت بتحديث القضية (%s %s)",
 	"cases.update.removed": "%s قام/ت بحذف القضية (%s %s)",

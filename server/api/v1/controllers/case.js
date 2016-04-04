@@ -363,6 +363,7 @@ module.exports.getSessions = function(req, res){
 }
 
 module.exports.upcomingSessions = function(req, res){
+	console.log('Bism Allah, here is a test');
 	cases.find({}).where('sessions').exists().populate('sessions').populate('defendant.user').populate('court').populate('client.user').populate('sessions.user').populate('sessions.lawyer').sort('created').exec(function(err, result){
 		if(err){
 			res.status(500).jsonp({message: err});
@@ -376,8 +377,10 @@ module.exports.upcomingSessions = function(req, res){
 				if(caseInfo.sessions.length > 0){
 					var sessions = caseInfo.sessions;
 					sessions.forEach(function(info){
+						console.log(info.newDate);
 						//isAfter check starting from the given date which will skip the day itself so we 'subtract'
-						if(moment(info.newDate).isAfter(moment().subtract(1, 'day'))){
+						if(moment(info.newDate).isAfter(moment( new Date()).subtract(1, 'day'))){
+							console.log('Bism Allah. test1');
 							//get last session
 							var sessionInfo = sessionInfoTemplate(info, caseInfo);
 							//get last session info and case info
@@ -410,7 +413,7 @@ module.exports.previousSessions = function(req, res){
 					var sessions = caseInfo.sessions;
 					sessions.forEach(function(info){
 						//isBefore check starting from the given date which will skip the day itself so we 'subtract'
-						if(moment(info.newDate).isBefore(moment().subtract(1, 'day'))){
+						if(moment(info.newDate).isBefore(moment(new Date()).subtract(1, 'day'))){
 							//get last session
 							var sessionInfo = sessionInfoTemplate(info, caseInfo);
 							//get last session info and case info
